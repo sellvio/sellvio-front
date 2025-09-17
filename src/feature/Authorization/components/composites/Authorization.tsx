@@ -58,13 +58,13 @@ const Authorization = () => {
         <div>
           <p className="mt-[33px] font-bold text-[18px] text-[var(--auth-text-dark)] text-center">
             არ გაქვს ექაუნთი?
-            <Link href="/registration">
+            <Link href="/registration?type=bussines">
               <span className="ml-[4px] text-[#583CCF]">
                 დარეგისტრირდი როგორც ბიზნესი
               </span>
             </Link>
             <span className="mx-[4px]">ან</span>
-            <Link href="/">
+            <Link href="/registration?type=creator">
               <span className="text-[#583CCF]">
                 დარეგისტრირდი როგორც შემქმნელი
               </span>

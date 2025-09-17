@@ -79,13 +79,13 @@ const Registration = () => {
         <div>
           <p className="mt-[33px] font-bold text-[18px] text-[var(--auth-text-dark)] text-center">
             გაქვს ექაუნთი?
-            <Link href="/registration">
+            <Link href="/auth/?type=bussines">
               <span className="ml-[4px] text-[#583CCF]">
                 შედით როგორც ბიზნესი
               </span>
             </Link>
             <span className="mx-[4px]">ან</span>
-            <Link href="/">
+            <Link href="/auth/?type=creator">
               <span className="text-[#583CCF]">შედით როგორც შემქმნელი</span>
             </Link>
           </p>
