@@ -6,11 +6,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { FormSchema, FormValues } from '../../schema/authorisationSchema';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 const Authorization = () => {
   const {
     register,
-    handleSubmit,
+    // handleSubmit,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
@@ -36,7 +37,7 @@ const Authorization = () => {
           </p>
         </div>
         <BussinesCreatorBtnSlider />
-        <form onSubmit={handleSubmit()} className="space-y-[22px] mt-[39px]">
+        <form className="space-y-[22px] mt-[39px]">
           <div className="space-y-[30px]">
             <ReUsableInput
               label="ემაილი"
@@ -57,7 +58,22 @@ const Authorization = () => {
           </div>
           <Button variant="auth">მონაწილეობის მიღება</Button>
         </form>
-        <div></div>
+        <div>
+          <p className="mt-[33px] font-bold text-[18px] text-[var(--auth-text-dark)] text-center">
+            არ გაქვს ექაუნთი?
+            <Link href="/">
+              <span className="ml-[4px] text-[#583CCF]">
+                დარეგისტრირდი როგორც ბიზნესი
+              </span>
+            </Link>
+            <span className="mx-[4px]">ან</span>
+            <Link href="/">
+              <span className="text-[#583CCF]">
+                დარეგისტრირდი როგორც შემქმნელი
+              </span>
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
