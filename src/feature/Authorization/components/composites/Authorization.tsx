@@ -4,7 +4,7 @@ import BussinesCreatorBtnSlider from '../primitives/BussinesCreatorBtnSlider';
 import ReUsableInput from '../primitives/ReusableInput';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { FormSchema, FormValues } from '../../schema/authorisationSchema';
+import { FormSchema, FormValues } from '../../../schema/authorisationSchema';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
@@ -18,13 +18,10 @@ const Authorization = () => {
   });
   return (
     <div className="space-y-[30px] m-auto w-full max-w-[621px]">
-      <div className="flex flex-col items-center">
-        <Image
-          src="./assets/images/svg/Sellvio.svg"
-          width={172}
-          height={48}
-          alt="logo"
-        />
+      <div className="flex flex-col items-center gap-[8px]">
+        <Link href="/">
+          <Image src="/Sellvio.svg" width={150} height={46} alt="logo" />
+        </Link>
         <p className="font-bold text-[18px] text-[var(--auth-text-dark)]">
           შედით პროფილზე
         </p>
@@ -61,7 +58,7 @@ const Authorization = () => {
         <div>
           <p className="mt-[33px] font-bold text-[18px] text-[var(--auth-text-dark)] text-center">
             არ გაქვს ექაუნთი?
-            <Link href="/">
+            <Link href="/registration">
               <span className="ml-[4px] text-[#583CCF]">
                 დარეგისტრირდი როგორც ბიზნესი
               </span>

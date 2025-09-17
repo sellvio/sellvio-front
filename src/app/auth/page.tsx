@@ -2,7 +2,7 @@ import Authorization from '@/feature/Authorization/components/composites/Authori
 
 const Auth = () => {
   return (
-    <div>
+    <div className="flex justify-center items-center h-screen">
       <Authorization />
     </div>
   );

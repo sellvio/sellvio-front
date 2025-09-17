@@ -1,11 +1,11 @@
 import { FieldErrors, UseFormRegister } from 'react-hook-form';
-import { FormValues } from './schema/authorisationSchema';
+import { RegistrationValues } from '../schema/registrationSchema';
 
 export type ReUsableInputProps = {
   label: string;
-  id: keyof FormValues;
+  id: keyof RegistrationValues;
   placeholder?: string;
-  register: UseFormRegister<FormValues>;
-  errors: FieldErrors<FormValues>;
+  register: UseFormRegister<RegistrationValues>;
+  errors: FieldErrors<RegistrationValues>;
   type?: string;
 };
