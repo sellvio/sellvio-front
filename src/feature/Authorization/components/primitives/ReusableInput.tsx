@@ -1,5 +1,6 @@
 import React from 'react';
 import { ReUsableInputProps } from '../../type';
+import Image from 'next/image';
 
 const ReUsableInput: React.FC<ReUsableInputProps> = ({
   label,
@@ -8,9 +9,14 @@ const ReUsableInput: React.FC<ReUsableInputProps> = ({
   register,
   errors,
   type = 'text',
+  icon,
 }) => (
   <div className="flex flex-col gap-[16px] rounded-[12px] w-full min-h-[94px]">
-    <label htmlFor={id} className="font-bold text-[18px]">
+    <label
+      htmlFor={id}
+      className="flex items-center gap-[16px] font-bold text-[18px]"
+    >
+      {icon && <Image src={icon} alt="socialMedia" width={20} height={20} />}
       {label}
     </label>
     <div className="w-full">

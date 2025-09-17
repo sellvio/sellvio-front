@@ -8,4 +8,5 @@ export type ReUsableInputProps = {
   register: UseFormRegister<RegistrationValues>;
   errors: FieldErrors<RegistrationValues>;
   type?: string;
+  icon?: string;
 };
