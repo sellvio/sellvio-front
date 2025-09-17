@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import BussinesCreatorBtnSlider from '@/feature/Authorization/components/primitives/BussinesCreatorBtnSlider';
-import ReUsableInput from '@/feature/Authorization/components/primitives/ReusableInput';
+import BussinesCreatorBtnSlider from '@/feature/authorization/components/primitives/BussinesCreatorBtnSlider';
+import ReUsableInput from '@/feature/authorization/components/primitives/ReusableInput';
 import {
   RegistrationSchema,
   RegistrationValues,
