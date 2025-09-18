@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import ReUsableInput from '@/feature/authorization/components/primitives/ReusableInput';
 import { SocialsSchema, SocialsValues } from '@/feature/schema/SocialsSchema';
+import TagInput from '../primitives/TagInput';
 
 const RegistrationSocials = () => {
   const {
@@ -23,7 +24,9 @@ const RegistrationSocials = () => {
   const toggleInput = (id: number) => {
     setVisible((prev) => {
       if (prev.includes(id)) {
-        return prev.length > 1 ? prev.filter((x) => x !== id) : prev;
+        return prev.length > 1
+          ? prev.filter((lastElement) => lastElement !== id)
+          : prev;
       }
       return [...prev, id];
     });
@@ -114,6 +117,9 @@ const RegistrationSocials = () => {
                 icon="/instagram.svg"
               />
             )}
+            <div>
+              <TagInput name="tags" register={register} errors={errors} />
+            </div>
           </div>
           <Button variant="auth">შემდეგი</Button>
         </form>
