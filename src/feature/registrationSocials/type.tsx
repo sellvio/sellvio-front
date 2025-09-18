@@ -6,3 +6,9 @@ export type TagInputProps = {
   register: UseFormRegister<SocialsValues>;
   errors: FieldErrors<SocialsValues>;
 };
+
+export type RegistrationSocialsFormProps = {
+  visible: number[];
+  register: UseFormRegister<SocialsValues>;
+  errors: FieldErrors<SocialsValues>;
+};

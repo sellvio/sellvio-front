@@ -1,14 +1,12 @@
 'use client';
-import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { socialMediaData } from '../../data/socialMediaData';
 import Image from 'next/image';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import ReUsableInput from '@/feature/authorization/components/primitives/ReusableInput';
 import { SocialsSchema, SocialsValues } from '@/feature/schema/SocialsSchema';
-import TagInput from '../primitives/TagInput';
+import RegistrationSocialsForm from '../primitives/RegistrationSocialsForm';
 
 const RegistrationSocials = () => {
   const {
@@ -82,47 +80,11 @@ const RegistrationSocials = () => {
             ))}
           </div>
         </div>
-        <form className="space-y-[22px] mt-[39px]">
-          <div className="space-y-[30px]">
-            {visible.includes(1) && (
-              <ReUsableInput
-                label="Facebook URL"
-                id="facebook"
-                type="text"
-                placeholder="მიუთითეთ Facebook URL"
-                register={register}
-                errors={errors}
-                icon="/facebook.svg"
-              />
-            )}
-            {visible.includes(2) && (
-              <ReUsableInput
-                label="Tik Tok URL"
-                id="tiktok"
-                type="text"
-                placeholder="მიუთითეთ Tik Tok URL"
-                register={register}
-                errors={errors}
-                icon="/tiktok.svg"
-              />
-            )}
-            {visible.includes(3) && (
-              <ReUsableInput
-                label="Instagram URL"
-                id="instagram"
-                type="text"
-                placeholder="მიუთითეთ Instagram URL"
-                register={register}
-                errors={errors}
-                icon="/instagram.svg"
-              />
-            )}
-            <div>
-              <TagInput name="tags" register={register} errors={errors} />
-            </div>
-          </div>
-          <Button variant="auth">შემდეგი</Button>
-        </form>
+        <RegistrationSocialsForm
+          visible={visible}
+          register={register}
+          errors={errors}
+        />
         <div>
           <p className="mt-[33px] font-bold text-[18px] text-[var(--auth-text-dark)] text-center">
             გაქვს ექაუნთი?
