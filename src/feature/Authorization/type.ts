@@ -5,7 +5,7 @@ import {
   UseFormRegister,
 } from 'react-hook-form';
 
-export interface ReUsableInputProps<T extends FieldValues = FieldValues> {
+export type ReUsableInputProps<T extends FieldValues = FieldValues> = {
   label: string;
   id: Path<T>;
   placeholder?: string;
@@ -13,4 +13,4 @@ export interface ReUsableInputProps<T extends FieldValues = FieldValues> {
   icon?: string;
   register: UseFormRegister<T>;
   errors: FieldErrors<T>;
-}
+};

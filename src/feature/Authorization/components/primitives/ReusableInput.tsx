@@ -14,7 +14,7 @@ const ReUsableInput = <T extends Record<string, unknown>>({
   <div className="flex flex-col gap-[16px] rounded-[12px] w-full min-h-[94px]">
     <label
       htmlFor={id as string}
-      className="flex items-center gap-[16px] font-bold text-[18px]"
+      className="flex items-center gap-[16px] font-bold text-[18px] cursor-pointer"
     >
       {icon && <Image src={icon} alt="socialMedia" width={20} height={20} />}
       {label}
