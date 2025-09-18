@@ -1,5 +1,6 @@
 import { FieldErrors, UseFormRegister } from 'react-hook-form';
 import { SocialsValues } from '../schema/SocialsSchema';
+import { RegistrationValues } from '../schema/registrationSchema';
 
 export type TagInputProps = {
   name: keyof SocialsValues;
@@ -11,4 +12,9 @@ export type RegistrationSocialsFormProps = {
   visible: number[];
   register: UseFormRegister<SocialsValues>;
   errors: FieldErrors<SocialsValues>;
+};
+
+export type RegistrationFormProps = {
+  register: UseFormRegister<RegistrationValues>;
+  errors: FieldErrors<RegistrationValues>;
 };

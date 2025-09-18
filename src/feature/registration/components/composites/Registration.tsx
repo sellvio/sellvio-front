@@ -1,24 +1,24 @@
 'use client';
-import { Button } from '@/components/ui/button';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import Image from 'next/image';
+import Link from 'next/link';
 import BussinesCreatorBtnSlider from '@/feature/authorization/components/primitives/BussinesCreatorBtnSlider';
-import ReUsableInput from '@/feature/authorization/components/primitives/ReusableInput';
 import {
   RegistrationSchema,
   RegistrationValues,
 } from '@/feature/schema/registrationSchema';
-import { zodResolver } from '@hookform/resolvers/zod';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useForm } from 'react-hook-form';
+import RegistrationForm from '../primitives/RegistrationForm';
 
 const Registration = () => {
   const {
     register,
-    // handleSubmit
+    // handleSubmit,
     formState: { errors },
   } = useForm<RegistrationValues>({
     resolver: zodResolver(RegistrationSchema),
   });
+
   return (
     <div className="space-y-[30px] m-auto w-full max-w-[621px]">
       <div className="flex flex-col items-center gap-[8px]">
@@ -39,43 +39,7 @@ const Registration = () => {
           </p>
         </div>
         <BussinesCreatorBtnSlider />
-        <form className="space-y-[22px] mt-[39px]">
-          <div className="space-y-[30px]">
-            <ReUsableInput
-              label="სახელი"
-              id="firstName"
-              type="text"
-              placeholder="შეიყვანე სახელი"
-              register={register}
-              errors={errors}
-            />
-            <ReUsableInput
-              label="გვარი"
-              id="lastName"
-              type="text"
-              placeholder="შეიყვანე გვარი"
-              register={register}
-              errors={errors}
-            />
-            <ReUsableInput
-              label="ზედმეტსახელი"
-              id="nickname"
-              type="text"
-              placeholder="შეიყვანე ზედმეტსახელი"
-              register={register}
-              errors={errors}
-            />
-            <ReUsableInput
-              label="დაბადების თარიღი"
-              id="birthDate"
-              type="date"
-              placeholder="აირჩიე თარიღი"
-              register={register}
-              errors={errors}
-            />
-          </div>
-          <Button variant="auth">შემდეგი</Button>
-        </form>
+        <RegistrationForm register={register} errors={errors} />
         <div>
           <p className="mt-[33px] font-bold text-[18px] text-[var(--auth-text-dark)] text-center">
             გაქვს ექაუნთი?
