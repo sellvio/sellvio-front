@@ -2,7 +2,7 @@ import React from 'react';
 import { ReUsableInputProps } from '../../type';
 import Image from 'next/image';
 
-const ReUsableInput: React.FC<ReUsableInputProps> = ({
+const ReUsableInput = <T extends Record<string, unknown>>({
   label,
   id,
   placeholder,
@@ -10,10 +10,10 @@ const ReUsableInput: React.FC<ReUsableInputProps> = ({
   errors,
   type = 'text',
   icon,
-}) => (
+}: ReUsableInputProps<T>) => (
   <div className="flex flex-col gap-[16px] rounded-[12px] w-full min-h-[94px]">
     <label
-      htmlFor={id}
+      htmlFor={id as string}
       className="flex items-center gap-[16px] font-bold text-[18px]"
     >
       {icon && <Image src={icon} alt="socialMedia" width={20} height={20} />}
@@ -24,11 +24,13 @@ const ReUsableInput: React.FC<ReUsableInputProps> = ({
         className="px-[18px] py-[17px] border border-[#E3E8EF] rounded-[8px] focus:outline-[#3012B3CC] w-full min-h-[56px] font-bold text-[18px]"
         type={type}
         placeholder={placeholder}
-        id={id}
+        id={id as string}
         {...register(id)}
       />
       {errors[id]?.message && (
-        <p className="text-[10px] text-red-600">{errors[id]?.message}</p>
+        <p className="text-[10px] text-red-600">
+          {String(errors[id]?.message)}
+        </p>
       )}
     </div>
   </div>

@@ -1,12 +1,16 @@
-import { FieldErrors, UseFormRegister } from 'react-hook-form';
-import { RegistrationValues } from '../schema/registrationSchema';
+import {
+  FieldErrors,
+  FieldValues,
+  Path,
+  UseFormRegister,
+} from 'react-hook-form';
 
-export type ReUsableInputProps = {
+export interface ReUsableInputProps<T extends FieldValues = FieldValues> {
   label: string;
-  id: keyof RegistrationValues;
+  id: Path<T>;
   placeholder?: string;
-  register: UseFormRegister<RegistrationValues>;
-  errors: FieldErrors<RegistrationValues>;
   type?: string;
   icon?: string;
-};
+  register: UseFormRegister<T>;
+  errors: FieldErrors<T>;
+}

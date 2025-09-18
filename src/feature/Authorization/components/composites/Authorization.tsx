@@ -39,7 +39,7 @@ const Authorization = () => {
             <ReUsableInput
               label="ემაილი"
               id="email"
-              type="tel"
+              type="email"
               placeholder="შეიყვანე ემაილი"
               register={register}
               errors={errors}
@@ -47,7 +47,7 @@ const Authorization = () => {
             <ReUsableInput
               label="პაროლი"
               id="password"
-              type="tel"
+              type="text"
               placeholder="შეიყვანე პაროლი"
               register={register}
               errors={errors}
