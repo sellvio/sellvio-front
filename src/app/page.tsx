@@ -1,5 +1,10 @@
-import { Button } from '@/components/ui/button';
+import MyProfile from "@/components/myProfile/components/MyProfile";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
-  return <Button>Click me</Button>;
+  return (
+    <div>
+      <MyProfile />
+    </div>
+  );
 }
