@@ -1,12 +1,13 @@
 'use client';
 import Image from 'next/image';
-import BussinesCreatorBtnSlider from '../primitives/BussinesCreatorBtnSlider';
-import ReUsableInput from '../primitives/ReusableInput';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { FormSchema, FormValues } from '../../../schema/authorisationSchema';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import BussinesCreatorBtnSlider from '../primitives/BussinesCreatorBtnSlider';
+import ReUsableInput from '../primitives/ReusableInput';
+import RegistrationAs from '@/feature/components/composites/RegistrationAs';
 
 const Authorization = () => {
   const {
@@ -58,22 +59,11 @@ const Authorization = () => {
           </div>
           <Button variant="auth">მონაწილეობის მიღება</Button>
         </form>
-        <div>
-          <p className="mt-[33px] font-bold text-[18px] text-[var(--auth-text-dark)] text-center">
-            არ გაქვს ექაუნთი?
-            <Link href="/registrationBussines?type=bussines">
-              <span className="ml-[4px] text-[#583CCF]">
-                დარეგისტრირდი როგორც ბიზნესი
-              </span>
-            </Link>
-            <span className="mx-[4px]">ან</span>
-            <Link href="/registrationCreator?type=creator">
-              <span className="text-[#583CCF]">
-                დარეგისტრირდი როგორც შემქმნელი
-              </span>
-            </Link>
-          </p>
-        </div>
+        <RegistrationAs
+          accountInfo={'არ გაქვს ექაუნთი?'}
+          bussines={'დარეგისტრირდი როგორც ბიზნესი'}
+          creator={'დარეგისტრირდი როგორც შემქმნელი'}
+        />
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { SocialsSchema, SocialsValues } from '@/feature/schema/SocialsSchema';
 import RegistrationSocialsForm from '../primitives/RegistrationSocialsForm';
+import RegistrationAs from '@/feature/components/composites/RegistrationAs';
 
 const RegistrationSocials = () => {
   const {
@@ -85,20 +86,11 @@ const RegistrationSocials = () => {
           register={register}
           errors={errors}
         />
-        <div>
-          <p className="mt-[33px] font-bold text-[18px] text-[var(--auth-text-dark)] text-center">
-            გაქვს ექაუნთი?
-            <Link href="/auth/?type=bussines">
-              <span className="ml-[4px] text-[#583CCF]">
-                შედით როგორც ბიზნესი
-              </span>
-            </Link>
-            <span className="mx-[4px]">ან</span>
-            <Link href="/auth/?type=creator">
-              <span className="text-[#583CCF]">შედით როგორც შემქმნელი</span>
-            </Link>
-          </p>
-        </div>
+        <RegistrationAs
+          accountInfo={'გაქვს ექაუნთი?'}
+          bussines={'შედით როგორც ბიზნესი'}
+          creator={'შედით როგორც შემქმნელი'}
+        />
       </div>
     </div>
   );

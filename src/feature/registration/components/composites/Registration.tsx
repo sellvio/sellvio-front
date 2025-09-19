@@ -3,12 +3,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 import Link from 'next/link';
-import BussinesCreatorBtnSlider from '@/feature/authorization/components/primitives/BussinesCreatorBtnSlider';
 import {
   RegistrationSchema,
   RegistrationValues,
 } from '@/feature/schema/registrationSchema';
 import RegistrationForm from '../primitives/RegistrationForm';
+import BussinesCreatorBtnSlider from '@/feature/Authorization/components/primitives/BussinesCreatorBtnSlider';
+import RegistrationAs from '@/feature/components/composites/RegistrationAs';
 
 const Registration = () => {
   const {
@@ -43,20 +44,11 @@ const Registration = () => {
           bussinesAuth={'/registrationBussines'}
         />
         <RegistrationForm register={register} errors={errors} />
-        <div>
-          <p className="mt-[33px] font-bold text-[18px] text-[var(--auth-text-dark)] text-center">
-            გაქვს ექაუნთი?
-            <Link href="/auth/?type=bussines">
-              <span className="ml-[4px] text-[#583CCF]">
-                შედით როგორც ბიზნესი
-              </span>
-            </Link>
-            <span className="mx-[4px]">ან</span>
-            <Link href="/auth/?type=creator">
-              <span className="text-[#583CCF]">შედით როგორც შემქმნელი</span>
-            </Link>
-          </p>
-        </div>
+        <RegistrationAs
+          accountInfo={'გაქვს ექაუნთი?'}
+          bussines={'შედით როგორც ბიზნესი'}
+          creator={'შედით როგორც შემქმნელი'}
+        />
       </div>
     </div>
   );

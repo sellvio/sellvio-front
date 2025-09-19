@@ -4,18 +4,18 @@ import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
-  RegistrationSchema,
-  RegistrationValues,
+  RegistrationStepBussinesSchema,
+  RegistrationStepBussinesValues,
 } from '@/feature/schema/registrationSchema';
 import RegistrationBussinesStepTwoForm from '../primitives/RegistrationBussinesStepTwoForm';
+import RegistrationAs from '@/feature/components/composites/RegistrationAs';
 
 const RegistrationBussinesStepTwo = () => {
   const {
     register,
-    // handleSubmit,
     formState: { errors },
-  } = useForm<RegistrationValues>({
-    resolver: zodResolver(RegistrationSchema),
+  } = useForm<RegistrationStepBussinesValues>({
+    resolver: zodResolver(RegistrationStepBussinesSchema),
   });
 
   return (
@@ -38,20 +38,11 @@ const RegistrationBussinesStepTwo = () => {
           </p>
         </div>
         <RegistrationBussinesStepTwoForm register={register} errors={errors} />
-        <div>
-          <p className="mt-[33px] font-bold text-[18px] text-[var(--auth-text-dark)] text-center">
-            გაქვს ექაუნთი?
-            <Link href="/auth/?type=bussines">
-              <span className="ml-[4px] text-[#583CCF]">
-                შედით როგორც ბიზნესი
-              </span>
-            </Link>
-            <span className="mx-[4px]">ან</span>
-            <Link href="/auth/?type=creator">
-              <span className="text-[#583CCF]">შედით როგორც შემქმნელი</span>
-            </Link>
-          </p>
-        </div>
+        <RegistrationAs
+          accountInfo={'გაქვს ექაუნთი?'}
+          bussines={'შედით როგორც ბიზნესი'}
+          creator={'შედით როგორც შემქმნელი'}
+        />
       </div>
     </div>
   );

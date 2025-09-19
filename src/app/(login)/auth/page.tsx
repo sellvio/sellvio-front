@@ -1,4 +1,4 @@
-import Authorization from '@/feature/authorization/components/composites/Authorization';
+import Authorization from '@/feature/Authorization/components/composites/Authorization';
 
 const Auth = () => {
   return (
