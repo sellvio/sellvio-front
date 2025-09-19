@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+// StepTwo ფორმის ველები
 export const RegistrationStepTwoSchema = z
   .object({
     contactNumber: z
@@ -29,7 +30,6 @@ export const RegistrationStepTwoSchema = z
     message: 'პაროლები უნდა ემთხვეოდეს ერთმანეთს',
     path: ['confirmPassword'],
   });
-
 export type RegistrationStepTwoValues = z.infer<
   typeof RegistrationStepTwoSchema
 >;

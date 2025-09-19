@@ -1,12 +1,11 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import ReUsableInput from '@/feature/authorization/components/primitives/ReusableInput';
-import { RegistrationStepTwoValues } from '@/feature/registrationSocials/type';
+import { RegistrationStepBussinesValues } from '@/feature/registrationSocials/type';
 
-const RegistrationBussinesStepTwoForm: React.FC<RegistrationStepTwoValues> = ({
-  register,
-  errors,
-}) => {
+const RegistrationBussinesStepTwoForm: React.FC<
+  RegistrationStepBussinesValues
+> = ({ register, errors }) => {
   return (
     <form className="space-y-[22px] mt-[39px]">
       <div className="space-y-[30px]">
