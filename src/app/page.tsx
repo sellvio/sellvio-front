@@ -1,10 +1,11 @@
+import Form from "@/components/createCampaing/components/Form";
 import MyProfile from "@/components/myProfile/components/MyProfile";
-import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
     <div>
-      <MyProfile />
+      {/* <MyProfile /> */}
+      <Form />
     </div>
   );
 }
