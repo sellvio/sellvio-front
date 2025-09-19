@@ -14,3 +14,8 @@ export type ReUsableInputProps<T extends FieldValues = FieldValues> = {
   register: UseFormRegister<T>;
   errors: FieldErrors<T>;
 };
+
+export type BussinesCreatorBtnSliderProps = {
+  creatorAuth: string;
+  bussinesAuth: string;
+};

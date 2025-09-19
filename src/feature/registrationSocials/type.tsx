@@ -23,3 +23,8 @@ export type CompanyFormProps = {
   register: UseFormRegister<CompanyValues>;
   errors: FieldErrors<CompanyValues>;
 };
+
+export type RegistrationStepTwoValues = {
+  register: UseFormRegister<RegistrationValues>;
+  errors: FieldErrors<RegistrationValues>;
+};
