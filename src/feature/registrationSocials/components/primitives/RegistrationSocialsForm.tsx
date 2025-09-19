@@ -46,6 +46,9 @@ const RegistrationSocialsForm: React.FC<RegistrationSocialsFormProps> = ({
           />
         )}
         <div>
+          <div className="m-auto my-[30px] w-full max-w-[360px] font-bold text-[18px] text-center">
+            აირჩიეთ თეგების რომელი სფეროს წარმომადგენელიც ხართ:
+          </div>
           <TagInput name="tags" register={register} errors={errors} />
         </div>
       </div>

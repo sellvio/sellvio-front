@@ -33,7 +33,10 @@ const Authorization = () => {
             შეარჩიე შენი პროფილის სტილი
           </p>
         </div>
-        <BussinesCreatorBtnSlider />
+        <BussinesCreatorBtnSlider
+          creatorAuth={'/auth'}
+          bussinesAuth={'/auth'}
+        />
         <form className="space-y-[22px] mt-[39px]">
           <div className="space-y-[30px]">
             <ReUsableInput
@@ -58,13 +61,13 @@ const Authorization = () => {
         <div>
           <p className="mt-[33px] font-bold text-[18px] text-[var(--auth-text-dark)] text-center">
             არ გაქვს ექაუნთი?
-            <Link href="/registration?type=bussines">
+            <Link href="/registrationBussines?type=bussines">
               <span className="ml-[4px] text-[#583CCF]">
                 დარეგისტრირდი როგორც ბიზნესი
               </span>
             </Link>
             <span className="mx-[4px]">ან</span>
-            <Link href="/registration?type=creator">
+            <Link href="/registrationCreator?type=creator">
               <span className="text-[#583CCF]">
                 დარეგისტრირდი როგორც შემქმნელი
               </span>

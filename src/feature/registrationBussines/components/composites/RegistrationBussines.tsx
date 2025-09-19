@@ -35,7 +35,10 @@ const RegistrationBussines = () => {
             შეარჩიე შენი პროფილის სტილი
           </p>
         </div>
-        <BussinesCreatorBtnSlider />
+        <BussinesCreatorBtnSlider
+          creatorAuth={'/registrationCreator'}
+          bussinesAuth={'/registrationBussines'}
+        />
         <RegistrationBussinesForm register={register} errors={errors} />
         <div>
           <p className="mt-[33px] font-bold text-[18px] text-[var(--auth-text-dark)] text-center">

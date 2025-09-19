@@ -3,7 +3,11 @@ import { useState } from 'react';
 import { TagInputProps } from '../../type';
 import Image from 'next/image';
 
-const TagInput = ({ name, register, errors }: TagInputProps) => {
+const TagInput = <T extends Record<string, unknown>>({
+  name,
+  register,
+  errors,
+}: TagInputProps<T>) => {
   const [items, setItems] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState('');
 
@@ -26,9 +30,6 @@ const TagInput = ({ name, register, errors }: TagInputProps) => {
 
   return (
     <div>
-      <div className="m-auto my-[30px] w-full max-w-[360px] font-bold text-[18px] text-center">
-        აირჩიეთ თეგების რომელი სფეროს წარმომადგენელიც ხართ:
-      </div>
       <input
         type="text"
         placeholder="შეიყვანე თეგი"
@@ -38,7 +39,13 @@ const TagInput = ({ name, register, errors }: TagInputProps) => {
         onKeyDown={handleKeyDown}
       />
 
-      <input type="hidden" value={items.join(',')} {...register(name)} />
+      <input
+        type="hidden"
+        value={JSON.stringify(items)} // array → string
+        {...register(name, {
+          setValueAs: (val) => JSON.parse(val || '[]'), // string → array
+        })}
+      />
 
       {errors[name] && (
         <p className="text-red-500 text-sm">
