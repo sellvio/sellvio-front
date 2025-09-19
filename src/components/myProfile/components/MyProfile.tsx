@@ -4,6 +4,7 @@ import PrimaryInformation from "./PrimaryInformation";
 import CreatorType from "./CreatorType";
 import ContentCategory from "./ContentCategory";
 import CreatorProfile from "./CreatorProfile";
+import SocmediaPlatform from "./SocmediaPlatform";
 
 const MyProfile = () => {
   return (
@@ -16,8 +17,8 @@ const MyProfile = () => {
         <ContentCategory
           label="კონტენტის კატეგორიები"
           placeholder="კატეგორიის დამატება"
-          error=""
         />
+        <SocmediaPlatform />
       </div>
     </div>
   );

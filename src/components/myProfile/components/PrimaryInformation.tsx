@@ -9,15 +9,9 @@ const PrimaryInformation = () => {
   // import ToggleSwitch from "../primitives/ToggleSwitch";
 
   return (
-    <div className="max-w-[1222px] w-full bg-transparent mx-auto  rounded-[8px] px-[30px] py-[30px] flex flex-col border ">
+    <div className="max-w-[1222px] w-full bg-transparent mx-auto  rounded-[8px] px-[30px] py-[30px] flex flex-col border">
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
-          {/* <Image
-            src="/images/svg/companyBasics.svg"
-            width={22}
-            height={22}
-            alt="logo"
-          /> */}
           <h2 className="text-[22px] font-[600]  text-[#000000]">
             ძირითადი ინფორმაცია
           </h2>
@@ -33,13 +27,13 @@ const PrimaryInformation = () => {
             <h3 className="text-[#000000] font-[700] text-[18px] mb-4">
               სრული სახელი
             </h3>
-            <div>
+            <div className="max-w-[543px]">
               <label className="block mb-1  font-medium"></label>
               <input
                 type="text"
                 placeholder="სალომე შავიანიძე"
                 // {...register("companyName")}
-                className="w-[543px] border border-[#E3E8EF] rounded-[8px] px-3 py-2 text-[18px] text-[#00000083]  font-[700] outline-none"
+                className="w-[543px]  border border-[#E3E8EF] rounded-[8px] px-3 py-2 text-[18px] text-[#00000083]  font-[700] outline-none"
               />
               {/* {errors.companyName && (
                 <span className="text-xs text-red-500">
@@ -69,17 +63,6 @@ const PrimaryInformation = () => {
                 )} */}
               </div>
             </div>
-
-            {/* <div
-              className="w-full flex items-center gap-3 cursor-pointer mt-3 justify-end "
-              onClick={toggleHandler}
-            >
-              <p className="text-[#000000] font-[700]">
-                დამალე ბიუჯეტი შემქნელებისთვის
-              </p>
-
-              <ToggleSwitch value={isOn} onToggle={toggleHandler} />
-            </div> */}
           </div>
         </div>
 

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import { TagFieldProps } from "../types";
 
@@ -30,7 +29,7 @@ const TagField = ({
   };
 
   return (
-    <div className="flex flex-col gap-[5px] mt-[37px] max-w-[1222px] w-full mx-auto">
+    <div className="flex flex-col gap-[5px]  max-w-[1222px] w-full mx-auto">
       <label className="text-[18px]">{label}</label>
       <div className="flex gap-[16px]">
         <input

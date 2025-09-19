@@ -19,3 +19,15 @@ export type TagFieldProps = {
   error?: string;
   onChange?: (values: string[]) => void;
 };
+export type InputFieldProps = {
+  label?: string;
+  placeholder?: string;
+  type?: string;
+  value?: string;
+  onChange?: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  error?: string;
+  textarea?: boolean;
+  className?: string;
+};
