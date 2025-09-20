@@ -23,9 +23,12 @@ const Platforms = () => {
       </div>
       <div className="flex   gap-[185px] w-full mt-[26px]">
         {Socmedia?.map((eachelement) => (
-          <div
+          <button
             key={eachelement.id}
-            className="w-[264px] h-[111px] bg-transparent border rounded-[8px] flex flex-col items-center justify-center gap-4 cursor-pointer"
+            type="button"
+            className="w-[264px] h-[111px] bg-transparent border rounded-[8px] 
+               flex flex-col items-center justify-center gap-4 cursor-pointer 
+               focus:bg-[#F0F0F0] outline-none"
           >
             <Image
               src={eachelement.img}
@@ -36,7 +39,7 @@ const Platforms = () => {
             <span className="font-[600] text-[#000000]">
               {eachelement.title}
             </span>
-          </div>
+          </button>
         ))}
       </div>
     </div>
