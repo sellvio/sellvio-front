@@ -5,7 +5,7 @@ import GoalCreatores from "../primitives/GoalCreatores";
 import PaymentStructure from "../primitives/PaymentStructure";
 import Platforms from "../primitives/Platforms";
 
-const CampaingForm = () => {
+const Form = () => {
   return (
     <div className="flex gap-16 flex-col">
       <CompanyBasics />
@@ -18,4 +18,4 @@ const CampaingForm = () => {
   );
 };
 
-export default CampaingForm;
+export default Form;
