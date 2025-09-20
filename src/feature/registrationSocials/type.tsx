@@ -1,8 +1,14 @@
-import { FieldErrors, Path, UseFormRegister } from 'react-hook-form';
+import {
+  FieldErrors,
+  Path,
+  UseFormRegister,
+  UseFormSetValue,
+} from 'react-hook-form';
 import { SocialsValues } from '../schema/SocialsSchema';
 import { RegistrationValues } from '../schema/registrationSchema';
 import { CompanyValues } from '../schema/companySchema';
 import { RegistrationStepTwoValues } from '../schema/bussinesRegistrationSchemaStepTwo';
+import { UploadImageFormValues } from '../schema/uploadImageSchema';
 
 export type TagInputProps<T extends Record<string, unknown>> = {
   name: Path<T>;
@@ -28,4 +34,10 @@ export type CompanyFormProps = {
 export type RegistrationStepBussinesValues = {
   register: UseFormRegister<RegistrationStepTwoValues>;
   errors: FieldErrors<RegistrationStepTwoValues>;
+};
+
+export type RegistrationBussinesFormProps = {
+  register: UseFormRegister<UploadImageFormValues>;
+  setValue: UseFormSetValue<UploadImageFormValues>;
+  errors: FieldErrors<UploadImageFormValues>;
 };

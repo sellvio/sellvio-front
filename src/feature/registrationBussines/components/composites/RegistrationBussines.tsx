@@ -4,17 +4,20 @@ import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 import Link from 'next/link';
 import RegistrationBussinesForm from '../primitives/RegistrationBussinesForm';
-import { CompanySchema, CompanyValues } from '@/feature/schema/companySchema';
 import RegistrationAs from '@/feature/components/composites/RegistrationAs';
 import BussinesCreatorBtnSlider from '@/feature/Authorization/components/primitives/BussinesCreatorBtnSlider';
+import {
+  UploadImageFormValues,
+  uploadImageSchema,
+} from '@/feature/schema/uploadImageSchema';
 
 const RegistrationBussines = () => {
   const {
     register,
-    // handleSubmit,
+    setValue,
     formState: { errors },
-  } = useForm<CompanyValues>({
-    resolver: zodResolver(CompanySchema),
+  } = useForm<UploadImageFormValues>({
+    resolver: zodResolver(uploadImageSchema),
   });
 
   return (
@@ -40,7 +43,11 @@ const RegistrationBussines = () => {
           creatorAuth={'/registrationCreator'}
           bussinesAuth={'/registrationBussines'}
         />
-        <RegistrationBussinesForm register={register} errors={errors} />
+        <RegistrationBussinesForm
+          register={register}
+          setValue={setValue}
+          errors={errors}
+        />
         <RegistrationAs
           accountInfo={'არ გაქვს ექაუნთი?'}
           bussines={'დარეგისტრირდი როგორც ბიზნესი'}
