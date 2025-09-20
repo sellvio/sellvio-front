@@ -37,3 +37,23 @@ export type socmediaPlatform = {
   title: string;
   placeholder: string;
 };
+export type Creator = {
+  id: number;
+  name: string;
+  badge: string;
+  badgeIcon: string;
+  profileImg: string;
+  location: {
+    icon: string;
+    text: string;
+  };
+  joined: {
+    icon: string;
+    text: string;
+  };
+  views: {
+    icon: string;
+    text: string;
+  };
+  bio: string;
+};

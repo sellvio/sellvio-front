@@ -1,4 +1,4 @@
-import { socmediaPlatform } from "../types";
+import { Creator, socmediaPlatform } from "../types";
 
 export const socmediaPlatforms: socmediaPlatform[] = [
   {
@@ -24,5 +24,27 @@ export const socmediaPlatforms: socmediaPlatform[] = [
     src: "/images/svg/facebook.svg",
     title: "Facebook",
     placeholder: "noza@example.com",
+  },
+];
+export const creators: Creator[] = [
+  {
+    id: 1,
+    name: "სალომე შავიანიძე",
+    badge: "ტოპ შემქმნელი",
+    badgeIcon: "/images/svg/diamond.svg",
+    profileImg: "/images/svg/creatorProfile.svg",
+    location: {
+      icon: "/images/svg/mapPin.svg",
+      text: "Georgia, Tbilisi",
+    },
+    joined: {
+      icon: "/images/svg/calendar.svg",
+      text: "შეურთდა მარტი 2025",
+    },
+    views: {
+      icon: "/images/svg/eye.svg",
+      text: "საშუალო 25,000 ნახვა",
+    },
+    bio: "კონტეტის შემქმნელი, სპეციალიზირებული ტექნოლოგიურ მიმოხილვებსა და ცხოვრების წესის კონტენტში. გატაცებული მიმზიდველი ვიდეოების შექმნით, რომლებიც ეხმარება ადამიანებს ინფორმირებული გადაწყვეტილებების მიღებაში",
   },
 ];
