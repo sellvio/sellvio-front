@@ -41,9 +41,15 @@ const TagInput = <T extends Record<string, unknown>>({
 
       <input
         type="hidden"
-        value={JSON.stringify(items)} // array → string
+        value={JSON.stringify(items)}
         {...register(name, {
-          setValueAs: (val) => JSON.parse(val || '[]'), // string → array
+          setValueAs: (val) => {
+            try {
+              return val ? JSON.parse(val) : [];
+            } catch {
+              return [];
+            }
+          },
         })}
       />
 

@@ -16,6 +16,8 @@ export type ReUsableInputProps<T extends FieldValues = FieldValues> = {
 };
 
 export type BussinesCreatorBtnSliderProps = {
-  creatorAuth: string;
-  bussinesAuth: string;
+  registrationType: 'bussines' | 'creator' | undefined;
+  setRegistrationType: React.Dispatch<
+    React.SetStateAction<'bussines' | 'creator'>
+  >;
 };

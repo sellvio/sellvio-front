@@ -1,33 +1,14 @@
 'use client';
-import { useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
 import { BussinesCreatorBtnSliderProps } from '../../type';
 
 const BussinesCreatorBtnSlider = ({
-  creatorAuth,
-  bussinesAuth,
+  setRegistrationType,
+  registrationType,
 }: BussinesCreatorBtnSliderProps) => {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const typeParam = searchParams.get('type');
-
-  const [registrationType, setRegistrationType] = useState<
-    'bussines' | 'creator'
-  >(typeParam === 'creator' ? 'creator' : 'bussines');
-
-  const handleClick = (type: 'bussines' | 'creator') => {
-    setRegistrationType(type);
-    const url =
-      type === 'creator'
-        ? creatorAuth + '?type=creator'
-        : bussinesAuth + '?type=bussines';
-    router.replace(url);
-  };
-
   return (
     <div className="flex justify-between bg-[var(--auth-buttonSlider-bg)] mt-[37px] px-[7px] py-[6px] rounded-[8px] w-full min-h-[56px]">
       <button
-        onClick={() => handleClick('bussines')}
+        onClick={() => setRegistrationType('bussines')}
         className={`w-1/2 font-bold text-[var(--auth-text-dark)] text-[18px] cursor-pointer rounded-[8px] ${
           registrationType === 'bussines' ? 'bg-[var(--white-color)]' : ''
         }`}
@@ -35,7 +16,7 @@ const BussinesCreatorBtnSlider = ({
         ბიზნესი
       </button>
       <button
-        onClick={() => handleClick('creator')}
+        onClick={() => setRegistrationType('creator')}
         className={`w-1/2 font-bold text-[var(--auth-text-dark)] text-[18px] cursor-pointer rounded-[8px] ${
           registrationType === 'creator' ? 'bg-[var(--white-color)]' : ''
         }`}

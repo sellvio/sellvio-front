@@ -10,12 +10,30 @@ import {
   UploadImageFormValues,
   uploadImageSchema,
 } from '@/feature/schema/uploadImageSchema';
+import RegistrationForm from '@/feature/registrationBussines/components/primitives/RegistrationForm';
+import {
+  RegistrationSchema,
+  RegistrationValues,
+} from '@/feature/schema/registrationSchema';
+import { useState } from 'react';
 
 const RegistrationBussines = () => {
+  const [registrationType, setRegistrationType] = useState<
+    'bussines' | 'creator'
+  >('creator');
+
   const {
-    register,
-    setValue,
-    formState: { errors },
+    register: registerUser,
+    formState: { errors: errorsUser },
+  } = useForm<RegistrationValues>({
+    resolver: zodResolver(RegistrationSchema),
+  });
+
+  // ბიზნესის ფორმა
+  const {
+    register: registerBussines,
+    setValue: setValueBussines,
+    formState: { errors: errorsBussines },
   } = useForm<UploadImageFormValues>({
     resolver: zodResolver(uploadImageSchema),
   });
@@ -40,14 +58,19 @@ const RegistrationBussines = () => {
           </p>
         </div>
         <BussinesCreatorBtnSlider
-          creatorAuth={'/registrationCreator'}
-          bussinesAuth={'/registrationBussines'}
+          registrationType={registrationType}
+          setRegistrationType={setRegistrationType}
         />
-        <RegistrationBussinesForm
-          register={register}
-          setValue={setValue}
-          errors={errors}
-        />
+        {registrationType === 'creator' ? (
+          <RegistrationForm register={registerUser} errors={errorsUser} />
+        ) : (
+          <RegistrationBussinesForm
+            register={registerBussines}
+            setValue={setValueBussines}
+            errors={errorsBussines}
+          />
+        )}
+
         <RegistrationAs
           accountInfo={'არ გაქვს ექაუნთი?'}
           bussines={'დარეგისტრირდი როგორც ბიზნესი'}
