@@ -76,7 +76,7 @@ const SocmediaPlatform = () => {
         </div>
         <div className="flex-1 min-w-[300px]">
           <h3 className="font-[700] text-[18px] text-[#000000] mb-4">
-            საშუალო ნახვები თითო პოსტზე{" "}
+            საშუალო ნახვები თითო პოსტზე
           </h3>
           <div className="w-full flex gap-4 items-center">
             <input

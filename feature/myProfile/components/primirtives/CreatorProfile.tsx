@@ -20,7 +20,7 @@ const CreatorProfile = () => {
               width={20}
               height={20}
               alt="diamond"
-            ></Image>
+            />
             <p>ტოპ შემქმნელი</p>
           </div>
         </div>
@@ -31,7 +31,7 @@ const CreatorProfile = () => {
               width={20}
               height={20}
               alt="diamond"
-            ></Image>
+            />
             <p className="text-[20px] font-[500] text-[#00000083]">
               Georgia, Tbilisi
             </p>
@@ -42,7 +42,7 @@ const CreatorProfile = () => {
               width={20}
               height={20}
               alt="diamond"
-            ></Image>
+            />
             <p className="text-[20px] font-[500] text-[#00000083]">
               შეუერთდა მარტი 2025
             </p>
@@ -53,7 +53,7 @@ const CreatorProfile = () => {
               width={20}
               height={20}
               alt="diamond"
-            ></Image>
+            />
             <p className="text-[20px] font-[500] text-[#00000083]">
               საშუალო 25,000 ნახვა
             </p>
