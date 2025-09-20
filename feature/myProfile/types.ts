@@ -35,4 +35,5 @@ export type socmediaPlatform = {
   id: string;
   src: string;
   title: string;
+  placeholder: string;
 };
