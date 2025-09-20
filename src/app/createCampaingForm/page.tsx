@@ -1,5 +1,5 @@
 import React from "react";
-import Form from "../../../feature/createCampaing/components/composites/Form";
+import Form from "../../../feature/createCampaing/components/composites/CampaingForm";
 
 const CreateCampaing = () => {
   return (
