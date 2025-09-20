@@ -75,7 +75,7 @@ const ExtraMedia = () => {
             <Button
               text="აირჩიე ფაილი"
               size="w-[267px] px-2 py-3 rounded-[8px] cursor-pointer"
-              color="bg-[#0866FF]"
+              color="bg-[#0866FF] text-[#ffffff]"
             />
           </div>
         ))}
