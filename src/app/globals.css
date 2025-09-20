@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -76,6 +76,17 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --white-color: #ffffff;
+  --auth-button-text: #f1e7ff;
+  --auth-border: #3012b3cc;
+  --auth-text-dark: #000000d4;
+  --auth-gradient-start: #3012b3;
+  --auth-gradient-end: #7b62e8;
+  --auth-registrationas-text: #583ccf;
+  --auth-buttonSlider-bg: #f2f5f9;
+  --auth-input-border: #e3e8ef;
+  --auth-social-input-border: #111827;
+  --auth-tag-bg: #3012b31f;
 }
 
 .dark {
