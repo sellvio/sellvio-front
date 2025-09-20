@@ -21,7 +21,7 @@ export const RegistrationSchema = z.object({
 
 export type RegistrationValues = z.infer<typeof RegistrationSchema>;
 
-export const RegistrationStepBussinesSchema = z
+export const RegistrationStepBusinessSchema = z
   .object({
     contactNumber: z.string().min(9, { message: 'ნომერი ძალიან მოკლეა' }),
     email: z.string().email({ message: 'შეიყვანე სწორი Email' }),
@@ -36,6 +36,6 @@ export const RegistrationStepBussinesSchema = z
     path: ['confirmPassword'],
   });
 
-export type RegistrationStepBussinesValues = z.infer<
-  typeof RegistrationStepBussinesSchema
+export type RegistrationStepBusinesValuess = z.infer<
+  typeof RegistrationStepBusinessSchema
 >;

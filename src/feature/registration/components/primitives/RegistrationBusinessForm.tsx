@@ -6,9 +6,9 @@ import TagInput from '@/feature/registrationSocials/components/primitives/TagInp
 
 import Image from 'next/image';
 
-import { RegistrationBussinesFormProps } from '@/feature/registrationSocials/type';
+import { RegistrationBusinessFormProps } from '@/feature/registrationSocials/type';
 
-const RegistrationBussinesForm: React.FC<RegistrationBussinesFormProps> = ({
+const RegistrationBusinessForm: React.FC<RegistrationBusinessFormProps> = ({
   register,
   setValue,
   errors,
@@ -113,4 +113,4 @@ const RegistrationBussinesForm: React.FC<RegistrationBussinesFormProps> = ({
   );
 };
 
-export default RegistrationBussinesForm;
+export default RegistrationBusinessForm;

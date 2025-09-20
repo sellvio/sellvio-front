@@ -88,8 +88,10 @@ const RegistrationSocials = () => {
         />
         <RegistrationAs
           accountInfo={'გაქვს ექაუნთი?'}
-          bussines={'შედით როგორც ბიზნესი'}
+          business={'შედით როგორც ბიზნესი'}
           creator={'შედით როგორც შემქმნელი'}
+          creatorAuth={'login'}
+          businessAuth={'login'}
         />
       </div>
     </div>

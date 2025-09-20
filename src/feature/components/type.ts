@@ -1,5 +1,5 @@
 export type RegistrationAsProps = {
-  bussines: string;
+  business: string;
   creator: string;
   accountInfo: string;
   creatorAuth: string;

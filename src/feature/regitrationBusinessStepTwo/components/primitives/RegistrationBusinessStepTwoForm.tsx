@@ -1,10 +1,10 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import ReUsableInput from '@/feature/Authorization/components/primitives/ReusableInput';
-import { RegistrationStepBussinesValues } from '@/feature/registrationSocials/type';
+import { RegistrationStepBusinessValues } from '@/feature/registrationSocials/type';
 
-const RegistrationBussinesStepTwoForm: React.FC<
-  RegistrationStepBussinesValues
+const RegistrationBusinessStepTwoForm: React.FC<
+  RegistrationStepBusinessValues
 > = ({ register, errors }) => {
   return (
     <form className="space-y-[22px] mt-[39px]">
@@ -58,4 +58,4 @@ const RegistrationBussinesStepTwoForm: React.FC<
   );
 };
 
-export default RegistrationBussinesStepTwoForm;
+export default RegistrationBusinessStepTwoForm;

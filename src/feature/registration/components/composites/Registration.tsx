@@ -1,44 +1,25 @@
 'use client';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import Link from 'next/link';
-import RegistrationBussinesForm from '../primitives/RegistrationBussinesForm';
-import RegistrationAs from '@/feature/components/composites/RegistrationAs';
-import BussinesCreatorBtnSlider from '@/feature/Authorization/components/primitives/BusinessCreatorBtnSlider';
-import {
-  UploadImageFormValues,
-  uploadImageSchema,
-} from '@/feature/schema/uploadImageSchema';
 import RegistrationForm from '@/feature/registration/components/primitives/RegistrationForm';
+import RegistrationAs from '@/feature/components/composites/RegistrationAs';
 import {
   RegistrationSchema,
   RegistrationValues,
 } from '@/feature/schema/registrationSchema';
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { useRouter } from 'next/navigation';
-
-type RegistrationType = 'bussines' | 'creator';
+import {
+  UploadImageFormValues,
+  uploadImageSchema,
+} from '@/feature/schema/uploadImageSchema';
+import { useRegistrationType } from '@/feature/components/composites/RegistrationType';
+import RegistrationBusinessForm from '../primitives/RegistrationBusinessForm';
+import BusinessCreatorBtnSlider from '@/feature/Authorization/components/primitives/BusinessCreatorBtnSlider';
 
 const Registration = () => {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  const typeFromUrl =
-    (searchParams.get('type') as RegistrationType) || 'creator';
-
-  const [registrationType, setRegistrationType] =
-    useState<RegistrationType>(typeFromUrl);
-
-  useEffect(() => {
-    setRegistrationType(typeFromUrl);
-  }, [typeFromUrl]);
-
-  const handleChangeType = (type: RegistrationType) => {
-    setRegistrationType(type);
-    router.push(`/registration?type=${type}`);
-  };
+  const { registrationType, handleChangeType } =
+    useRegistrationType('/registration');
 
   const {
     register: registerUser,
@@ -48,9 +29,9 @@ const Registration = () => {
   });
 
   const {
-    register: registerBussines,
-    setValue: setValueBussines,
-    formState: { errors: errorsBussines },
+    register: registerBusiness,
+    setValue: setValueBusiness,
+    formState: { errors: errorsBusiness },
   } = useForm<UploadImageFormValues>({
     resolver: zodResolver(uploadImageSchema),
   });
@@ -74,23 +55,25 @@ const Registration = () => {
             შეარჩიე შენი პროფილის სტილი
           </p>
         </div>
-        <BussinesCreatorBtnSlider
+
+        <BusinessCreatorBtnSlider
           registrationType={registrationType}
           setRegistrationType={handleChangeType}
         />
+
         {registrationType === 'creator' ? (
           <RegistrationForm register={registerUser} errors={errorsUser} />
         ) : (
-          <RegistrationBussinesForm
-            register={registerBussines}
-            setValue={setValueBussines}
-            errors={errorsBussines}
+          <RegistrationBusinessForm
+            register={registerBusiness}
+            setValue={setValueBusiness}
+            errors={errorsBusiness}
           />
         )}
 
         <RegistrationAs
           accountInfo={'გაქვს ექაუნთი?'}
-          bussines={'შედით როგორც ბიზნესი'}
+          business={'შედით როგორც ბიზნესი'}
           creator={'შედით როგორც შემქმნელი'}
           creatorAuth={'login'}
           businessAuth={'login'}

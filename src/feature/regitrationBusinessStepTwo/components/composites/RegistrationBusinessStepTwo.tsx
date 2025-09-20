@@ -3,19 +3,17 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 import Link from 'next/link';
-import {
-  RegistrationStepBussinesSchema,
-  RegistrationStepBussinesValues,
-} from '@/feature/schema/registrationSchema';
-import RegistrationBussinesStepTwoForm from '../primitives/RegistrationBussinesStepTwoForm';
 import RegistrationAs from '@/feature/components/composites/RegistrationAs';
+import { RegistrationStepBusinessValues } from '@/feature/registrationSocials/type';
+import RegistrationBusinessForm from '@/feature/registration/components/primitives/RegistrationBusinessForm';
+import { RegistrationStepBusinessSchema } from '@/feature/schema/registrationSchema';
 
 const RegistrationBusinessStepTwo = () => {
   const {
     register,
     formState: { errors },
-  } = useForm<RegistrationStepBussinesValues>({
-    resolver: zodResolver(RegistrationStepBussinesSchema),
+  } = useForm<RegistrationStepBusinessValues>({
+    resolver: zodResolver(RegistrationStepBusinessSchema),
   });
 
   return (
@@ -37,11 +35,13 @@ const RegistrationBusinessStepTwo = () => {
             შეარჩიე შენი პროფილის სტილი
           </p>
         </div>
-        <RegistrationBussinesStepTwoForm register={register} errors={errors} />
+        <RegistrationBusinessForm register={register} errors={errors} />
         <RegistrationAs
           accountInfo={'გაქვს ექაუნთი?'}
-          bussines={'შედით როგორც ბიზნესი'}
+          business={'შედით როგორც ბიზნესი'}
           creator={'შედით როგორც შემქმნელი'}
+          creatorAuth={'login'}
+          businessAuth={'login'}
         />
       </div>
     </div>

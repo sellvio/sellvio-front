@@ -1,16 +1,16 @@
 'use client';
-import { BussinesCreatorBtnSliderProps } from '../../type';
+import { BusinessCreatorBtnSliderProps } from '../../type';
 
 const BusinessCreatorBtnSlider = ({
   setRegistrationType,
   registrationType,
-}: BussinesCreatorBtnSliderProps) => {
+}: BusinessCreatorBtnSliderProps) => {
   return (
     <div className="flex justify-between bg-[var(--auth-buttonSlider-bg)] mt-[37px] px-[7px] py-[6px] rounded-[8px] w-full min-h-[56px]">
       <button
-        onClick={() => setRegistrationType('bussines')}
+        onClick={() => setRegistrationType('business')}
         className={`w-1/2 font-bold text-[var(--auth-text-dark)] text-[18px] cursor-pointer rounded-[8px] ${
-          registrationType === 'bussines' ? 'bg-[var(--white-color)]' : ''
+          registrationType === 'business' ? 'bg-[var(--white-color)]' : ''
         }`}
       >
         ბიზნესი

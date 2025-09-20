@@ -7,8 +7,8 @@ import {
 import { SocialsValues } from '../schema/SocialsSchema';
 import { RegistrationValues } from '../schema/registrationSchema';
 import { CompanyValues } from '../schema/companySchema';
-import { RegistrationStepTwoValues } from '../schema/bussinesRegistrationSchemaStepTwo';
 import { UploadImageFormValues } from '../schema/uploadImageSchema';
+import { RegistrationStepTwoValues } from '../schema/businessRegistrationSchemaStepTwo';
 
 export type TagInputProps<T extends Record<string, unknown>> = {
   name: Path<T>;
@@ -31,12 +31,12 @@ export type CompanyFormProps = {
   errors: FieldErrors<CompanyValues>;
 };
 
-export type RegistrationStepBussinesValues = {
+export type RegistrationStepBusinessValues = {
   register: UseFormRegister<RegistrationStepTwoValues>;
   errors: FieldErrors<RegistrationStepTwoValues>;
 };
 
-export type RegistrationBussinesFormProps = {
+export type RegistrationBusinessFormProps = {
   register: UseFormRegister<UploadImageFormValues>;
   setValue: UseFormSetValue<UploadImageFormValues>;
   errors: FieldErrors<UploadImageFormValues>;
