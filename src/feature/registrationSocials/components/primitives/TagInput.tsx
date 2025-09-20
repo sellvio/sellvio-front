@@ -33,7 +33,7 @@ const TagInput = <T extends Record<string, unknown>>({
       <input
         type="text"
         placeholder="შეიყვანე თეგი"
-        className="px-[18px] py-[17px] border border-[#E3E8EF] rounded-[8px] focus:outline-[var(--auth-gradient-start)] w-full min-h-[56px] font-bold text-[18px]"
+        className="px-[18px] py-[17px] border border-[var(--auth-input-border)] rounded-[8px] focus:outline-[var(--auth-gradient-start)] w-full min-h-[56px] font-bold text-[18px]"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         onKeyDown={handleKeyDown}
@@ -58,7 +58,7 @@ const TagInput = <T extends Record<string, unknown>>({
           {items.map((item, index) => (
             <span
               key={index}
-              className="flex justify-center items-center gap-[5px] bg-[#3012B31F] px-[12px] py-[6px] border border-[var(--auth-border)] rounded-[8px] font-semibold text-[#111827]"
+              className="flex justify-center items-center gap-[5px] bg-[var(--auth-tag-bg)] px-[12px] py-[6px] border text-[var(--auth-social-input-border)] border-[var(--auth-border)] rounded-[8px] font-semibold"
             >
               {item}
               <button

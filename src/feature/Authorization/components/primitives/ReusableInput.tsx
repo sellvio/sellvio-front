@@ -21,7 +21,7 @@ const ReUsableInput = <T extends Record<string, unknown>>({
     </label>
     <div className="w-full">
       <input
-        className="px-[18px] py-[17px] border border-[#E3E8EF] rounded-[8px] focus:outline-[#3012B3CC] w-full min-h-[56px] font-bold text-[18px]"
+        className="px-[18px] py-[17px] border border-[var(--auth-input-border)] rounded-[8px] focus:outline-[var(--auth-border)] w-full min-h-[56px] font-bold text-[18px]"
         type={type}
         placeholder={placeholder}
         id={id as string}

@@ -1,8 +1,8 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import ReUsableInput from '@/feature/authorization/components/primitives/ReusableInput';
 import TagInput from '../primitives/TagInput';
 import { RegistrationSocialsFormProps } from '../../type';
+import ReUsableInput from '@/feature/Authorization/components/primitives/ReusableInput';
 
 const RegistrationSocialsForm: React.FC<RegistrationSocialsFormProps> = ({
   visible,

@@ -11,11 +11,15 @@ const RegistrationAs = ({
       <p className="mt-[33px] font-bold text-[18px] text-[var(--auth-text-dark)] text-center">
         {accountInfo}
         <Link href="/registrationBussines?type=bussines">
-          <span className="ml-[4px] text-[#583CCF]">{bussines}</span>
+          <span className="ml-[4px] text-[var(--auth-registrationas-text)]">
+            {bussines}
+          </span>
         </Link>
         <span className="mx-[4px]">ან</span>
         <Link href="/registrationCreator?type=creator">
-          <span className="text-[#583CCF]">{creator}</span>
+          <span className="text-[var(--auth-registrationas-text)]">
+            {creator}
+          </span>
         </Link>
       </p>
     </div>
