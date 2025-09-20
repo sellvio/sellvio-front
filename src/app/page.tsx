@@ -1,10 +1,10 @@
-import Form from "@/components/createCampaing/components/Form";
-import MyProfile from "@/components/myProfile/components/MyProfile";
+import Form from "../../feature/createCampaing/components/composites/Form";
+import MyProfile from "../../feature/myProfile/components/composites/MyProfile";
 
 export default function Home() {
   return (
     <div>
-      {/* <MyProfile /> */}
+      <MyProfile />
       <Form />
     </div>
   );
