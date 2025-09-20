@@ -1,7 +1,7 @@
 'use client';
 import { BussinesCreatorBtnSliderProps } from '../../type';
 
-const BussinesCreatorBtnSlider = ({
+const BusinessCreatorBtnSlider = ({
   setRegistrationType,
   registrationType,
 }: BussinesCreatorBtnSliderProps) => {
@@ -27,4 +27,4 @@ const BussinesCreatorBtnSlider = ({
   );
 };
 
-export default BussinesCreatorBtnSlider;
+export default BusinessCreatorBtnSlider;

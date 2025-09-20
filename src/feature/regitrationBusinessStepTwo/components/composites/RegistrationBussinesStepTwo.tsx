@@ -10,7 +10,7 @@ import {
 import RegistrationBussinesStepTwoForm from '../primitives/RegistrationBussinesStepTwoForm';
 import RegistrationAs from '@/feature/components/composites/RegistrationAs';
 
-const RegistrationBussinesStepTwo = () => {
+const RegistrationBusinessStepTwo = () => {
   const {
     register,
     formState: { errors },
@@ -48,4 +48,4 @@ const RegistrationBussinesStepTwo = () => {
   );
 };
 
-export default RegistrationBussinesStepTwo;
+export default RegistrationBusinessStepTwo;

@@ -5,9 +5,10 @@ import { useForm } from 'react-hook-form';
 import { FormSchema, FormValues } from '../../../schema/authorisationSchema';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import BussinesCreatorBtnSlider from '../primitives/BussinesCreatorBtnSlider';
+import BussinesCreatorBtnSlider from '../primitives/BusinessCreatorBtnSlider';
 import ReUsableInput from '../primitives/ReusableInput';
 import RegistrationAs from '@/feature/components/composites/RegistrationAs';
+import BusinessCreatorBtnSlider from '../primitives/BusinessCreatorBtnSlider';
 
 const Authorization = () => {
   const {
@@ -34,7 +35,7 @@ const Authorization = () => {
             შეარჩიე შენი პროფილის სტილი
           </p>
         </div>
-        <BussinesCreatorBtnSlider
+        <BusinessCreatorBtnSlider
           creatorAuth={'/auth'}
           bussinesAuth={'/auth'}
         />

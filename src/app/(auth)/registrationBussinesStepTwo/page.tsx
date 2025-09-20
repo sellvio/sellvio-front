@@ -1,12 +1,9 @@
-import RegistrationBussinesStepTwo from '@/feature/regitrationBussinesStepTwo/components/composites/RegistrationBussinesStepTwo';
-import React from 'react';
-
-const RegistrationBussinesStepTwoPage = () => {
+const RegistrationBusinessStepTwoPage = () => {
   return (
     <div>
-      <RegistrationBussinesStepTwo />
+      <RegistrationBusinessStepTwoPage />
     </div>
   );
 };
 
-export default RegistrationBussinesStepTwoPage;
+export default RegistrationBusinessStepTwoPage;

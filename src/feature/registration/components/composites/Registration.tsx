@@ -5,19 +5,19 @@ import Image from 'next/image';
 import Link from 'next/link';
 import RegistrationBussinesForm from '../primitives/RegistrationBussinesForm';
 import RegistrationAs from '@/feature/components/composites/RegistrationAs';
-import BussinesCreatorBtnSlider from '@/feature/Authorization/components/primitives/BussinesCreatorBtnSlider';
+import BussinesCreatorBtnSlider from '@/feature/Authorization/components/primitives/BusinessCreatorBtnSlider';
 import {
   UploadImageFormValues,
   uploadImageSchema,
 } from '@/feature/schema/uploadImageSchema';
-import RegistrationForm from '@/feature/registrationBussines/components/primitives/RegistrationForm';
+import RegistrationForm from '@/feature/registration/components/primitives/RegistrationForm';
 import {
   RegistrationSchema,
   RegistrationValues,
 } from '@/feature/schema/registrationSchema';
 import { useState } from 'react';
 
-const RegistrationBussines = () => {
+const Registration = () => {
   const [registrationType, setRegistrationType] = useState<
     'bussines' | 'creator'
   >('creator');
@@ -29,7 +29,6 @@ const RegistrationBussines = () => {
     resolver: zodResolver(RegistrationSchema),
   });
 
-  // ბიზნესის ფორმა
   const {
     register: registerBussines,
     setValue: setValueBussines,
@@ -81,4 +80,4 @@ const RegistrationBussines = () => {
   );
 };
 
-export default RegistrationBussines;
+export default Registration;
