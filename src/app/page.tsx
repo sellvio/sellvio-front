@@ -1,11 +1,7 @@
-import Form from "../../feature/createCampaing/components/composites/Form";
-import MyProfile from "../../feature/myProfile/components/composites/MyProfile";
+import React from "react";
 
-export default function Home() {
-  return (
-    <div>
-      <MyProfile />
-      <Form />
-    </div>
-  );
-}
+const page = () => {
+  return <div>page</div>;
+};
+
+export default page;
