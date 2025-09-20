@@ -14,10 +14,7 @@ export type ReUsableInputProps<T extends FieldValues = FieldValues> = {
   register: UseFormRegister<T>;
   errors: FieldErrors<T>;
 };
-
 export type BussinesCreatorBtnSliderProps = {
   registrationType: 'bussines' | 'creator' | undefined;
-  setRegistrationType: React.Dispatch<
-    React.SetStateAction<'bussines' | 'creator'>
-  >;
+  setRegistrationType: (type: 'bussines' | 'creator') => void;
 };

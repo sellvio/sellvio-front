@@ -15,12 +15,30 @@ import {
   RegistrationSchema,
   RegistrationValues,
 } from '@/feature/schema/registrationSchema';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+
+type RegistrationType = 'bussines' | 'creator';
 
 const Registration = () => {
-  const [registrationType, setRegistrationType] = useState<
-    'bussines' | 'creator'
-  >('creator');
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const typeFromUrl =
+    (searchParams.get('type') as RegistrationType) || 'creator';
+
+  const [registrationType, setRegistrationType] =
+    useState<RegistrationType>(typeFromUrl);
+
+  useEffect(() => {
+    setRegistrationType(typeFromUrl);
+  }, [typeFromUrl]);
+
+  const handleChangeType = (type: RegistrationType) => {
+    setRegistrationType(type);
+    router.push(`/registration?type=${type}`);
+  };
 
   const {
     register: registerUser,
@@ -58,7 +76,7 @@ const Registration = () => {
         </div>
         <BussinesCreatorBtnSlider
           registrationType={registrationType}
-          setRegistrationType={setRegistrationType}
+          setRegistrationType={handleChangeType}
         />
         {registrationType === 'creator' ? (
           <RegistrationForm register={registerUser} errors={errorsUser} />
@@ -71,9 +89,11 @@ const Registration = () => {
         )}
 
         <RegistrationAs
-          accountInfo={'არ გაქვს ექაუნთი?'}
-          bussines={'დარეგისტრირდი როგორც ბიზნესი'}
-          creator={'დარეგისტრირდი როგორც შემქმნელი'}
+          accountInfo={'გაქვს ექაუნთი?'}
+          bussines={'შედით როგორც ბიზნესი'}
+          creator={'შედით როგორც შემქმნელი'}
+          creatorAuth={'login'}
+          businessAuth={'login'}
         />
       </div>
     </div>

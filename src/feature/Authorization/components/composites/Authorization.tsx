@@ -5,12 +5,33 @@ import { useForm } from 'react-hook-form';
 import { FormSchema, FormValues } from '../../../schema/authorisationSchema';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import BussinesCreatorBtnSlider from '../primitives/BusinessCreatorBtnSlider';
 import ReUsableInput from '../primitives/ReusableInput';
 import RegistrationAs from '@/feature/components/composites/RegistrationAs';
 import BusinessCreatorBtnSlider from '../primitives/BusinessCreatorBtnSlider';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
+type RegistrationType = 'bussines' | 'creator';
 
 const Authorization = () => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const typeFromUrl =
+    (searchParams.get('type') as RegistrationType) || 'creator';
+
+  const [registrationType, setRegistrationType] =
+    useState<RegistrationType>(typeFromUrl);
+
+  useEffect(() => {
+    setRegistrationType(typeFromUrl);
+  }, [typeFromUrl]);
+
+  const handleChangeType = (type: RegistrationType) => {
+    setRegistrationType(type);
+    router.push(`/registration?type=${type}`);
+  };
+
   const {
     register,
     // handleSubmit,
@@ -36,8 +57,8 @@ const Authorization = () => {
           </p>
         </div>
         <BusinessCreatorBtnSlider
-          creatorAuth={'/auth'}
-          bussinesAuth={'/auth'}
+          registrationType={registrationType}
+          setRegistrationType={handleChangeType}
         />
         <form className="space-y-[22px] mt-[39px]">
           <div className="space-y-[30px]">
@@ -64,6 +85,8 @@ const Authorization = () => {
           accountInfo={'არ გაქვს ექაუნთი?'}
           bussines={'დარეგისტრირდი როგორც ბიზნესი'}
           creator={'დარეგისტრირდი როგორც შემქმნელი'}
+          creatorAuth={'registration'}
+          businessAuth={'registration'}
         />
       </div>
     </div>
