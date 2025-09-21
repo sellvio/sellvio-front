@@ -1,4 +1,5 @@
 import BusinessCreatorCards from '../primitives/BusinessCreatorCards';
+import CompanyCards from '../primitives/CompanyCards';
 import HeroSection from '../primitives/HeroSection';
 
 const Lending = () => {
@@ -6,6 +7,7 @@ const Lending = () => {
     <div>
       <HeroSection />
       <BusinessCreatorCards />
+      <CompanyCards />
     </div>
   );
 };
