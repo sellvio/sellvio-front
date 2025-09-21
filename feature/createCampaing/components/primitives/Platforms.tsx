@@ -4,7 +4,7 @@ import { Socmedia } from "../../data/data";
 
 const Platforms = () => {
   return (
-    <div className="max-w-[1222px] w-full bg-transparent mx-auto  rounded-[8px] px-[30px] py-[30px] flex flex-col border">
+    <div className="max-w-[1222px] w-full bg-transparent mx-auto rounded-[8px] px-[30px] py-[30px] flex flex-col border">
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
           <Image
@@ -21,14 +21,15 @@ const Platforms = () => {
           აირჩიე რომელ პლატფორმებზე გსურთ ამ კამპანიის მიზნობრივი გამოყენება
         </p>
       </div>
-      <div className="flex   gap-[185px] w-full mt-[26px]">
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full mt-[26px]">
         {Socmedia?.map((eachelement) => (
           <button
             key={eachelement.id}
             type="button"
-            className="w-[264px] h-[111px] bg-transparent border rounded-[8px] 
-               flex flex-col items-center justify-center gap-4 cursor-pointer 
-               focus:bg-[#F0F0F0] outline-none"
+            className="w-full h-[111px] bg-transparent border rounded-[8px] 
+              flex flex-col items-center justify-center gap-4 cursor-pointer 
+              hover:bg-[#F9F9F9] focus:bg-[#F0F0F0] transition-colors outline-none"
           >
             <Image
               src={eachelement.img}
