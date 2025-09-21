@@ -27,7 +27,7 @@ const Platforms = () => {
           <button
             key={eachelement.id}
             type="button"
-            className="w-full h-[111px] bg-transparent border rounded-[8px] 
+            className="lg:w-[264px] h-[111px] bg-transparent border lg:mx-auto rounded-[8px] 
               flex flex-col items-center justify-center gap-4 cursor-pointer 
               hover:bg-[#F9F9F9] focus:bg-[#F0F0F0] transition-colors outline-none"
           >
