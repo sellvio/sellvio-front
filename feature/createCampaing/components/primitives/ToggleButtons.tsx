@@ -10,16 +10,16 @@ const ToggleButtons = ({ active, setActive }: ButtonSliderProps) => {
         transition={{ type: "spring", stiffness: 300, damping: 40 }}
       />
       <button
-        className={`flex justify-center relative z-[10] items-center rounded-[12px] text-[#00000083] w-1/2 font-bold  cursor-pointer`}
+        className={`flex justify-center relative z-[10] items-center rounded-[12px] text-[#00000083] w-1/2 font-[700]  cursor-pointer`}
         onClick={() => setActive("analytic")}
       >
-        ბიზნესი
+        ანალიტიკა
       </button>
       <button
-        className={`flex justify-center relative z-[10] items-center rounded-[12px] text-[#00000083] w-1/2 font-bold  cursor-pointer`}
+        className={`flex justify-center relative z-[10] items-center rounded-[12px] text-[#00000083] w-1/2 font-[700]  cursor-pointer`}
         onClick={() => setActive("campaing")}
       >
-        შემქმნელი
+        კამპინგი
       </button>
     </div>
   );

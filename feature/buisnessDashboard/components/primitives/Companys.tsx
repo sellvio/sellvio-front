@@ -56,8 +56,8 @@ const Companys = () => {
                 </div>
 
                 <div className="absolute bottom-[22px] left-[19px]">
-                  <p className="text-[18px] font-bold text-white drop-shadow-md">
-                    ვიდეოს სახელწოდება
+                  <p className="text-[18px] font-[700] text-white drop-shadow-md">
+                    კამპანიის სახელწოდება
                   </p>
                 </div>
               </div>
