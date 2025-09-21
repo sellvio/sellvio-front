@@ -41,7 +41,7 @@ const CompanyDetails = () => {
       </div>
 
       <form>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap md:w-full">
           <div className="flex flex-col">
             <h3 className="mt-[26px] text-[#000000] font-[700] text-[18px] ">
               კამპანიის ხანგრძლივობა (დღეები)
@@ -95,9 +95,6 @@ const CompanyDetails = () => {
             className="w-full border border-[#E3E8EF] rounded px-3 py-2 text-[#000000] min-h-[218px] font-[700] outline-none resize-none"
           />
 
-          <h3 className="text-[#000000] font-[700] text-[18px] mb-4 mt-6">
-            კამპანიის თეგები
-          </h3>
           <Tags label="კამპანიის თეგები" placeholder="თეგების დამატება" />
         </div>
 

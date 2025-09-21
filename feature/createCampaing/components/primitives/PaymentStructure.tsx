@@ -57,7 +57,7 @@ const PaymentStructure = () => {
                 type="text"
                 placeholder="რაოდენობა"
                 {...register("auditory")}
-                className="w-[875px] border border-[#E3E8EF] rounded px-3 py-2 text-[#000000] font-[700] outline-none"
+                className="w-full border border-[#E3E8EF] rounded px-3 py-2 text-[#000000] font-[700] outline-none"
               />
               {errors.auditory && (
                 <span className="text-xs text-red-500 mt-1">
