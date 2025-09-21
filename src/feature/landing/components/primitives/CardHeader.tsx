@@ -5,7 +5,7 @@ const CardHeader = ({ task }: CompanyCardsProps) => {
   return (
     <div className="flex justify-between w-full">
       <div className="flex items-center gap-[7px]">
-        <div className="bg-[#D9D9D9] border border-[#0000007A] rounded-[8px] w-[28px] h-[28px]"></div>
+        <div className="bg-[var(--lending-card-bg)] border border-[var(--lending-card-border)] rounded-[8px] w-[28px] h-[28px]"></div>
         <p className="font-bold text-[22px]">{task.title}</p>
         {task.verified && (
           <Image

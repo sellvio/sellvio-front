@@ -18,7 +18,7 @@ const CompanyCards = () => {
       id="discoverbusiness"
       className="space-y-[31px] mx-auto mt-[59px] w-full max-w-[1440px]"
     >
-      <p className="font-bold text-[#583CCF] text-[32px] text-center">
+      <p className="font-bold text-[32px] text-[var(--auth-registrationas-text)] text-center">
         აღმოაჩინე აქტიური კამპანიები
       </p>
 

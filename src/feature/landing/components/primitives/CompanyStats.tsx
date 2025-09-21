@@ -8,9 +8,9 @@ const CompanyStats = () => {
         return (
           <div
             key={companyStat.id}
-            className="flex gap-[20px] bg-[#FFFFFF99] shadow-[0px_0px_9.9px_0px_#00000040] px-[15px] py-[20px] border-[#583CCF] border-[2px] rounded-[8px] w-full max-w-[396px] min-h-[103px]"
+            className="flex gap-[20px] bg-[var(--transperent-white)] shadow-[0px_0px_9.9px_0px_#00000040] px-[15px] py-[20px] border-[2px] border-[var(--auth-registrationas-text)] rounded-[8px] w-full max-w-[396px] min-h-[103px]"
           >
-            <div className="flex justify-center items-center bg-[#3012B314] border-[#00000014] border-[2px] rounded-full w-[60px] h-[60px] shrink-0">
+            <div className="flex justify-center items-center bg-[var(--company-frame-bg)] border-[2px] border-[var(--company-frame-border)] rounded-full w-[60px] h-[60px] shrink-0">
               <Image
                 src={companyStat.icon}
                 alt={companyStat.alt}
@@ -33,7 +33,7 @@ const CompanyStats = () => {
                 </div>
                 <p className="font-bold text-[18px]">{companyStat.title}</p>
               </div>
-              <p className="font-medium text-[#000000BD] text-[12px]">
+              <p className="font-medium text-[12px] text-[var(--company-cards-text)]">
                 {companyStat.description}
               </p>
             </div>

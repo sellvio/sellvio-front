@@ -5,7 +5,7 @@ import CardStats from './CardStats';
 
 const CompanyCard = ({ task }: CompanyCardsProps) => {
   return (
-    <div className="flex flex-col justify-between px-[25px] py-[23px] border-[#3012B3CC] border-[2px] rounded-[8px] w-full max-w-[445px] h-full min-h-[417px]">
+    <div className="flex flex-col justify-between px-[25px] py-[23px] border-[2px] border-[var(--auth-border)] rounded-[8px] w-full max-w-[445px] h-full min-h-[417px]">
       <div>
         <CardHeader task={task} />
 
@@ -17,7 +17,7 @@ const CompanyCard = ({ task }: CompanyCardsProps) => {
             {task.categories.map((category, index) => (
               <span
                 key={index}
-                className="bg-[#F1E7FF] px-[10px] py-[6px] border border-[#3012B3] rounded-[60px] font-medium text-[#3012B3] text-[10px] cursor-default"
+                className="bg-[var(--auth-button-text)] px-[10px] py-[6px] border border-[var(--auth-gradient-start)] rounded-[60px] font-medium text-[10px] text-[var(--auth-gradient-start)] cursor-default"
               >
                 {category ? (
                   category
@@ -40,7 +40,7 @@ const CompanyCard = ({ task }: CompanyCardsProps) => {
               width={18}
               height={18}
             />
-            <div className="flex font-bold text-[#000000D4] text-[12px]">
+            <div className="flex font-bold text-[12px] text-[var(--auth-text-dark)]">
               <p className="flex gap-[2px]">
                 {task.filters?.length ? (
                   task.filters.map((category, index) => (
@@ -62,7 +62,7 @@ const CompanyCard = ({ task }: CompanyCardsProps) => {
               width={18}
               height={18}
             />
-            <div className="flex gap-[4px] font-bold text-[#000000D4] text-[12px]">
+            <div className="flex gap-[4px] font-bold text-[12px] text-[var(--auth-text-dark)]">
               <p>ბოლო ვადა:</p>
               <p>{task.deadline}</p>
             </div>
@@ -70,7 +70,7 @@ const CompanyCard = ({ task }: CompanyCardsProps) => {
         </div>
       </div>
       <button
-        className="mt-[17px] rounded-[8px] w-full min-h-[39px] font-medium text-[#F1E7FF] text-[12px] cursor-pointer"
+        className="mt-[17px] rounded-[8px] w-full min-h-[39px] font-medium text-[12px] text-[var(--auth-button-text)] cursor-pointer"
         style={{
           background:
             'linear-gradient(90deg, rgba(48,18,179,1) 0%, rgba(123,98,232,1) 100%)',

@@ -15,7 +15,7 @@ const Header = () => {
             href={heroButton.href}
             className="w-[148px] h-[40px]"
           >
-            <button className="flex justify-center items-center bg-[#FFFFFF] hover:bg-[#583CCF] shadow-[0px_0px_8.8px_0px_#0000000A] border border-[#0000000A] rounded-[8px] w-full max-w-[148px] h-[40px] font-medium hover:font-bold hover:text-white transition-all duration-300 ease-in-out cursor-pointer">
+            <button className="flex justify-center items-center bg-[var(--white-color)] hover:bg-[var(--auth-registrationas-text)] shadow-[0px_0px_8.8px_0px_#0000000A] border border-[#0000000A] rounded-[8px] w-full max-w-[148px] h-[40px] font-medium hover:font-bold hover:text-white transition-all duration-300 ease-in-out cursor-pointer">
               {heroButton.label}
             </button>
           </Link>

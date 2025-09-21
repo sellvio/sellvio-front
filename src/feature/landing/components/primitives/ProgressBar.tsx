@@ -15,9 +15,9 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           ${goalAmount - currentAmount} დარჩა
         </p>
       </div>
-      <div className="bg-[#E6E7EB] rounded-full w-full h-2 overflow-hidden">
+      <div className="bg-[var(--gray-color)] rounded-full w-full h-2 overflow-hidden">
         <div
-          className="bg-[#8265FF] rounded-full h-full"
+          className="bg-[var(--lending-button)] rounded-full h-full"
           style={{ width: `${percentage}%` }}
         ></div>
       </div>

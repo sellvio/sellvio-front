@@ -16,10 +16,10 @@ const HeroSection = () => {
       <div className="z-[2] relative flex flex-col items-center">
         <Header />
         <div className="space-y-[20px] mt-[45px] w-full max-w-[1288px]">
-          <p className="max-w-[571px] font-medium text-[35px] text-white leading-10">
+          <p className="max-w-[571px] font-medium text-[35px] text-[var(--white-color)] leading-10">
             პლათფორმა, რომელიც აკავშირებს ბრენდებს და UGC კონტენტის შემქმნელებს
           </p>
-          <p className="max-w-[571px] font-medium text-[#B3B3B3] leading-5">
+          <p className="max-w-[571px] font-medium text-[var(--lending-text)] leading-5">
             პლათფორმა, სადაც ბიზნესები ქმნიან კამპანიებს, ხოლო კონტენტ
             კრეატორებს შეუძლიათ გამოიმუშაონ ფული კამპანიებზე შექმნილი კონტენტის
             პერფორმანსის შესაბამისად
