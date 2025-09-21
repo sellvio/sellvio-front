@@ -1,8 +1,8 @@
 import { ButtonProps } from '../type';
 
 export const heroButtons: ButtonProps[] = [
-  { id: 1, label: 'რეგისტრაცია', href: '/' },
-  { id: 2, label: 'ავტორიზაცია', href: '/' },
+  { id: 1, label: 'რეგისტრაცია', href: '/registration' },
+  { id: 2, label: 'ავტორიზაცია', href: '/login' },
 ];
 
 export const heroScrollDownButton: ButtonProps[] = [
