@@ -11,7 +11,7 @@ const HeroSection = () => {
         alt="backgroundImage"
         width={572}
         height={434}
-        className="top-[110] right-[58px] absolute"
+        className="right-[58px] bottom-[115px] absolute"
       />
       <div className="z-[2] relative flex flex-col items-center">
         <Header />
