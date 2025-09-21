@@ -13,11 +13,11 @@ const Platforms = () => {
             height={22}
             alt="logo"
           />
-          <h2 className="text-[27px] font-[600] text-[#000000]">
+          <h2 className="text-[27px] font-[600] text-[var(--black-color)]">
             აირჩიე პლატფორმები
           </h2>
         </div>
-        <p className="text-[#000000AD] text-[14px]">
+        <p className="text-[var(--campaing-form-paragraphs)] text-[14px]">
           აირჩიე რომელ პლატფორმებზე გსურთ ამ კამპანიის მიზნობრივი გამოყენება
         </p>
       </div>
@@ -29,7 +29,7 @@ const Platforms = () => {
             type="button"
             className="lg:w-[264px] h-[111px] bg-transparent border lg:mx-auto rounded-[8px] 
               flex flex-col items-center justify-center gap-4 cursor-pointer 
-              hover:bg-[#F9F9F9] focus:bg-[#F0F0F0] transition-colors outline-none"
+              hover:bg-[var(--card-hovers)] focus:bg-[var(--selected-cards)] transition-colors outline-none"
           >
             <Image
               src={eachelement.img}
@@ -37,7 +37,7 @@ const Platforms = () => {
               height={36}
               alt={eachelement.title}
             />
-            <span className="font-[600] text-[#000000]">
+            <span className="font-[600] text-[var(--black-color)]">
               {eachelement.title}
             </span>
           </button>

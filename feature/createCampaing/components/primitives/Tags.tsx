@@ -29,14 +29,14 @@ const Tags = ({
 
   return (
     <div className="flex flex-col gap-[5px] mt-[37px] w-full">
-      <label className="text-[18px] text-[#000000] font-bold mb-4">
+      <label className="text-[18px] text-[var(--black-color)] font-bold mb-4">
         {label}
       </label>
       <div className="flex gap-[16px]">
         <input
           type="text"
           placeholder={placeholder}
-          className="px-[18px] text-[#00000083] font-[700] py-[17px] rounded-[8px] outline outline-[#E3E8EF] w-full"
+          className="px-[18px] text-[var(--adding-tags-color)] font-[700] py-[17px] rounded-[8px] outline outline-[var(--auth-input-border)] w-full"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyPress={handleKeyPress}
@@ -54,7 +54,7 @@ const Tags = ({
           {items.map((item, index) => (
             <span
               key={index}
-              className="bg-[#3012B312] px-[12px] py-[6px] rounded-[6px]   border-[#111827] border text-[#111827] font-[600]"
+              className="bg-[#3012B312] px-[12px] py-[6px] rounded-[6px]   border-[var(--auth-social-input-border)] border text-[var( --auth-social-input-border)] font-[600]"
             >
               {item}
             </span>

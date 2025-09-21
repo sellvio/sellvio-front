@@ -11,7 +11,7 @@ const ToggleSwitch = ({ value, onToggle }: ToggleSwitchProps) => {
       <div
         onClick={() => setIsOn(!isOn)}
         className={`w-[40px] h-[22px] flex items-center p-[2px] cursor-pointer rounded-full transition-colors duration-300 ${
-          isOn ? "bg-blue-500" : "bg-gray-300"
+          isOn ? "bg-[var(--button-bg)]" : "bg-gray-300"
         }`}
       >
         <motion.div

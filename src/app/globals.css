@@ -105,6 +105,11 @@
   --auth-input-border: #e3e8ef;
   --auth-social-input-border: #111827;
   --auth-tag-bg: #3012b31f;
+  --campaing-form-paragraphs: #000000ad;
+  --card-hovers: #f9f9f9;
+  --selected-cards: #f0f0f0;
+  --adding-tags-color: #00000083;
+  --button-bg: #0866ff;
 }
 
 .dark {
