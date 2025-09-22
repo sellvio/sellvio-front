@@ -12,6 +12,7 @@ export const fetchCompanyCards = async (): Promise<CompanyCardProps[]> => {
     const response = await axios.get<CompanyCardProps[]>(`${baseURL}/login`);
     return response.data;
   } catch (error) {
+    console.log(error);
     throw new Error('Failed to fetch Cards');
   }
 };

@@ -1,9 +1,12 @@
+import { Suspense } from 'react';
 import Registration from '@/feature/registration/components/composites/Registration';
 
 const RegistrationBusinessPage = () => {
   return (
     <div>
-      <Registration />
+      <Suspense fallback={null}>
+        <Registration />
+      </Suspense>
     </div>
   );
 };
