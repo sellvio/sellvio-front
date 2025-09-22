@@ -1,9 +1,10 @@
 "use client";
 import { useState } from "react";
-import { DropDownInputProps } from "../../types";
-import Image from "next/image";
 
-const DropDownInput = ({ placeholder, options }: DropDownInputProps) => {
+import Image from "next/image";
+import { DropDownInputProps } from "../../types";
+
+const DropDownInput = ({ placeholder, options, size }: DropDownInputProps) => {
   const [value, setValue] = useState("");
 
   function handleSelect(event: React.ChangeEvent<HTMLSelectElement>) {
@@ -11,7 +12,7 @@ const DropDownInput = ({ placeholder, options }: DropDownInputProps) => {
   }
 
   return (
-    <div className="flex flex-col w-full max-w-[1440px]">
+    <div className={`flex flex-col ${size ? size : "w-full"} max-w-[1440px]`}>
       <div className="mb-6">
         <h3 className="mb-4 font-[700] text-[#000000] text-[18px]"></h3>
 
@@ -36,8 +37,8 @@ const DropDownInput = ({ placeholder, options }: DropDownInputProps) => {
             <div className="right-0 absolute inset-y-0 flex items-center pr-3 pointer-events-none">
               <Image
                 src="images/svg/dropdown.svg"
-                width="12"
-                height="6"
+                width={12}
+                height={6}
                 alt="dropDown"
               />
             </div>

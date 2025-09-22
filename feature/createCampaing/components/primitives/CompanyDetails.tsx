@@ -7,8 +7,15 @@ import Tags from "./Tags";
 
 import { dayOptions } from "../../data/data";
 import Button from "../../../myProfile/components/primirtives/button";
+import ToggleSwitch from "./ToggleSwitch";
+import { useState } from "react";
 
 const CompanyDetails = () => {
+  const [isOn, setIsOn] = useState(false);
+
+  const toggleHandler = () => {
+    setIsOn((prev) => !prev);
+  };
   return (
     <div className="max-w-[1222px] w-full bg-transparent mx-auto rounded-[8px] px-[30px] py-[30px] flex flex-col border">
       <div className="flex flex-col">
@@ -35,7 +42,7 @@ const CompanyDetails = () => {
               კამპანიის ხანგრძლივობა (დღეები)
             </h3>
             <DropDownInput
-              size="543px"
+              size="w-[543px]"
               placeholder="მაგ:1 დღე"
               options={dayOptions}
             />
@@ -48,8 +55,18 @@ const CompanyDetails = () => {
             <input
               type="text"
               placeholder="მაგ: ტექნოლოგიების მოყვარული, 18-35 წლის"
-              className="w-[543px] border border-[va(--auth-input-border)] rounded px-3 py-2 text-[var(--black-color)] font-[700] outline-none"
+              className="w-[543px] border border-[va(--auth-input-border)] rounded-[8px] px-3 py-2 text-[var(--black-color)] font-[700] outline-none ml-[10px]"
             />
+          </div>
+          <div className="w-full relative mt-[30px]">
+            <input
+              type="text"
+              placeholder="ჩატში გაწევრიანების ტიპი"
+              className="w-full border border-[var(--auth-input-border)] rounded-[8px] px-3 py-2 pr-14 text-[var(--black-color)] font-[700] outline-none"
+            />
+            <div className="absolute top-1/2 right-3 transform -translate-y-1/2">
+              <ToggleSwitch value={isOn} onToggle={toggleHandler} />
+            </div>
           </div>
         </div>
 
@@ -59,7 +76,7 @@ const CompanyDetails = () => {
           </h3>
           <textarea
             placeholder="მიუთითეთ მოთხოვნები..."
-            className="w-full border border-[var(--auth-input-border)] rounded px-3 py-2 text-[var(--black-color)] min-h-[218px] font-[700] outline-none resize-none"
+            className="w-full border border-[var(--auth-input-border)] rounded-[8px] px-3 py-2 text-[var(--black-color)] min-h-[218px] font-[700] outline-none resize-none"
           />
 
           <h3 className="text-[var(--black-color)] font-[700] text-[18px] mb-4 mt-6">
@@ -67,7 +84,7 @@ const CompanyDetails = () => {
           </h3>
           <textarea
             placeholder="არასავალდებულო..."
-            className="w-full border border-[var(--auth-input-border)] rounded px-3 py-2 text-[var(--black-color)] min-h-[218px] font-[700] outline-none resize-none"
+            className="w-full border border-[var(--auth-input-border)] rounded-[8px] px-3 py-2 text-[var(--black-color)] min-h-[218px] font-[700] outline-none resize-none"
           />
 
           <Tags label="კამპანიის თეგები" placeholder="თეგების დამატება" />

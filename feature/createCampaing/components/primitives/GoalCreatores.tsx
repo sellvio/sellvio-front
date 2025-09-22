@@ -4,7 +4,7 @@ import { GoalCards } from "../../data/data";
 
 const GoalCreatores = () => {
   return (
-    <div className="lg:max-w-[1222px] lg:w-full bg-transparent mx-auto  rounded-[8px] px-[30px] py-[30px] flex flex-wrap border ">
+    <div className="max-w-[1222px] w-full bg-transparent mx-auto rounded-[8px] px-[30px] py-[30px] flex flex-col border">
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
           <Image
@@ -25,8 +25,9 @@ const GoalCreatores = () => {
       <div className="flex gap-6 w-full flex-wrap">
         {GoalCards?.map((eachelement) => (
           <div
+            tabIndex={0}
             key={eachelement.id}
-            className="w-[566px] h-[111px] cursor-pointer border rounded-[8px] flex items-center gap-4 px-6 py-4 bg-[#0866FF05]"
+            className="w-[566px] h-[111px] cursor-pointer border rounded-[8px] flex items-center gap-4 px-6 py-4 bg-[#0866FF05] focus:bg-[#99C2FF]"
           >
             <div className="w-[48px] h-[48px] flex justify-center items-center bg-[#E6F1FF] rounded-md">
               <Image

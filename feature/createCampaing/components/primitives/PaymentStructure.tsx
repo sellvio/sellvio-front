@@ -34,26 +34,26 @@ const PaymentStructure = () => {
             />
           </div>
 
-          <div className="flex gap-4 mt-8">
-            <div className="flex flex-col">
+          <div className="flex gap-4 mt-8 flex-wrap">
+            <div className="flex flex-col flex-5 min-w-[250px] max-w-[900px]">
               <h3 className="mb-4 font-[700] text-[var(--black-color)] text-[18px]">
                 გადახდის მოდელი
               </h3>
               <input
                 type="text"
                 placeholder="რაოდენობა"
-                className="px-3 py-2 border border-[var(  --auth-input-border)] rounded outline-none w-full font-[700] text-[var(--black-color)]"
+                className="px-3 py-2 border border-[var(--auth-input-border)] rounded-[8px] outline-none w-full font-[700] text-[var(--black-color)]"
               />
             </div>
 
-            <div className="flex flex-col">
+            <div className="flex flex-col flex-1 min-w-[250px] max-w-[900px]">
               <h3 className="invisible mb-4 font-[700] text-[var(--black-color)] text-[18px]">
                 გადახდის მოდელი
               </h3>
               <input
                 type="text"
                 placeholder="თანხა"
-                className="px-3 py-2 border  border-[var(  --auth-input-border)] rounded outline-none w-[269px] font-[700] text-[var(--black-color)]"
+                className="px-3 py-2 border border-[var(--auth-input-border)] rounded-[8px] outline-none w-full font-[700] text-[var(--black-color)]"
               />
             </div>
           </div>

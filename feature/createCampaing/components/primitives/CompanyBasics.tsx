@@ -39,7 +39,7 @@ const CompanyBasics = () => {
             <input
               type="text"
               placeholder="მაგ: საზაფხულო პროდუქტი"
-              className="w-full border border-[var(--auth-input-border)] rounded px-3 py-2 text-[var(--black-color)] font-[700] outline-none"
+              className="w-full border border-[var(--auth-input-border)] rounded-[8px] px-3 py-2 text-[var(--black-color)] font-[700] outline-none"
             />
           </div>
 
@@ -50,7 +50,7 @@ const CompanyBasics = () => {
             <input
               type={isOn ? "password" : "text"}
               placeholder="₾ 5000"
-              className="w-full border border-[var(--auth-input-border) rounded px-3 py-2 text-[var(--black-color)] font-[700] outline-none"
+              className="w-full border border-[var(--auth-input-border) rounded-[8px] px-3 py-2 text-[var(--black-color)] font-[700] outline-none"
             />
 
             <div
@@ -71,7 +71,7 @@ const CompanyBasics = () => {
           </h3>
           <textarea
             placeholder="აღწერეთ თქვენი კამპანიის მიზნები, სამიზნე აუდიტორია და რას ეძებთ შემქმნელებში..."
-            className="w-full border border-[var(--auth-input-border)] rounded px-3 py-2 text-[var(--black-color)] min-h-[218px] font-[700] outline-none resize-none"
+            className="w-full border border-[var(--auth-input-border)] rounded-[8px] px-3 py-2 text-[var(--black-color)] min-h-[218px] font-[700] outline-none resize-none"
           />
         </div>
       </form>
