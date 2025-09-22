@@ -1,22 +1,20 @@
-import { motion } from "motion/react";
 import { ButtonSliderProps } from "../../types";
 
 const ToggleButtons = ({ active, setActive }: ButtonSliderProps) => {
   return (
-    <div className="relative mx-auto mb-[28px] mt-[65px] flex justify-between bg-[var(#--auth-buttonSlider-bg) px-[14px] py-[12px] rounded-[12px] w-full max-w-[1387px] min-h-[72px] overflow-hidden">
-      <motion.div
-        className="top-1/2 left-[14px] absolute bg-[var(--white-color)] rounded-[12px] w-1/2 h-[48px] -translate-y-1/2"
-        animate={{ x: active === "analytic" ? 0 : "calc(100% - 28px)" }}
-        transition={{ type: "spring", stiffness: 300, damping: 40 }}
-      />
+    <div className=" mx-auto mb-[28px] mt-[65px] flex justify-between bg-[var(--auth-buttonSlider-bg)] px-[14px] py-[12px] rounded-[12px] w-full max-w-[1387px] min-h-[72px] overflow-hidden">
       <button
-        className={`flex justify-center relative z-[10] items-center rounded-[12px] text-[var(--adding-tags-color)] w-1/2 font-[700]  cursor-pointer`}
+        className={`flex ${
+          active === "analytic" && "bg-[var(--white-color)]"
+        } justify-center items-center rounded-[12px] text-[var(--adding-tags-color)] w-1/2 font-[700]  cursor-pointer`}
         onClick={() => setActive("analytic")}
       >
         ანალიტიკა
       </button>
       <button
-        className={`flex justify-center relative z-[10] items-center rounded-[12px] text-[var(--adding-tags-color)] w-1/2 font-[700]  cursor-pointer`}
+        className={`flex justify-center ${
+          active === "campaing" && "bg-[var(--white-color)]"
+        }  items-center rounded-[12px] text-[var(--adding-tags-color)] w-1/2 font-[700]  cursor-pointer`}
         onClick={() => setActive("campaing")}
       >
         კამპინგი

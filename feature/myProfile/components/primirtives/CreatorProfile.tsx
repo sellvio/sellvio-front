@@ -8,7 +8,7 @@ const CreatorProfile = () => {
       {creators.map((creator) => (
         <div
           key={creator.id}
-          className="flex mt-[37px] max-w-[1222px] w-full mx-auto gap-[32px] border border-[#00000038] px-[30px] py-[30px] rounded-[8px]"
+          className="flex mt-[37px] max-w-[1222px] lg:flex-row flex-col w-full mx-auto gap-[32px] border border-[#00000038] px-[30px] py-[30px] rounded-[8px]"
         >
           <Image
             src={creator.profileImg}

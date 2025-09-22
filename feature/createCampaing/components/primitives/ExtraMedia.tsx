@@ -62,7 +62,7 @@ const ExtraMedia = () => {
         {UploadFile.map((eachElement) => (
           <div
             key={eachElement.id}
-            className="w-[570px] flex flex-col gap-5 justify-center items-center border border-dashed  pt-[21px] pb-[21px] bg-[#0866FF05] rounded-[8px]"
+            className="w-full m-auto lg:max-w-[570px] flex flex-col gap-5 justify-center items-center border border-dashed  pt-[21px] pb-[21px] bg-[#0866FF05] rounded-[8px]"
           >
             <Image
               src={eachElement.img}

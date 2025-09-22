@@ -27,7 +27,8 @@ const GoalCreatores = () => {
           <div
             tabIndex={0}
             key={eachelement.id}
-            className="w-[566px] h-[111px] cursor-pointer border rounded-[8px] flex items-center gap-4 px-6 py-4 bg-[#0866FF05] focus:bg-[#99C2FF]"
+            className="w-full
+             lg:max-w-[566px] m-auto h-[111px] cursor-pointer border rounded-[8px] flex items-center gap-4 px-6 py-4 bg-[#0866FF05] focus:bg-[#99C2FF]"
           >
             <div className="w-[48px] h-[48px] flex justify-center items-center bg-[#E6F1FF] rounded-md">
               <Image

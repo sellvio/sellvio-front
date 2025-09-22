@@ -37,7 +37,7 @@ const CompanyDetails = () => {
 
       <form>
         <div className="flex items-center justify-between flex-wrap md:w-full">
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-[16px] max-w-[543px] w-full">
             <h3 className="mt-[26px] text-[var(--black-color)] font-[700] text-[18px] ">
               კამპანიის ხანგრძლივობა (დღეები)
             </h3>
@@ -48,14 +48,14 @@ const CompanyDetails = () => {
             />
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col max-w-[543px] w-full">
             <h3 className="text-[var(--black-color)] font-[700] text-[18px] mb-4">
               სამიზნე აუდიტორია
             </h3>
             <input
               type="text"
               placeholder="მაგ: ტექნოლოგიების მოყვარული, 18-35 წლის"
-              className="w-[543px] border border-[va(--auth-input-border)] rounded-[8px] px-3 py-2 text-[var(--black-color)] font-[700] outline-none ml-[10px]"
+              className="max-w-[543px] w-full border border-[va(--auth-input-border)] rounded-[8px] px-3 py-2 text-[var(--black-color)] font-[700] outline-none ml-[10px]"
             />
           </div>
           <div className="w-full relative mt-[30px]">

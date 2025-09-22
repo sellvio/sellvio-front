@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { TagsProps } from "../../../myProfile/types";
-import Button from "../../../myProfile/components/primirtives/button";
+import Image from "next/image";
 
 const Tags = ({
   label,
@@ -41,12 +41,19 @@ const Tags = ({
           onChange={(e) => setInputValue(e.target.value)}
           onKeyPress={handleKeyPress}
         />
-        <Button
+
+        <button
+          type="button"
           onClick={handleAdd}
-          img="./images/svg/plusBlack.svg"
-          size="px-[17px] py-[17px]"
-          color="border border-[#E3E8EF] rounded-[8px] cursor-pointer"
-        />
+          className="border border-[#E3E8EF] w-[56px] h-[56px] flex items-center justify-center rounded-[8px] cursor-pointer"
+        >
+          <Image
+            src="./images/svg/plusBlack.svg"
+            alt="pluseButton"
+            width={22}
+            height={22}
+          />
+        </button>
       </div>
 
       {items.length > 0 && (
