@@ -3,7 +3,7 @@ import Button from "../primirtives/button";
 
 const MyProfileHeader = () => {
   return (
-    <div className="w-wull bg-[#00D540] flex px-5 py-6">
+    <div className="flex w-full items-center px-4 py-4px-5 py-6 mx-auto bg-[green]">
       <div className="max-w-[1222px] w-full flex justify-between items-center mx-auto">
         <h1 className="text-[#000000] font-[600] text-[22px]">ჩემი პროფილი</h1>
         <Link href="/">
