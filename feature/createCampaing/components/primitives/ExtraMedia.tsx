@@ -3,7 +3,6 @@ import Image from "next/image";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { UploadFile } from "../../data/data";
-import Button from "../../../myProfile/components/primirtives/button";
 
 const ExtraMedia = () => {
   const [open, setOpen] = useState(false);
@@ -22,7 +21,7 @@ const ExtraMedia = () => {
               height={22}
               alt="logo"
             />
-            <h2 className="text-[20px] font-[600] text-[#000000]">
+            <h2 className="text-[20px] font-[600] text-[var(--black-color)]">
               გსურთ დამატებით მედიის ატვირთვა?
             </h2>
           </div>
@@ -49,7 +48,7 @@ const ExtraMedia = () => {
               transition={{ duration: 0.3 }}
               className="overflow-hidden"
             >
-              <p className="text-[#000000AD] text-[14px] mt-4">
+              <p className="text-[var(--campaing-form-paragraphs)] text-[14px] mt-4">
                 იმ შემთხვევაში, თუ თქვენთვის სასურველი კონტენტის შექმნისთვის
                 საჭიროა თქვენი ფოტოებისა და ვიდეობის გამოყენება კრეატორების
                 მხირდან, გთხოვთ ატვირთოთ, რათა შეძლონ გამოყენება
@@ -71,12 +70,9 @@ const ExtraMedia = () => {
               alt={eachElement.title}
             />
             <p className="text-[#000000A3] font-[700]">{eachElement.title}</p>
-
-            <Button
-              text="აირჩიე ფაილი"
-              size="w-[267px] px-2 py-3 rounded-[8px] cursor-pointer"
-              color="bg-[#0866FF] text-[#ffffff]"
-            />
+            <button className="w-[267px] px-2 py-3 rounded-[8px] cursor-pointer bg-[var(--button-bg)] text-[var(--white-color)]">
+              აირჩიე ფაილი
+            </button>
           </div>
         ))}
       </div>

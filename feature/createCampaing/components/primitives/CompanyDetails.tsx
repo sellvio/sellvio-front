@@ -6,7 +6,7 @@ import DropDownInput from "../primitives/DropDownInput";
 import Tags from "./Tags";
 
 import { dayOptions } from "../../data/data";
-import Button from "../../../myProfile/components/primirtives/button";
+
 import ToggleSwitch from "./ToggleSwitch";
 import { useState } from "react";
 
@@ -91,18 +91,15 @@ const CompanyDetails = () => {
         </div>
 
         <div className="flex justify-end gap-4 mt-10">
-          <Button
-            text="გაუქმება"
-            color="bg-transparent border border-[#00000024] text-[#000000]"
-            size=" w-[202px] px-4 py-2 cursor-pointer"
-            type="button"
-          />
-          <Button
-            text="შექმენი კამპანია"
-            color="bg-blue-500 text-white"
-            size="px-4 py-2 cursor-pointer"
+          <button className="bg-transparent border border-[#00000024] text-[#000000] w-[202px] px-4 py-2 cursor-pointer">
+            გაუქმება
+          </button>
+          <button
             type="submit"
-          />
+            className=" bg-[var(--button-bg)] text-[var(--white-color)] px-4 py-2 cursor-pointer "
+          >
+            შექმენი კამპანია
+          </button>
         </div>
       </form>
     </div>
