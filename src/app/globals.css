@@ -77,6 +77,24 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
   --white-color: #ffffff;
+  --transperent-white: #ffffff99;
+  --company-frame-border: #00000014;
+  --company-cards-text: #000000bd;
+  --company-frame-bg: #3012b314;
+  --dolar-icon-color: #00b737;
+  --black-color: #000000;
+  --budget-stats-bg: #3012b30f;
+  --lending-title: #1e1e1e;
+  --lending-card-bg: #d9d9d9;
+  --lending-card-border: 0000007A;
+  --hero-icon: #0866ff;
+  --lending-border: #0000001f;
+  --gray-color: #e6e7eb;
+  --lending-text: #b3b3b3;
+  --light-withe: #ffffff1f;
+  --leding-dark-button: #0866ff1f;
+  --lending-light-button: #ffffffa1;
+  --lending-button: #8265ff;
   --auth-button-text: #f1e7ff;
   --auth-border: #3012b3cc;
   --auth-text-dark: #000000d4;
@@ -123,6 +141,11 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+@font-face {
+  font-family: 'HelveticaNeue';
+  src: url('/fonts/helvetica-neue-regular.ttf') format('truetype');
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -130,4 +153,10 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+body {
+  background: #ffffff;
+  color: #000000;
+  font-family: 'HelveticaNeue', Helvetica, sans-serif;
 }
