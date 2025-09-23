@@ -20,11 +20,9 @@ const DropDownInput = ({ placeholder, options, size }: DropDownInputProps) => {
               name="cost-type"
               onChange={handleSelect}
               value={value}
-              className="bg-white px-4 py-3 border border-gray-300 rounded-lg focus:outline-none w-full text-gray-900 appearance-none cursor-pointer"
+              className="bg-[var(--white-color)] px-4 py-3 border border-[var(--auth-input-border)] rounded-lg focus:outline-none w-full text-[var(--auth-text-dark)] appearance-none cursor-pointer"
             >
-              <option value="" disabled>
-                {placeholder}
-              </option>
+              <option disabled>{placeholder}</option>
               {options.map((option, id) => (
                 <option key={id} value={option.value}>
                   {option.label}

@@ -115,6 +115,13 @@
   --creator-type-bg: #0866ff14;
   --top-creator-status: #00000008;
   --header-cards: #00000010;
+  --buisness-cards-border: #00000036;
+  --buisness-active: #00d5404f;
+  --buisness-uncomplited: #c13d3f4f;
+  --buisness-card-info: #111827ad;
+  --total-payment: #00d540;
+  --cancel-button-bg: #00000024;
+  --extra-media-bg: #e3e8ef;
 }
 
 .dark {

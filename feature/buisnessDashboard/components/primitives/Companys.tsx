@@ -35,7 +35,7 @@ const Companys = () => {
           {data?.map((eachElement, index) => (
             <div
               key={index}
-              className="max-w-[446px] bg-transparent rounded-[8px] border border-[#00000036] flex flex-col relative"
+              className="max-w-[446px] bg-transparent rounded-[8px] border border-[var(--buisness-cards-border)] flex flex-col relative"
             >
               <div className="relative">
                 <Image
@@ -46,19 +46,19 @@ const Companys = () => {
                   className="rounded-t-[8px]"
                 />
                 <div
-                  className={`absolute top-[19px] left-[19px] rounded-3xl px-3 py-2 font-semibold text-[10px] text-white ${
+                  className={`absolute top-[19px] left-[19px] rounded-3xl px-3 py-2 font-semibold text-[10px] text-[var(--white-color)] ${
                     eachElement.status === "აქტიური"
-                      ? "bg-[#00D5404F]"
-                      : eachElement.status === "დაუსრულებელი"
-                      ? "bg-[#C13D3F4F]"
-                      : "bg-[#C13D3F4F]"
+                      ? "bg-[var(--buisness-active)]"
+                      : eachElement.status === "დასრულებული"
+                      ? "bg-[var(--buisness-uncomplited)]"
+                      : "bg-[var(--buisness-uncomplited)]"
                   }`}
                 >
                   {eachElement.status}
                 </div>
 
                 <div className="absolute bottom-[22px] left-[19px]">
-                  <p className="text-[18px] font-[700] text-white drop-shadow-md">
+                  <p className="text-[18px] font-[700] text-[var(--white-color)] drop-shadow-md">
                     კამპანიის სახელწოდება
                   </p>
                 </div>
@@ -74,7 +74,7 @@ const Companys = () => {
                       alt="created"
                     />
                     <div className="flex items-center gap-3">
-                      <p className="text-[#111827AD] font-medium">
+                      <p className="text-[var(--buisness-card-info)] font-medium flex gap-2">
                         <span>{eachElement.creator.toLocaleString()}</span>
                         შექმნილი
                       </p>
@@ -87,15 +87,15 @@ const Companys = () => {
                       height={16}
                       alt="views"
                     />
-                    <p className="text-[#111827AD] font-medium">
+                    <p className="text-[var(--buisness-card-info)]  font-medium">
                       <span>{eachElement.views.toLocaleString()}</span> ნახვა
                     </p>
                   </div>
                 </div>
 
-                <div className="flex justify-between mt-[13px] text-[14px] text-[#111827AD]">
+                <div className="flex justify-between mt-[13px] text-[14px] text-[var(--buisness-card-info)] ">
                   <p className="font-medium">ბიუჯეტი</p>
-                  <p className="font-[600] text-[#111827]">
+                  <p className="font-[600] text-[var(--buisness-card-info)]">
                     ${eachElement.yourbudget.toLocaleString()} / $
                     {eachElement.fullbudget.toLocaleString()}
                   </p>
@@ -105,15 +105,15 @@ const Companys = () => {
                   goalAmount={10000}
                 />
 
-                <div className="flex justify-between items-center text-[#000000AD] font-medium">
+                <div className="flex justify-between items-center text-[var(--buisness-card-info)] font-medium">
                   <p>ჯამური გადახდა</p>
-                  <p className="text-[#00D540] font-semibold">
+                  <p className="text-[var(--total-payment)] font-semibold">
                     ${eachElement.totalpayment.toLocaleString()}
                   </p>
                 </div>
 
                 <div className="flex gap-3 mt-4 mb-[18px]">
-                  <button className="w-[259px] py-3 bg-transparent rounded-[8px] border border-[#00000036] text-[#111827] font-bold flex items-center justify-center gap-2 cursor-pointer">
+                  <button className="w-[259px] py-3 bg-transparent rounded-[8px] border border-[var(--buisness-cards-border)] text-[var(--buisness-card-info)] font-bold flex items-center justify-center gap-2 cursor-pointer">
                     <Image
                       src="/images/svg/analytic.svg"
                       width={18}
@@ -122,7 +122,7 @@ const Companys = () => {
                     />
                     ანალიტიკა
                   </button>
-                  <button className="w-[133px] py-3 bg-transparent rounded-[8px] border border-[#00000036] text-[#111827] font-bold flex items-center justify-center text-[15px] cursor-pointer">
+                  <button className="w-[133px] py-3 bg-transparent rounded-[8px] border border-[var(--buisness-cards-border)] text-[var(--buisness-card-info)] font-bold flex items-center justify-center text-[15px] cursor-pointer">
                     გახსენი ჩატი
                   </button>
                 </div>

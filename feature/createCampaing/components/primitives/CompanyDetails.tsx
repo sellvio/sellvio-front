@@ -89,7 +89,7 @@ const CompanyDetails = () => {
         </div>
 
         <div className="flex justify-end gap-4 mt-10">
-          <button className="bg-transparent border border-[#00000024] text-[#000000] w-[202px] px-4 py-2 cursor-pointer">
+          <button className="bg-transparent border border-[var(--cancel-button-bg)] text-[var(--black-color)] w-[202px] px-4 py-2 cursor-pointer">
             გაუქმება
           </button>
           <button

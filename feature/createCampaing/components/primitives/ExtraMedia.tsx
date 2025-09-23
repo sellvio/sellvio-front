@@ -6,6 +6,13 @@ import { UploadFile } from "../../data/data";
 
 const ExtraMedia = () => {
   const [open, setOpen] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile(e.target.files[0]);
+    }
+  };
 
   return (
     <div className="max-w-[1222px] w-full bg-transparent mx-auto rounded-[8px] px-[30px] py-[30px] flex flex-col border ">
@@ -61,16 +68,53 @@ const ExtraMedia = () => {
         {UploadFile.map((eachElement) => (
           <div
             key={eachElement.id}
-            className="w-full m-auto lg:max-w-[570px] flex flex-col gap-5 justify-center items-center border border-dashed  pt-[21px] pb-[21px] bg-[#0866FF05] rounded-[8px]"
+            className="w-full m-auto lg:max-w-[570px] flex flex-col gap-5 justify-center items-center border border-dashed  pt-[21px] pb-[21px]  rounded-[8px]"
           >
-            <Image
-              src={eachElement.img}
-              width={40}
-              height={40}
-              alt={eachElement.title}
+            <div
+              className={`w-[160px] ${
+                file && "mb-[20px] "
+              }h-[80px] flex items-center justify-center`}
+            >
+              {file ? (
+                <div className="flex flex-col items-center justify-center gap-2 mt-2">
+                  {file && (
+                    <div className="flex py-[5px] flex-col items-center mt-2">
+                      <Image
+                        src={URL.createObjectURL(file)}
+                        alt="Preview"
+                        width={60}
+                        height={60}
+                        className="object-cover rounded"
+                      />
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="w-full flex-col flex items-center justify-center">
+                  <Image
+                    src={eachElement.img}
+                    width={40}
+                    height={40}
+                    alt={eachElement.title}
+                  />
+                  <p className="text-[var(--campaing-form-paragraphs)] font-[700]">
+                    {eachElement.title}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <input
+              type="file"
+              id="fileInput"
+              className="hidden"
+              onChange={handleFileChange}
             />
-            <p className="text-[#000000A3] font-[700]">{eachElement.title}</p>
-            <button className="w-[267px] px-2 py-3 rounded-[8px] cursor-pointer bg-[var(--button-bg)] text-[var(--white-color)]">
+
+            <button
+              className="w-[267px] px-2 py-3 rounded-[8px] cursor-pointer bg-[var(--button-bg)] text-[var(--white-color)]"
+              onClick={() => document.getElementById("fileInput")?.click()}
+            >
               აირჩიე ფაილი
             </button>
           </div>
