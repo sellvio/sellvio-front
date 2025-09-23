@@ -17,7 +17,7 @@ const ToggleSwitch = ({ value, onToggle }: ToggleSwitchProps) => {
         <motion.div
           layout
           transition={{ type: "spring" }}
-          className="bg-white shadow-md rounded-full w-[18px] h-[18px]"
+          className="bg-[var(--white-color)] shadow-md rounded-full w-[18px] h-[18px]"
           style={{ x: isOn ? 17.5 : 1 }}
         />
       </div>

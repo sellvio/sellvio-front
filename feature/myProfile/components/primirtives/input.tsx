@@ -20,7 +20,6 @@ const InputField: React.FC<InputFieldProps> = ({
           {label}
         </h3>
       )}
-      <label className="block mb-1 text-sm font-medium"></label>
       {textarea ? (
         <textarea
           placeholder={placeholder}

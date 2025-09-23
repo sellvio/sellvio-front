@@ -2,9 +2,7 @@
 
 import Image from "next/image";
 import DropDownInput from "../primitives/DropDownInput";
-
 import Tags from "./Tags";
-
 import { dayOptions } from "../../data/data";
 
 import ToggleSwitch from "./ToggleSwitch";

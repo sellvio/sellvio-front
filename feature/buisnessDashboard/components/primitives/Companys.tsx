@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import ToggleButtons from "../../../createCampaing/components/primitives/ToggleButtons";
-import Button from "../../../myProfile/components/primirtives/button";
 import ProgressBar from "./ProgressDash";
 import { data } from "../../data/landingData";
 
@@ -14,18 +13,21 @@ const Companys = () => {
     <div>
       <ToggleButtons active={active} setActive={setActive} />
       <div className="flex flex-wrap gap-6 max-w-[1387px] w-full mx-auto">
-        <div className="flex justify-between items-center w-[1378px] mx-auto">
-          <h2 className="text-[24px] font-bold text-[#000000]">
+        <div className="flex justify-between items-center max-w-[1408px] w-full mx-auto px-[15px]">
+          <h2 className="text-[24px] font-bold text-[var(--black-color)]">
             შენი კამპანიები
           </h2>
           <div>
             <Link href="createForm">
-              <Button
-                text="დაიწყე ახალი კემპინგი"
-                color=" bg-[#0866FF] text-[#ffffff]"
-                size="w-[229px] py-3 px-2 border cursor-pointer text-[14px]"
-                img="/images/svg/plus.svg"
-              />
+              <button className="bg-[var(--button-bg)] text-[var(  --white-color)] w-[229px] py-3 px-2 border cursor-pointer text-[14px] flex items-center gap-2 text-[var(--white-color)] rounded-[8px]">
+                <Image
+                  src="/images/svg/plus.svg"
+                  width={30}
+                  height={30}
+                  alt="icon"
+                />
+                დაიწყე ახალი კემპინგი
+              </button>
             </Link>
           </div>
         </div>

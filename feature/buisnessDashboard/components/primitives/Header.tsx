@@ -15,7 +15,7 @@ const Header = () => {
       <div className="flex gap-4 py-">
         {headerBtns.map((eachElement) => (
           <div
-            className="w-[50px] h-[50px]  border border-[#00000010] flex justify-center items-center rounded-[8px] cursor-pointer"
+            className="w-[50px] h-[50px]  border border-[var(--header-cards)] flex justify-center items-center rounded-[8px] cursor-pointer"
             key={eachElement.id}
           >
             <Image
