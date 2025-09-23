@@ -18,12 +18,12 @@ const PaymentStructure = () => {
             გადახდის სტრუქტურა
           </h2>
         </div>
-        <p className="text-[#000000AD] text-[14px]">
+        <p className="text-[var(--campaing-form-paragraphs)] text-[14px]">
           კონფენსაცია, თუ როგორ მიიღებენ კომპენსაციას შემმნელები
         </p>
 
         <form className="flex-col">
-          <div>
+          <div className="flex flex-col gap-4">
             <h3 className="mt-[26px] font-[700] text-[var(--black-color)] text-[18px]">
               შეთავაზების ტიპი
             </h3>
