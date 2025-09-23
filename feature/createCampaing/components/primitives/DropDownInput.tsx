@@ -12,7 +12,7 @@ const DropDownInput = ({ placeholder, options, size }: DropDownInputProps) => {
   }
 
   return (
-    <div className={`flex flex-col w-full max-w-[1440px]`}>
+    <div className="flex flex-col w-full max-w-[1440px] ">
       <div className="mb-6">
         <div className="relative">
           <div className="relative">
