@@ -45,7 +45,7 @@ const Tags = ({
         <button
           type="button"
           onClick={handleAdd}
-          className="border border-[#E3E8EF] w-[56px] h-[56px] flex items-center justify-center rounded-[8px] cursor-pointer"
+          className="border border-[var(--auth-input-border)] w-[56px] h-[56px] flex items-center justify-center rounded-[8px] cursor-pointer"
         >
           <Image
             src="./images/svg/plusBlack.svg"
@@ -61,7 +61,7 @@ const Tags = ({
           {items.map((item, index) => (
             <span
               key={index}
-              className="bg-[#3012B312] px-[12px] py-[6px] rounded-[6px]   border-[var(--auth-social-input-border)] border text-[var( --auth-social-input-border)] font-[600]"
+              className="bg-[var(--tags-bg)] px-[12px] py-[6px] rounded-[6px]   border-[var(--auth-social-input-border)] border text-[var( --auth-social-input-border)] font-[600]"
             >
               {item}
             </span>
