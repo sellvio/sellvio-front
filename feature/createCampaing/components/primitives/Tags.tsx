@@ -19,7 +19,11 @@ const Tags = ({
       onChange?.(newItems);
     }
   };
-
+  const handleRemove = (indexToRemove: number) => {
+    const newItems = items.filter((_, index) => index !== indexToRemove);
+    setItems(newItems);
+    onChange?.(newItems);
+  };
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -59,12 +63,19 @@ const Tags = ({
       {items.length > 0 && (
         <div className="flex flex-wrap gap-[8px] mt-[10px]">
           {items.map((item, index) => (
-            <span
+            <div
               key={index}
-              className="bg-[var(--tags-bg)] px-[12px] py-[6px] rounded-[6px]   border-[var(--auth-social-input-border)] border text-[var( --auth-social-input-border)] font-[600]"
+              className="bg-[var(--tags-bg)] px-[12px] py-[6px] rounded-[6px]   border-[var(--auth-social-input-border)] border text-[var( --auth-social-input-border)] font-[600] flex items-center gap-2"
             >
-              {item}
-            </span>
+              <span>{item}</span>
+              <button
+                type="button"
+                onClick={() => handleRemove(index)}
+                className="flex items-center justify-center text-[var( --auth-social-input-border)]hover:text-red-500 mb-[3px]"
+              >
+                ×
+              </button>
+            </div>
           ))}
         </div>
       )}

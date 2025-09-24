@@ -1,3 +1,4 @@
+import { Calendar22 } from "../../../components/ui/date-picker";
 import CompanyBasics from "../primitives/CompanyBasics";
 import CompanyDetails from "../primitives/CompanyDetails";
 import ExtraMedia from "../primitives/ExtraMedia";

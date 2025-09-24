@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import DropDownInput from "../primitives/DropDownInput";
+import DropDownInput from "./DropDownInput";
 import { costOptions } from "../../data/data";
 
 const PaymentStructure = () => {
@@ -28,9 +28,9 @@ const PaymentStructure = () => {
               შეთავაზების ტიპი
             </h3>
             <DropDownInput
-              size="1162px"
-              placeholder="Cost per View"
+              placeholder="აირჩიეთ ტიპი"
               options={costOptions}
+              onChange={(val) => console.log(val)}
             />
           </div>
 

@@ -1,12 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import DropDownInput from "../primitives/DropDownInput";
 import Tags from "./Tags";
-import { dayOptions } from "../../data/data";
 
 import ToggleSwitch from "./ToggleSwitch";
 import { useState } from "react";
+import { Calendar22 } from "../../../components/ui/date-picker";
 
 const CompanyDetails = () => {
   const [isOn, setIsOn] = useState(false);
@@ -34,26 +33,22 @@ const CompanyDetails = () => {
       </div>
 
       <form>
-        <div className="flex items-center justify-between flex-wrap md:w-full">
-          <div className="flex flex-col gap-[16px] max-w-[543px] w-full">
-            <h3 className="mt-[26px] text-[var(--black-color)] font-[700] text-[18px] ">
+        <div className="flex items-center justify-between flex-wrap md:w-full mt-[20px]">
+          <div className="flex flex-col gap-4 w-full md:w-[543px]">
+            <h3 className="text-[var(--black-color)] font-[700] text-[18px]">
               კამპანიის ხანგრძლივობა (დღეები)
             </h3>
-            <DropDownInput
-              size="w-[543px]"
-              placeholder="მაგ:1 დღე"
-              options={dayOptions}
-            />
+            <Calendar22 />
           </div>
 
-          <div className="flex flex-col max-w-[543px] w-full">
-            <h3 className="text-[var(--black-color)] font-[700] text-[18px] mb-4">
+          <div className="flex flex-col gap-4 w-full md:w-[543px]">
+            <h3 className="text-[var(--black-color)] font-[700] text-[18px]">
               სამიზნე აუდიტორია
             </h3>
             <input
               type="text"
               placeholder="მაგ: ტექნოლოგიების მოყვარული, 18-35 წლის"
-              className="max-w-[543px] w-full border border-[va(--auth-input-border)] rounded-[8px] px-3 py-2 text-[var(--black-color)] font-[700] outline-none ml-[10px]"
+              className="w-full border border-[var(--auth-input-border)] rounded-[8px] px-3 py-2 text-[var(--black-color)] font-[700] outline-none"
             />
           </div>
           <div className="w-full relative mt-[30px]">

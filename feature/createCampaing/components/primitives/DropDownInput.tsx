@@ -1,43 +1,58 @@
 "use client";
+
 import { useState } from "react";
-
 import Image from "next/image";
-import { DropDownInputProps } from "../../types";
 
-const DropDownInput = ({ placeholder, options, size }: DropDownInputProps) => {
+export interface DropDownOption {
+  label: string;
+  value: string;
+}
+
+export interface DropDownInputProps {
+  placeholder: string;
+  options: DropDownOption[];
+  onChange?: (value: string) => void; // optional callback parent-ისთვის
+}
+
+const DropDownInput = ({
+  placeholder,
+  options,
+  onChange,
+}: DropDownInputProps) => {
   const [value, setValue] = useState("");
 
-  function handleSelect(event: React.ChangeEvent<HTMLSelectElement>) {
+  const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setValue(event.target.value);
-  }
+    onChange?.(event.target.value);
+  };
 
   return (
-    <div className="flex flex-col w-full max-w-[1440px] ">
+    <div className="flex flex-col w-full max-w-[1440px]">
       <div className="mb-6">
         <div className="relative">
-          <div className="relative">
-            <select
-              name="cost-type"
-              onChange={handleSelect}
-              value={value}
-              className="bg-[var(--white-color)] px-4 py-3 border border-[var(--auth-input-border)] rounded-lg focus:outline-none w-full text-[var(--auth-text-dark)] appearance-none cursor-pointer"
-            >
-              <option disabled>{placeholder}</option>
-              {options.map((option, id) => (
-                <option key={id} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+          <select
+            name="dropdown"
+            onChange={handleSelect}
+            value={value}
+            className="px-3 py-2 border border-[var(--auth-input-border)] rounded-[8px] outline-none w-full font-[700] text-[var(--black-color)] appearance-none"
+          >
+            <option disabled value="">
+              {placeholder}
+            </option>
+            {options.map((option, id) => (
+              <option key={id} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
 
-            <div className="right-0 absolute inset-y-0 flex items-center pr-3 pointer-events-none">
-              <Image
-                src="images/svg/dropdown.svg"
-                width={12}
-                height={6}
-                alt="dropDown"
-              />
-            </div>
+          <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+            <Image
+              src="images/svg/dropdown.svg"
+              width={12}
+              height={6}
+              alt="dropDown"
+            />
           </div>
         </div>
       </div>
