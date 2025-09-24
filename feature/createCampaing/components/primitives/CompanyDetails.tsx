@@ -57,9 +57,7 @@ const CompanyDetails = () => {
               placeholder="ჩატში გაწევრიანების ტიპი"
               className="w-full border border-[var(--auth-input-border)] rounded-[8px] px-3 py-2 pr-14 text-[var(--black-color)] font-[700] outline-none"
             />
-            <div className="absolute top-1/2 right-3 transform -translate-y-1/2">
-              <ToggleSwitch value={isOn} onToggle={toggleHandler} />
-            </div>
+            <div className="absolute top-1/2 right-3 transform -translate-y-1/2"></div>
           </div>
         </div>
 

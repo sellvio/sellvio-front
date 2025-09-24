@@ -1,8 +1,7 @@
 "use client";
+import { Switch } from "@/components/ui/switch";
 import Image from "next/image";
 import { useState } from "react";
-
-import ToggleSwitch from "../primitives/ToggleSwitch";
 
 const CompanyBasics = () => {
   const [isOn, setIsOn] = useState(false);
@@ -60,7 +59,7 @@ const CompanyBasics = () => {
               <p className="text-[var(--black-color)] font-[700]">
                 დამალე ბიუჯეტი შემქნელებისთვის
               </p>
-              <ToggleSwitch value={isOn} onToggle={toggleHandler} />
+              <Switch />
             </div>
           </div>
         </div>

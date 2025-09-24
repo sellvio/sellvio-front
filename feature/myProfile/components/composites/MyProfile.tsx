@@ -4,6 +4,7 @@ import PrimaryInformation from "../primirtives/PrimaryInformation";
 import CreatorType from "../primirtives/CreatorType";
 import CreatorProfile from "../primirtives/CreatorProfile";
 import SocmediaPlatform from "../primirtives/SocmediaPlatform";
+import ContentCategory from "../primirtives/ContentCategory";
 
 const MyProfile = () => {
   return (
@@ -13,6 +14,7 @@ const MyProfile = () => {
         <CreatorProfile />
         <PrimaryInformation />
         <CreatorType />
+        <ContentCategory />
         <SocmediaPlatform />
       </div>
     </div>

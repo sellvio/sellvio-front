@@ -1,28 +1,22 @@
 "use client";
-import { useState } from "react";
-import { motion } from "motion/react";
-import { ToggleSwitchProps } from "../../types";
+import * as Switch from "@radix-ui/react-switch";
+import "./styles.css";
 
-const ToggleSwitch = ({ value, onToggle }: ToggleSwitchProps) => {
-  const [isOn, setIsOn] = useState(false);
-
-  return (
-    <div className="flex flex-col gap-4">
-      <div
-        onClick={() => setIsOn(!isOn)}
-        className={`w-[40px] h-[22px] flex items-center p-[2px] cursor-pointer rounded-full transition-colors duration-300 ${
-          isOn ? "bg-[var(--button-bg)]" : "bg-gray-300"
-        }`}
+const SwitchDemo = () => (
+  <form>
+    <div style={{ display: "flex", alignItems: "center" }}>
+      <label
+        className="Label"
+        htmlFor="airplane-mode"
+        style={{ paddingRight: 15 }}
       >
-        <motion.div
-          layout
-          transition={{ type: "spring" }}
-          className="bg-[var(--white-color)] shadow-md rounded-full w-[18px] h-[18px]"
-          style={{ x: isOn ? 17.5 : 1 }}
-        />
-      </div>
+        Airplane mode
+      </label>
+      <Switch.Root className="SwitchRoot" id="airplane-mode">
+        <Switch.Thumb className="SwitchThumb" />
+      </Switch.Root>
     </div>
-  );
-};
+  </form>
+);
 
-export default ToggleSwitch;
+export default SwitchDemo;
