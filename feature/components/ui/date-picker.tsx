@@ -30,7 +30,7 @@ export function Calendar22() {
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            className="w-[543px] justify-between font-normal text-left py-3"
+            className="w-[543px] justify-between text-left py-3 text-[var(--black-color)] font-[700]"
           >
             {date
               ? `დარჩა ${calculateDaysDifference(date)} დღე`
