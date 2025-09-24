@@ -33,3 +33,8 @@ export type TagsProps = {
   error?: string;
   onChange?: (values: string[]) => void;
 };
+export type ContentCategoryProps = {
+  label?: string;
+  placeholder?: string;
+  error?: string;
+};

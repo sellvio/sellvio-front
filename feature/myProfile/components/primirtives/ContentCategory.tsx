@@ -3,8 +3,6 @@
 import React, { useState } from "react";
 import { initialTags } from "../../data/data";
 
-// პირველი ვარიანტი - მარტივი სტრინგების მასივი
-
 const ContentCategory = () => {
   const [tags, setTags] = useState(initialTags);
   const [selectedTags, setSelectedTags] = useState(new Set());
@@ -70,7 +68,7 @@ const ContentCategory = () => {
                   className={`relative px-4 py-2 rounded-lg cursor-pointer transition-all duration-200 flex items-center gap-2 ${
                     isSelected
                       ? "bg-[var(--tags-bg)] px-[12px] py-[6px] rounded-[6px]   border-[var(--auth-social-input-border)] border text-[var( --auth-social-input-border)] font-[600] flex items-center gap-2"
-                      : "bg-[var(--white-color)] border  text-gray-700"
+                      : "bg-[var(--white-color)] border "
                   }`}
                   onClick={() => handleTagClick(categoryId, tagIndex)}
                 >

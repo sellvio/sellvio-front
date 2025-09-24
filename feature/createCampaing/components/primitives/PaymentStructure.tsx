@@ -27,11 +27,7 @@ const PaymentStructure = () => {
             <h3 className="mt-[26px] font-[700] text-[var(--black-color)] text-[18px]">
               შეთავაზების ტიპი
             </h3>
-            <DropDownInput
-              placeholder="აირჩიეთ ტიპი"
-              options={costOptions}
-              onChange={(val) => console.log(val)}
-            />
+            <DropDownInput placeholder="აირჩიეთ ტიპი" options={costOptions} />
           </div>
 
           <div className="flex gap-4 mt-8 flex-wrap">

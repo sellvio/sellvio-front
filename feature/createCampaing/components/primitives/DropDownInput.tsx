@@ -2,28 +2,13 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { DropDownInputProps } from "../../types";
 
-export interface DropDownOption {
-  label: string;
-  value: string;
-}
-
-export interface DropDownInputProps {
-  placeholder: string;
-  options: DropDownOption[];
-  onChange?: (value: string) => void; // optional callback parent-ისთვის
-}
-
-const DropDownInput = ({
-  placeholder,
-  options,
-  onChange,
-}: DropDownInputProps) => {
+const DropDownInput = ({ placeholder, options }: DropDownInputProps) => {
   const [value, setValue] = useState("");
 
   const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setValue(event.target.value);
-    onChange?.(event.target.value);
   };
 
   return (
