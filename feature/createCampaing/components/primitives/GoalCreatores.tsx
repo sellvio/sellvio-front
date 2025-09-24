@@ -4,9 +4,9 @@ import React, { useState } from "react";
 import { GoalCards } from "../../data/data";
 
 const GoalCreatores = () => {
-  const [selected, setSelected] = useState<number[]>([]);
+  const [selected, setSelected] = useState<string[]>([]);
 
-  const toggleCard = (id: number) => {
+  const toggleCard = (id: string) => {
     setSelected((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );

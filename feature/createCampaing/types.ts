@@ -1,10 +1,10 @@
 export type Item = {
-  id: string;
+  id: number;
   img: string;
   title: string;
 };
 export type CreatoreGoalProps = {
-  id: number;
+  id: string;
   img: string;
   title: string;
   descr: string;
@@ -22,10 +22,6 @@ export type DropDownInputProps = {
 export type DropDownOption = {
   label: string;
   value: string;
-};
-export type ToggleSwitchProps = {
-  value: boolean;
-  onToggle?: (val: boolean) => void;
 };
 export type ButtonSliderProps = {
   active: "analytic" | "campaing";

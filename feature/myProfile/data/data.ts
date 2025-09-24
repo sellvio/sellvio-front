@@ -49,12 +49,15 @@ export const creators: Creator[] = [
   },
 ];
 export const initialTags = [
-  "Technology",
-  "Lifestyle",
-  "Fitness",
-  "Health",
-  "Food",
-  "Gaming",
-  "Fashion",
-  "Cooking",
+  {
+    tags: [
+      "Technology",
+      "Lifestyle",
+      "Fitness",
+      "Health",
+      "Gaming",
+      "Fashion",
+      "Cooking",
+    ],
+  },
 ];
