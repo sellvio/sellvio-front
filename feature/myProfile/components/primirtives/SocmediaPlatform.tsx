@@ -6,11 +6,10 @@ const SocmediaPlatform = () => {
   return (
     <div className="max-w-[1222px] w-full border-[var(--component-border-color)] mx-auto rounded-[8px] px-[30px] py-[30px] flex flex-col border">
       <div className="flex flex-col">
-        <div className="flex items-center gap-2">
-          <h2 className="text-[22px] font-[600] text-[var(--black-color)]">
-            სოციალური მედიის პროფილები
-          </h2>
-        </div>
+        <h2 className="text-[22px] font-[600] text-[var(--black-color)]">
+          სოციალური მედიის პროფილები
+        </h2>
+
         <p className="text-[var(--campaing-form-paragraphs)] text-[19px]">
           განაახლეთ თქვენი სოციალური მედიის სახელები და არხები
         </p>
@@ -90,7 +89,7 @@ const SocmediaPlatform = () => {
           </div>
         </div>
 
-        <div className="flex-1 min-w-[300px] mt-6">
+        <div className="flex-1 min-w-[300px]">
           <h3 className="font-[700] text-[18px] text-[var(--black-color)] mb-4">
             საშუალო ნახვები თითო პოსტზე
           </h3>
