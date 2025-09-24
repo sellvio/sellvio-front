@@ -4,7 +4,7 @@ export type Item = {
   title: string;
 };
 export type CreatoreGoalProps = {
-  id: string;
+  id: number;
   img: string;
   title: string;
   descr: string;

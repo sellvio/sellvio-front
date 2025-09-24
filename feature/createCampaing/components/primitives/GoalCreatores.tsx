@@ -1,8 +1,17 @@
+"use client";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { GoalCards } from "../../data/data";
 
 const GoalCreatores = () => {
+  const [selected, setSelected] = useState<number[]>([]);
+
+  const toggleCard = (id: number) => {
+    setSelected((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
   return (
     <div className="max-w-[1222px] w-full bg-transparent mx-auto rounded-[8px] px-[30px] border-[var(--createCampaing-border)] py-[30px] flex flex-col border">
       <div className="flex flex-col">
@@ -23,32 +32,39 @@ const GoalCreatores = () => {
         </p>
       </div>
       <div className="flex gap-6 w-full flex-wrap">
-        {GoalCards?.map((eachelement) => (
-          <div
-            tabIndex={0}
-            key={eachelement.id}
-            className="w-full
-             lg:max-w-[566px] m-auto h-[111px] cursor-pointer border  border-[var(--createCampaing-border)] rounded-[8px] flex items-center gap-4 px-6 py-4  focus:bg-[var(--goal-auditory-bg)]"
-          >
-            <div className="w-[48px] h-[48px] flex justify-center items-center bg-[var(--goal-auditory-icons-bg)] rounded-md">
-              <Image
-                src={eachelement.img}
-                width={23}
-                height={23}
-                alt={eachelement.title}
-              />
-            </div>
+        {GoalCards?.map((eachelement) => {
+          const isSelected = selected.includes(eachelement.id);
 
-            <div className="flex flex-col">
-              <span className="font-[600] text-[16px] text-[var( --black-color)]">
-                {eachelement.title}
-              </span>
-              <span className="text-[14px] text-[var(  --campaing-form-paragraphs)]">
-                {eachelement.descr}
-              </span>
+          return (
+            <div
+              tabIndex={0}
+              key={eachelement.id}
+              onClick={() => toggleCard(eachelement.id)}
+              className={`w-full lg:max-w-[566px] m-auto h-[111px] cursor-pointer border border-[var(--createCampaing-border)] rounded-[8px] flex items-center gap-4 px-6 py-4 
+                ${
+                  isSelected ? "bg-[var(--goal-auditory-bg)]" : "bg-transparent"
+                }`}
+            >
+              <div className="w-[48px] h-[48px] flex justify-center items-center bg-[var(--goal-auditory-icons-bg)] rounded-md">
+                <Image
+                  src={eachelement.img}
+                  width={23}
+                  height={23}
+                  alt={eachelement.title}
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <span className="font-[600] text-[16px] text-[var(--black-color)]">
+                  {eachelement.title}
+                </span>
+                <span className="text-[14px] text-[var(--campaing-form-paragraphs)]">
+                  {eachelement.descr}
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
