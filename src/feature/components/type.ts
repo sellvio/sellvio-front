@@ -5,3 +5,6 @@ export type RegistrationAsProps = {
   creatorAuth: string;
   businessAuth: string;
 };
+export type HeaderProps = {
+  pageName: string;
+};
