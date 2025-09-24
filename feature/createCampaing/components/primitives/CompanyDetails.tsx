@@ -1,18 +1,9 @@
 "use client";
-
 import Image from "next/image";
 import Tags from "./Tags";
-
-import ToggleSwitch from "./ToggleSwitch";
-import { useState } from "react";
 import { Calendar22 } from "../../../components/ui/date-picker";
 
 const CompanyDetails = () => {
-  const [isOn, setIsOn] = useState(false);
-
-  const toggleHandler = () => {
-    setIsOn((prev) => !prev);
-  };
   return (
     <div className="max-w-[1222px] w-full bg-transparent mx-auto rounded-[8px] px-[30px] py-[30px] flex flex-col border  border-[var(--createCampaing-border)]">
       <div className="flex flex-col">
