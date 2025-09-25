@@ -105,6 +105,27 @@
   --auth-input-border: #e3e8ef;
   --auth-social-input-border: #111827;
   --auth-tag-bg: #3012b31f;
+  --campaing-form-paragraphs: #000000ad;
+  --card-hovers: #f9f9f9;
+  --selected-cards: #f0f0f0;
+  --adding-tags-color: #00000083;
+  --button-bg: #0866ff;
+  --header-bg: #a8e6c8;
+  --component-border-color: #00000038;
+  --creator-type-bg: #0866ff14;
+  --top-creator-status: #00000008;
+  --header-cards: #00000010;
+  --buisness-cards-border: #00000036;
+  --buisness-active: #00d5404f;
+  --buisness-uncomplited: #c13d3f4f;
+  --buisness-card-info: #111827ad;
+  --total-payment: #00d540;
+  --cancel-button-bg: #00000024;
+  --extra-media-bg: #e3e8ef;
+  --tags-bg: #3012b312;
+  --goal-auditory-bg: #99c2ff;
+  --createCampaing-border: #0000007a;
+  --goal-auditory-icons-bg: #e6f1ff;
 }
 
 .dark {
