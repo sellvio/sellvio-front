@@ -2,7 +2,10 @@
 import Image from 'next/image';
 import { heroScrollDownButton } from '../../data/heroButtonsData';
 import Link from 'next/link';
-import { Company, Creator } from '../../../../../public/images/svg/intex';
+import {
+  Company,
+  Creator,
+} from '../../../../../public/images/landingPageIcons/svg/intex';
 
 const HeroSectionBottomSide = () => {
   return (
@@ -14,7 +17,7 @@ const HeroSectionBottomSide = () => {
               {eachElement.label}
               <div className="mt-[2px]">
                 <Image
-                  src="/images/svg/arrow-down.svg"
+                  src="/images/landingPageIcons/svg/arrow-down.svg"
                   alt="arrow down"
                   width={20}
                   height={20}

@@ -35,7 +35,7 @@ const CompanyCard = ({ task }: CompanyCardsProps) => {
         <div className="space-y-[11px] mt-[6px]">
           <div className="flex gap-[8px]">
             <Image
-              src="/images/svg/filter.svg"
+              src="/images/landingPageIcons/svg/filter.svg"
               alt="filter"
               width={18}
               height={18}
@@ -57,7 +57,7 @@ const CompanyCard = ({ task }: CompanyCardsProps) => {
           </div>
           <div className="flex gap-[8px]">
             <Image
-              src="/images/svg/calendar.svg"
+              src="/images/landingPageIcons/svg/calendar.svg"
               alt="calendar"
               width={18}
               height={18}

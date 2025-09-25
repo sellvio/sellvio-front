@@ -7,7 +7,7 @@ const HeroSection = () => {
   return (
     <div className="relative bg-[url('/images/svg/heroSectionBackground.svg')] bg-no-repeat m-auto mt-[12px] p-[17px] rounded-[60px] w-full max-w-[1420px] min-h-[651px]">
       <Image
-        src="/images/png/background-image.png"
+        src="/images/landingPageIcons/png/background-image.png"
         alt="backgroundImage"
         width={572}
         height={434}

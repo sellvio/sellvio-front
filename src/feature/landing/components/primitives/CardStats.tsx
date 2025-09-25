@@ -9,7 +9,7 @@ const CardStats = ({ task }: CompanyCardsProps) => {
         <div className="flex flex-col">
           <div className="flex gap-[2px]">
             <Image
-              src="/images/svg/dollar.svg"
+              src="/images/landingPageIcons/svg/dollar.svg"
               alt="dollar"
               width={18}
               height={18}
@@ -26,7 +26,7 @@ const CardStats = ({ task }: CompanyCardsProps) => {
         <div>
           <div className="flex gap-[2px]">
             <Image
-              src="/images/svg/users.svg"
+              src="/images/landingPageIcons/svg/users.svg"
               alt="users"
               width={18}
               height={18}

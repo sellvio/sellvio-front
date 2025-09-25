@@ -9,7 +9,7 @@ const CardHeader = ({ task }: CompanyCardsProps) => {
         <p className="font-bold text-[22px]">{task.title}</p>
         {task.verified && (
           <Image
-            src="/images/svg/verified.svg"
+            src="/images/landingPageIcons/svg/verified.svg"
             alt="verified"
             width={20}
             height={20}
@@ -17,7 +17,12 @@ const CardHeader = ({ task }: CompanyCardsProps) => {
         )}
       </div>
       <div className="flex items-center gap-[4px]">
-        <Image src="/images/svg/star.svg" alt="rating" width={18} height={18} />
+        <Image
+          src="/images/landingPageIcons/svg/star.svg"
+          alt="rating"
+          width={18}
+          height={18}
+        />
         <p className="font-bold text-[14px]">{task.rating}</p>
       </div>
     </div>
