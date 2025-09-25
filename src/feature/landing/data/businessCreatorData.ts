@@ -7,7 +7,7 @@ export const businessCreatorData: DataProps = {
       title: 'გაწევრიანდი კამპანიის ჩატში',
       description:
         'ყველა კამპანიას აქვს საკუთარი ჩატი, სადაც კრეატორს გაწევრიანება და დეტალებზე კომუნიკაცია შეუძლია კამპანიის მენეჯერთან',
-      icon: '/images/svg/bullhorn.svg',
+      icon: '/images/landingPageIcons/svg/bullhorn.svg',
       alt: 'კამპანიის განცხადების ხატულა',
     },
     {
@@ -15,7 +15,7 @@ export const businessCreatorData: DataProps = {
       title: 'გაეცანი ინსტრუქციებს და შექმენი კონტენტი',
       description:
         'ჩატში არსებული ინფორმაციები საშუალებას გაძლევს დეტალურად გაეცნო საჭირო ინფორმაციას და შექმნა კონტენტი',
-      icon: '/images/svg/gallery.svg',
+      icon: '/images/landingPageIcons/svg/createContent.svg',
       alt: 'ინსტრუქციებისა და კონტენტის ხატულა',
     },
     {
@@ -23,7 +23,7 @@ export const businessCreatorData: DataProps = {
       title: 'ავტომატური ხელშეკრულება',
       description:
         'გაგაზავნე შექმნილი კონტენტი ბიზნესთან ჩატის შიდა სისტემაში და კამპანიის მენეჯერის თანხმობის შემთხვევაში განათავსე ის საკუთარ პლათფორმებზე',
-      icon: '/images/svg/user-check.svg',
+      icon: '/images/landingPageIcons/svg/user-check.svg',
       alt: 'ავტომატური ხელშეკრულების ხატულა',
     },
     {
@@ -31,7 +31,7 @@ export const businessCreatorData: DataProps = {
       title: 'დაელოდე ვიდეოს დადასტურებას და განათავსე',
       description:
         'დადე იურიდიული ხელშეკრულება ბიზნესთან, ავტომატური სისტემის დახმარებით.',
-      icon: '/images/svg/license.svg',
+      icon: '/images/landingPageIcons/svg/license.svg',
       alt: 'იურიდიული ხელშეკრულების ხატულა',
     },
   ],
@@ -41,7 +41,7 @@ export const businessCreatorData: DataProps = {
       title: 'ქმნი კამპანიას',
       description:
         'ბიზნესი ქმნის კამპანიას და აწესებს ჯამურ ბიუჯეტს, მოთხოვნებს და გადახდის პრინციპს.',
-      icon: '/images/svg/bullhorn.svg',
+      icon: '/images/landingPageIcons/svg/bullhorn.svg',
       alt: 'ბიზნეს კამპანიის ხატულა',
     },
     {
@@ -49,7 +49,7 @@ export const businessCreatorData: DataProps = {
       title: 'აფასებ კონტენტს',
       description:
         'კრეტორებთან აქტიურად კომუნიკაციაში ხარ და სოციალურ მედიაში ქვეყნდება მხოლოდ შენი დადასტურებული კონტენტი',
-      icon: '/images/svg/gallery.svg',
+      icon: '/images/landingPageIcons/svg/createContent.svg',
       alt: 'კონტენტის მართვის ხატულა',
     },
     {
@@ -57,7 +57,7 @@ export const businessCreatorData: DataProps = {
       title: 'ავტომატური ხელშეკრულება',
       description:
         'ხელშეკრულების გაფორმება ავტომატიზებულია და თავიდან გარიდებთ ზედმეტ თავის ტკივილს',
-      icon: '/images/svg/user-check.svg',
+      icon: '/images/landingPageIcons/svg/user-check.svg',
       alt: 'ავტომატური ხელშეკრულების ხატულა',
     },
     {
@@ -65,7 +65,7 @@ export const businessCreatorData: DataProps = {
       title: 'შედეგების ანალიზი',
       description:
         'მიიღე დეატალური ანალიტიკა შენს ყველა კამპანაზე და დააკვირდი სხვადასხვა მეტრიკის პერფორმანსს.',
-      icon: '/images/svg/license.svg',
+      icon: '/images/landingPageIcons/svg/license.svg',
       alt: 'შედეგების ანალიზის ხატულა',
     },
   ],

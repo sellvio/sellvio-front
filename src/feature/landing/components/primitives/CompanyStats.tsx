@@ -25,7 +25,7 @@ const CompanyStats = () => {
                     {companyStat.quantity}
                   </p>
                   <Image
-                    src="images/svg/plus.svg"
+                    src="images/landingPageIcons/svg/plus.svg"
                     alt="plus icon"
                     width={18}
                     height={18}

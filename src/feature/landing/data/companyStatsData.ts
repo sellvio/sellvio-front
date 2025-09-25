@@ -7,7 +7,7 @@ export const companyStatsData: companyStatsDataProps[] = [
     title: 'აქტიური შემქმნელი',
     description:
       'პლათფორმაზე რეგისტრირებულია 350-ზე მეტი კრეატორი საქართველოს ყველა კუთხიდან',
-    icon: '/images/svg/usersGroup.svg',
+    icon: '/images/landingPageIcons/svg/usersGroup.svg',
     alt: 'creator icon',
   },
   {
@@ -16,7 +16,7 @@ export const companyStatsData: companyStatsDataProps[] = [
     title: 'აქტიური ბიზნესი',
     description:
       'პლათფორმაზე რეგისტრირებულია 350-ზე მეტი კრეატორი საქართველოს ყველა კუთხიდან',
-    icon: '/images/svg/cup.svg',
+    icon: '/images/landingPageIcons/svg/cup.svg',
     alt: 'business icon',
   },
   {
@@ -25,7 +25,7 @@ export const companyStatsData: companyStatsDataProps[] = [
     title: 'გამომუშავებული',
     description:
       'პლათფორმაზე რეგისტრირებულია 350-ზე მეტი კრეატორი საქართველოს ყველა კუთხიდან',
-    icon: '/images/svg/purpledollar.svg',
+    icon: '/images/landingPageIcons/svg/purpledollar.svg',
     alt: 'dollar icon',
   },
 ];
