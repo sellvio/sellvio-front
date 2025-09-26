@@ -25,4 +25,3 @@ const AnaliticTotalCards = () => {
 };
 
 export default AnaliticTotalCards;
-// var(--lending-border)
