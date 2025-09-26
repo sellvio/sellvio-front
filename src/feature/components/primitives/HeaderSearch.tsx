@@ -5,7 +5,7 @@ const HeaderSearch = () => {
   const [search, setSearch] = useState(false);
   return (
     <div
-      className={`flex justify-between overflow-hidden bg-[var(--header-icon-bg)] ease-in-out transition-all duration-300 ${
+      className={`flex justify-between relative overflow-hidden bg-[var(--header-icon-bg)] ease-in-out transition-all duration-300 ${
         search
           ? 'max-w-[485px] w-full min-h-[50px]'
           : 'max-w-[50px] min-h-[50px] w-full'
@@ -22,7 +22,7 @@ const HeaderSearch = () => {
       />
       <button
         onClick={() => setSearch(!search)}
-        className="flex justify-center items-center w-[50px] h-[50px] cursor-pointer"
+        className="right-0 absolute flex justify-center items-center w-[50px] h-[50px] cursor-pointer"
       >
         <Image
           src="/images/headerIcons/svg/search.svg"
