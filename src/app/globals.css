@@ -1,5 +1,5 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
+@import "tailwindcss";
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -126,6 +126,7 @@
   --goal-auditory-bg: #99c2ff;
   --createCampaing-border: #0000007a;
   --goal-auditory-icons-bg: #e6f1ff;
+  --analytic-cards-border: #00000005;
 }
 
 .dark {
@@ -163,8 +164,8 @@
 }
 
 @font-face {
-  font-family: 'HelveticaNeue';
-  src: url('/fonts/helvetica-neue-regular.ttf') format('truetype');
+  src: url("/fonts/helvetica-neue-regular.ttf") format("truetype");
+  font-family: "HelveticaNeue";
 }
 
 @layer base {
@@ -179,5 +180,5 @@
 body {
   background: #ffffff;
   color: #000000;
-  font-family: 'HelveticaNeue', Helvetica, sans-serif;
+  font-family: "HelveticaNeue", Helvetica, sans-serif;
 }
