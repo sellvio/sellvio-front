@@ -4,9 +4,16 @@ import { platformPerformance } from "../../data/data";
 const PlatformPerformance = () => {
   return (
     <div className="px-[27px] flex flex-col">
-      <h3 className="font-[600] text-[22px] mb-[26px] ">
-        პლათფორმის პერფორმანსი
-      </h3>
+      <div className="flex gap-2 items-center mb-[26px]">
+        <Image
+          src="/images/performanceCardIcons/svg/trending-up.svg"
+          width={20}
+          height={20}
+          alt="trending"
+        />
+        <h3 className="font-[600] text-[22px]  ">პლათფორმის პერფორმანსი</h3>
+      </div>
+
       <div className="max-w-[1440px] w-full flex gap-[26px]">
         {platformPerformance.map((eachElement) => (
           <div
