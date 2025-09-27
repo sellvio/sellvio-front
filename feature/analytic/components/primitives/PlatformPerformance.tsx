@@ -3,18 +3,18 @@ import { platformPerformance } from "../../data/data";
 
 const PlatformPerformance = () => {
   return (
-    <div className="px-[27px] flex flex-col">
-      <div className="flex gap-2 items-center mb-[26px]">
+    <div className="flex flex-col lg:max-w-[1440px] lg:w-full  flex-wrap gap-[26px] px-[15px] mx-auto">
+      <div className="flex gap-2 items-center mb-[26px] pl-[11px]">
         <Image
           src="/images/performanceCardIcons/svg/trending-up.svg"
           width={20}
           height={20}
           alt="trending"
         />
-        <h3 className="font-[600] text-[22px]  ">პლათფორმის პერფორმანსი</h3>
+        <h3 className="font-[600] text-[22px]   ">პლათფორმის პერფორმანსი</h3>
       </div>
 
-      <div className="max-w-[1440px] w-full flex gap-[26px]">
+      <div className="lg:max-w-[1440px] lg:w-full flex flex-wrap justify-center gap-[26px] mx-auto">
         {platformPerformance.map((eachElement) => (
           <div
             key={eachElement.id}
