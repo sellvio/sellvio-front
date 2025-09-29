@@ -23,12 +23,16 @@ interface AuthResponse {
 }
 
 export const authApi = {
-  login: async (credentials: LoginRequest): Promise<ApiResponse<AuthResponse>> => {
+  login: async (
+    credentials: LoginRequest
+  ): Promise<ApiResponse<AuthResponse>> => {
     const response = await apiClient.post('/auth/login', credentials);
     return response.data;
   },
 
-  register: async (userData: RegisterRequest): Promise<ApiResponse<AuthResponse>> => {
+  register: async (
+    userData: RegisterRequest
+  ): Promise<ApiResponse<AuthResponse>> => {
     const response = await apiClient.post('/auth/register', userData);
     return response.data;
   },
@@ -48,12 +52,17 @@ export const authApi = {
     return response.data;
   },
 
-  updateProfile: async (userData: Partial<AuthResponse['user']>): Promise<ApiResponse<AuthResponse['user']>> => {
+  updateProfile: async (
+    userData: Partial<AuthResponse['user']>
+  ): Promise<ApiResponse<AuthResponse['user']>> => {
     const response = await apiClient.put('/auth/profile', userData);
     return response.data;
   },
 
-  changePassword: async (passwordData: { currentPassword: string; newPassword: string }): Promise<ApiResponse> => {
+  changePassword: async (passwordData: {
+    currentPassword: string;
+    newPassword: string;
+  }): Promise<ApiResponse> => {
     const response = await apiClient.put('/auth/change-password', passwordData);
     return response.data;
   },
