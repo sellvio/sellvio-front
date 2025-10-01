@@ -11,7 +11,7 @@ const PlatformPerformance = () => {
           height={20}
           alt="trending"
         />
-        <h3 className="font-[600] text-[22px]   ">პლათფორმის პერფორმანსი</h3>
+        <h3 className="font-[600] text-[22px]">პლათფორმის პერფორმანსი</h3>
       </div>
 
       <div className="lg:max-w-[1440px] lg:w-full flex flex-wrap justify-center gap-[26px] mx-auto">
