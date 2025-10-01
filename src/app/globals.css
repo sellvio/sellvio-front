@@ -130,6 +130,12 @@
   --goal-auditory-icons-bg: #e6f1ff;
   --analytic-cards-border: #00000005;
   --performance-card-line: #00000029;
+  --revenue-overview-total-earn-bg: #00d54014;
+  --revenue-overview-total-earn-text: #00d540;
+  --revenue-overview-total-view-bg: #583ccf14;
+  --revenue-overview-total-view-text: #583ccf;
+  --revenue--overview-1k-view-bg: #0866ff14;
+  --revenue-overview-1k-view-bg: #0866ff;
 }
 
 .dark {
