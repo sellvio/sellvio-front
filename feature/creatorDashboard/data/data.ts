@@ -1,10 +1,4 @@
 export const creatorAnalytic = [
-  { id: 1, title: "ჯამური გამომუშავება", quantity: "$1,988" },
-  { id: 2, title: "აქტიური კამპანიები", quantity: 8 },
-  { id: 3, title: "განხილვის პროცესში", quantity: 3 },
-  { id: 4, title: "ჯამური ნახვები", quantity: "5,621" },
-];
-export const revenueOverview = [
   {
     id: 1,
     quantity: "24,000",
@@ -14,16 +8,90 @@ export const revenueOverview = [
   },
   {
     id: 2,
+    quantity: "3",
+    title: "აქტიური კამპანიები",
+    bg: "bg-[#FB8A2E14]",
+    text: "text-[#FB8A2E]",
+  },
+  {
+    id: 2,
+    quantity: "8",
+    title: "განხილვის პროცესში",
+    bg: "bg-[#0866FF14",
+    text: "text-[#0866FF]",
+  },
+  {
+    id: 3,
     quantity: "24,000",
     title: "ჯამური ნახვები",
     bg: "bg-[#583CCF14]",
     text: "text-[#583CCF]",
   },
+];
+
+export const campaignData = [
+  {
+    id: 1,
+    name: "მარიამი_2000",
+    role: "კამპინგის შემქმნელი",
+    video: "videos/video1.mp4",
+    videoName: "ოკეანეში ქორწილის ინიციატივა",
+    videoDescription:
+      "გემით გასეირნება ოკეანეში სადაც გაიმართება დაუვიწყარი წვეულებები და ღონისძიებები.",
+    publiched: "გამოქვეყნდა:24 აგვისტო 2025, 12:46",
+    status: "უარყოფილია",
+    openChatBtn: "url/openChat1",
+    addUrld: "url/addUrl1",
+    views: "0",
+    campaingName: "კამპანიის სახელი",
+    percent: "68%",
+  },
+  {
+    id: 2,
+    name: "მარიამი_2000",
+    role: "კამპინგის შემქმნელი",
+    video: "videos/video2.mp4",
+    videoName: "ოკეანეში ქორწილის ინიციატივა",
+    videoDescription:
+      "გემით გასეირნება ოკეანეში სადაც გაიმართება დაუვიწყარი წვეულებები და ღონისძიებები.",
+    publiched: "გამოქვეყნდა:24 აგვისტო 2025, 12:46",
+    status: "დადებითი",
+    openChatBtn: "url/openChat2",
+    addUrld: "url/addUrl2",
+    views: "0",
+    campaingName: "კამპანიის სახელი",
+    percent: "68%",
+  },
   {
     id: 3,
-    quantity: "24,000",
-    title: "საშუალოდ 1K ნახვაზე",
-    bg: "bg-[#0866FF14]",
-    text: "text-[#0866FF]",
+    name: "მარიამი_2000",
+    role: "კამპინგის შემქმნელი",
+    video: "videos/video3.mp4",
+    videoName: "ოკეანეში ქორწილის ინიციატივა",
+    videoDescription:
+      "გემით გასეირნება ოკეანეში სადაც გაიმართება დაუვიწყარი წვეულებები და ღონისძიებები.",
+    publiched: "გამოქვეყნდა:24 აგვისტო 2025, 12:46",
+    status: "უარყოფილია",
+    openChatBtn: "url/openChat3",
+    addUrld: "url/addUrl3",
+    views: "0",
+    campaingName: "კამპანიის სახელი",
+    percent: "68%",
+  },
+  {
+    id: 4,
+    name: "მარიამი_2000",
+    role: "კამპინგის შემქმნელი",
+    video: "videos/video4.mp4",
+    videoName: "ოკეანეში ქორწილის ინიციატივა",
+    videoDescription:
+      "გემით გასეირნება ოკეანეში სადაც გაიმართება დაუვიწყარი წვეულებები და ღონისძიებები.",
+    publiched: "გამოქვეყნდა:24 აგვისტო 2025, 12:46",
+    status: "უარყოფილია",
+    openChatBtn: "url/openChat4",
+    addUrld: "url/addUrl4",
+    views: "0",
+    campaingName: "კამპანიის სახელი",
+    percent: "68%",
   },
 ];
