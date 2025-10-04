@@ -31,10 +31,10 @@ export const creatorAnalytic = [
 
 export const campaignData = [
   {
-    id: 1,
+    id: "1",
     name: "მარიამი_2000",
     role: "კამპინგის შემქმნელი",
-    video: "/creatorDashboard/svg/videoFrames.svg",
+    video: "/images/creatorDashboard/png/videoFrames.png",
     videoName: "ოკეანეში ქორწილის ინიციატივა",
     videoDescription:
       "გემით გასეირნება ოკეანეში სადაც გაიმართება დაუვიწყარი წვეულებები და ღონისძიებები.",
@@ -47,10 +47,10 @@ export const campaignData = [
     percent: "68%",
   },
   {
-    id: 2,
+    id: "2",
     name: "მარიამი_2000",
     role: "კამპინგის შემქმნელი",
-    video: "/creatorDashboard/svg/videoFrames.svg",
+    video: "/images/creatorDashboard/png/videoFrames.png",
     videoName: "ოკეანეში ქორწილის ინიციატივა",
     videoDescription:
       "გემით გასეირნება ოკეანეში სადაც გაიმართება დაუვიწყარი წვეულებები და ღონისძიებები.",
@@ -63,10 +63,10 @@ export const campaignData = [
     percent: "68%",
   },
   {
-    id: 3,
+    id: "3",
     name: "მარიამი_2000",
     role: "კამპინგის შემქმნელი",
-    video: "/creatorDashboard/svg/videoFrames.svg",
+    video: "/images/creatorDashboard/png/videoFrames.png",
     videoName: "ოკეანეში ქორწილის ინიციატივა",
     videoDescription:
       "გემით გასეირნება ოკეანეში სადაც გაიმართება დაუვიწყარი წვეულებები და ღონისძიებები.",
@@ -79,10 +79,10 @@ export const campaignData = [
     percent: "68%",
   },
   {
-    id: 4,
+    id: "4",
     name: "მარიამი_2000",
     role: "კამპინგის შემქმნელი",
-    video: "/creatorDashboard/svg/videoFrames.svg",
+    video: "/images/creatorDashboard/png/videoFrames.png",
     videoName: "ოკეანეში ქორწილის ინიციატივა",
     videoDescription:
       "გემით გასეირნება ოკეანეში სადაც გაიმართება დაუვიწყარი წვეულებები და ღონისძიებები.",
