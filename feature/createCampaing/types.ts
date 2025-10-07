@@ -26,6 +26,11 @@ export type DropDownOption = {
 export type ButtonSliderProps = {
   active: "analytic" | "campaing";
   setActive: (value: "analytic" | "campaing") => void;
+  firstLabel: string;
+  secondLabel: string;
+  firstImage?: string;
+  secondImage?: string;
+  className?: string;
 };
 export type TagsProps = {
   label: string;

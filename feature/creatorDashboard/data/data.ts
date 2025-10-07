@@ -17,7 +17,7 @@ export const creatorAnalytic = [
     id: 2,
     quantity: "8",
     title: "განხილვის პროცესში",
-    bg: "bg-[#0866FF14",
+    bg: "bg-[#0866FF14]",
     text: "text-[#0866FF]",
   },
   {
