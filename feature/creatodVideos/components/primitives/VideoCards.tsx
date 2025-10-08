@@ -20,8 +20,8 @@ const VideoCards = () => {
             firstImage="/images/creatorDashboard/svg/trumpet.svg"
             secondImage="/images/creatorDashboard/svg/gallery.svg"
           />
-          <Link href="createForm">
-            <button className="bg-[var(--button-bg)] text-[var(  --white-color)] w-[229px] py-3 justify-center  border cursor-pointer text-[14px] flex items-center gap-2 text-[var(--white-color)] rounded-[8px]">
+          <Link href="/createForm">
+            <button className="bg-[var(--button-bg)] w-[229px] py-3 justify-center  border cursor-pointer text-[14px] flex items-center gap-2 text-[var(--white-color)] rounded-[8px]">
               <Image
                 src="/images/creatorDashboard/svg/users.svg"
                 width={18}
@@ -107,7 +107,7 @@ const VideoCards = () => {
                   <div className="flex items-center gap-3">
                     <p className="text-[var(--buisness-card-info)] font-medium flex gap-2">
                       <span>{eachElement.creator.toLocaleString()}</span>
-                      შექმნილი
+                      ვიდეო
                     </p>
                   </div>
                 </div>
