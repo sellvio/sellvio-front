@@ -136,6 +136,12 @@
   --revenue-overview-total-view-text: #583ccf;
   --revenue--overview-1k-view-bg: #0866ff14;
   --revenue-overview-1k-view-bg: #0866ff;
+  --approved-card-status: #00ff4dbd;
+  --videos-status-green: #61ff9138;
+  --videos-status-pending: #fbde18c2;
+  --videos-status-rejected: #c13d3f4f;
+  --videos-status-rejected-text: #ffffffc2;
+  --videos-card-paragraph: #ffffffad;
 }
 
 .dark {
