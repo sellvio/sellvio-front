@@ -28,7 +28,7 @@ const YourVideos = () => {
               height={18}
               alt="icon"
             />
-            დაიწყე ახალი კემპინგი
+            მოძებნე მეტი კამპანია
           </button>
         </Link>
       </div>

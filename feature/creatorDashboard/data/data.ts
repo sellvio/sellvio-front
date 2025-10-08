@@ -14,14 +14,14 @@ export const creatorAnalytic = [
     text: "text-[#FB8A2E]",
   },
   {
-    id: 2,
+    id: 3,
     quantity: "8",
     title: "განხილვის პროცესში",
     bg: "bg-[#0866FF14]",
     text: "text-[#0866FF]",
   },
   {
-    id: 3,
+    id: 4,
     quantity: "24,000",
     title: "ჯამური ნახვები",
     bg: "bg-[#583CCF14]",

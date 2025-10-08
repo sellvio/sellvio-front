@@ -1,0 +1,38 @@
+export const videoData = [
+  {
+    id: "5",
+    status: "გაწევრიანებული",
+    statusImage: "/images/creatorVideos/svg/done.svg",
+    views: 45000,
+    creator: 8,
+    fullbudget: 5240,
+    totalpayment: 1240,
+  },
+  {
+    id: "6",
+    status: "მომლოდინეთა სიაში",
+    statusImage: "/images/creatorVideos/svg/pending.svg",
+    views: 32000,
+    creator: 5,
+    fullbudget: 4200,
+    totalpayment: 800,
+  },
+  {
+    id: "7",
+    status: "დადასტურებული",
+    statusImage: "/images/creatorVideos/svg/done.svg",
+    views: 56000,
+    creator: 12,
+    fullbudget: 10000,
+    totalpayment: 2100,
+  },
+  {
+    id: "8",
+    status: "უარყოფილი",
+    statusImage: "/images/creatorVideos/svg/rejected.svg",
+    views: 15000,
+    creator: 3,
+    fullbudget: 3500,
+    totalpayment: 500,
+  },
+];

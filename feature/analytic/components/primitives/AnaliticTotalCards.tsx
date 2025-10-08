@@ -1,13 +1,8 @@
-"use client";
-import { useState } from "react";
-import ToggleButtons from "../../../createCampaing/components/primitives/ToggleButtons";
 import { analyticCards } from "../../data/data";
 
 const AnaliticTotalCards = () => {
-  const [active, setActive] = useState<"analytic" | "campaing">("analytic");
   return (
     <div className="px-[15px] flex flex-col">
-      <ToggleButtons active={active} setActive={setActive} />
       <h3 className="font-[600] text-[22px] mb-[26px] pl-[11px] ">ანალიტიკა</h3>
       <div className="max-w-[1440px] w-full flex flex-wrap justify-center gap-[17px]">
         {analyticCards.map((eachElement) => (
