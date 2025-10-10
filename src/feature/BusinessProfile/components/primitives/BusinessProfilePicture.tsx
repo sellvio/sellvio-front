@@ -1,48 +1,19 @@
 'use client';
-import { businessProfileData } from '@/lib/api/businessProfileData';
-import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
-import { useRef, useState } from 'react';
 
 const BusinessProfilePicture = () => {
-  const [banner, setBanner] = useState<string | null>(null);
-  const [profile, setProfile] = useState<string | null>(null);
-
-  const bannerInputRef = useRef<HTMLInputElement | null>(null);
-  const profileInputRef = useRef<HTMLInputElement | null>(null);
-
-  const handleUpload = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    setter: React.Dispatch<React.SetStateAction<string | null>>
-  ) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setter(URL.createObjectURL(file));
-    }
-  };
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['cards'],
-    queryFn: businessProfileData,
-  });
-
-  if (isError) return <p>Failed to fetch Cards</p>;
-  if (isLoading) return <p>Loading...</p>;
-
   return (
-    <div className="flex flex-col items-end gap-[24px] m-auto w-full max-w-[1360px]">
+    <div className="flex flex-col items-end gap-[24px] m-auto w-full max-w-[1360px] min-h-[548px]">
       <div className="flex flex-col items-center gap-4 mt-[48px] w-full">
         <div
           className="relative flex justify-end items-start bg-black p-[20px] rounded-[12px] w-full max-w-[1360px] min-h-[397px]"
           style={{
-            backgroundImage: banner ? `url(${banner})` : 'none',
+            backgroundImage: `url('/images/businessIcons/png/defaultBanner.png')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
         >
-          <div
-            onClick={() => bannerInputRef.current?.click()}
-            className="flex items-center gap-[14px] bg-[#FFFFFF1F] px-[15px] py-[12px] border border-[#3012B3AD] rounded-[12px] cursor-pointer"
-          >
+          <div className="flex items-center gap-[14px] bg-[#FFFFFF1F] px-[15px] py-[12px] border border-[#3012B3AD] rounded-[12px] cursor-pointer">
             <Image
               src="/images/businessIcons/svg/editIcon.svg"
               alt="editIcon"
@@ -52,41 +23,15 @@ const BusinessProfilePicture = () => {
             <p className="text-[#FFFFFFB8]">შეასწორე პროფილი</p>
           </div>
           <div
-            onClick={() => profileInputRef.current?.click()}
             className="bottom-[-151px] left-[75px] absolute border-[#000000] border-[4px] rounded-full w-[226px] h-[226px] cursor-pointer"
             style={{
-              backgroundImage: profile
-                ? `url(${profile})`
-                : `url('/images/businessIcons/png/defaultUserProfile.png')`,
+              backgroundImage: `url('/images/businessIcons/png/defaultUserProfile.png')`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}
           ></div>
         </div>
-        <input
-          ref={bannerInputRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={(event) => handleUpload(event, setBanner)}
-        />
-        <input
-          ref={profileInputRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={(event) => handleUpload(event, setProfile)}
-        />
       </div>
-      {data?.map((profile) => (
-        <div
-          key={profile.id}
-          className="flex gap-[20px] mr-[60px] w-full max-w-[969px] h-[106px] felx-col"
-        >
-          <p></p>
-          <div></div>
-        </div>
-      ))}
     </div>
   );
 };

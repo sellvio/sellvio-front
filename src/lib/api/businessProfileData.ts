@@ -1,20 +1,21 @@
-import { CompanyCardProps } from '@/feature/landing/type';
-import axios from 'axios';
+const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-const baseURL: string | undefined = process.env.NEXT_PUBLIC_API_BASE_URL;
+export async function businessProfileData() {
+  const token = localStorage.getItem('access_token');
+  const res = await fetch(`${baseURL}/auth/profile`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
-export const businessProfileData = async () => {
-  if (!baseURL) {
-    throw new Error('API URL is not defined');
+  if (!res.ok) {
+    const errorData = await res.json();
+    console.error('Profile fetch error:', errorData);
+    throw new Error('Failed to fetch profile');
   }
 
-  try {
-    const response = await axios.get<CompanyCardProps[]>(
-      `${baseURL}/auth/profile`
-    );
-    return response.data;
-  } catch (error) {
-    console.log(error);
-    throw new Error('Failed to fetch Cards');
-  }
-};
+  const data = await res.json();
+  console.log('Fetched profile data:', data);
+  return data;
+}
