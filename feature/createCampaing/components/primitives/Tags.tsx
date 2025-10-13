@@ -40,7 +40,9 @@ const Tags = ({
         <input
           type="text"
           placeholder={placeholder}
-          className="px-[18px] text-[var(--adding-tags-color)] font-[700] py-[17px] rounded-[8px] outline outline-[var(--auth-input-border)] w-full"
+          className="px-[18px] text-[var(--adding-tags-color)] font-[700] py-[17px] rounded-[8px] outline outline-[var(--auth-input-border)] w-full  bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset]
+=
+         backdrop-blur-[7.5px]"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyPress={handleKeyPress}
@@ -49,7 +51,9 @@ const Tags = ({
         <button
           type="button"
           onClick={handleAdd}
-          className="border border-[var(--auth-input-border)] w-[56px] h-[56px] flex items-center justify-center rounded-[8px] cursor-pointer"
+          className="border w-[56px] h-[56px] flex items-center justify-center rounded-[8px] cursor-pointer bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset]
+=
+         backdrop-blur-[7.5px] "
         >
           <Image
             src="./images/svg/plusBlack.svg"
@@ -71,7 +75,9 @@ const Tags = ({
               <button
                 type="button"
                 onClick={() => handleRemove(index)}
-                className="flex items-center justify-center text-[var( --auth-social-input-border)]hover:text-red-500 mb-[3px]"
+                className="flex items-center justify-center text-[var( --auth-social-input-border)]hover:text-red-500 mb-[3px]  bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset]
+=
+         backdrop-blur-[7.5px]"
               >
                 ×
               </button>

@@ -142,6 +142,9 @@
   --videos-status-rejected: #c13d3f4f;
   --videos-status-rejected-text: #ffffffc2;
   --videos-card-paragraph: #ffffffad;
+  --company-basics-bg: #0866ff33;
+  --platforms-bg: #fb8a2e33;
+  --payment-strucutre-bg: #00d54033;
 }
 
 .dark {
