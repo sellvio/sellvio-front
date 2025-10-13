@@ -11,7 +11,7 @@ const CompanyBasics = () => {
   };
 
   return (
-    <div className="max-w-[1222px] w-full bg-transparent mx-auto rounded-[8px] px-[30px] py-[30px] flex flex-col border justify-center  border-[var(--createCampaing-border)]">
+    <div className="max-w-[1222px] w-full bg-[var(--company-basics-bg)] mx-auto rounded-[8px] px-[30px] py-[30px] flex flex-col border justify-center  border-[var(--createCampaing-border)]">
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
           <Image
@@ -38,7 +38,9 @@ const CompanyBasics = () => {
             <input
               type="text"
               placeholder="მაგ: საზაფხულო პროდუქტი"
-              className="w-full border border-[var(--auth-input-border)] rounded-[8px] px-3 py-2 text-[var(--black-color)] font-[700] outline-none"
+              className="w-full border bg-[#FFFFFF1A] border-[#FFFFFF] rounded-[8px] px-3 py-2 text-[var(--black-color)] font-[700] outline-none shadow-[4px_5px_6px_0px_#FFFFFF66_inset]
+=
+         backdrop-blur-[7.5px]"
             />
           </div>
 
@@ -49,7 +51,9 @@ const CompanyBasics = () => {
             <input
               type={isOn ? "password" : "text"}
               placeholder="₾ 5000"
-              className="w-full border border-[var(--auth-input-border) rounded-[8px] px-3 py-2 text-[var(--black-color)] font-[700] outline-none"
+              className="w-full border  bg-[#FFFFFF1A] border-[#FFFFFF] border-[var(--auth-input-border) rounded-[8px] px-3 py-2 text-[var(--black-color)] font-[700] outline-none shadow-[4px_5px_6px_0px_#FFFFFF66_inset]
+=
+         backdrop-blur-[7.5px]"
             />
 
             <div
@@ -70,7 +74,9 @@ const CompanyBasics = () => {
           </h3>
           <textarea
             placeholder="აღწერეთ თქვენი კამპანიის მიზნები, სამიზნე აუდიტორია და რას ეძებთ შემქმნელებში..."
-            className="w-full border border-[var(--auth-input-border)] rounded-[8px] px-3 py-2 text-[var(--black-color)] min-h-[218px] font-[700] outline-none resize-none"
+            className="w-full border  rounded-[8px] px-3 py-2 text-[var(--black-color)] min-h-[218px] font-[700] outline-none resize-none  bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset]
+=
+         backdrop-blur-[7.5px]"
           />
         </div>
       </form>

@@ -25,12 +25,21 @@ export function Calendar22() {
   };
 
   return (
-    <div className="w-full">
+    <div
+      className="w-full  border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset]
+=
+         backdrop-blur-[7.5px]"
+    >
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            className="w-[543px] justify-between text-left py-3 text-[var(--black-color)] font-[700]"
+            className="
+    w-[543px] justify-between text-left py-3 text-[var(--black-color)] font-[700]
+    bg-[#FFFFFF1A] border-[#FFFFFF] 
+    shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px]
+    hover:bg-[#FFFFFF1A] active:bg-[#FFFFFF1A] focus:bg-[#FFFFFF1A]
+  "
           >
             {date
               ? `დარჩა ${calculateDaysDifference(date)} დღე`

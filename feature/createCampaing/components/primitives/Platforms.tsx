@@ -13,7 +13,7 @@ const Platforms = () => {
   };
 
   return (
-    <div className="max-w-[1222px] w-full bg-transparent mx-auto rounded-[8px] px-[30px] py-[30px] flex flex-col border border-[var(--createCampaing-border)]">
+    <div className="max-w-[1222px] w-full bg-[var(--platforms-bg)] mx-auto rounded-[8px] px-[30px] py-[30px] flex flex-col border border-[var(--createCampaing-border)]">
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
           <Image
@@ -42,11 +42,11 @@ const Platforms = () => {
               onClick={() => togglePlatform(eachelement.id)}
               className={`lg:w-[264px] h-[111px] border lg:mx-auto rounded-[8px] 
                 flex flex-col items-center justify-center gap-4 cursor-pointer 
-                transition-colors outline-none
+                transition-colors outline-none bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset]
+=
+         backdrop-blur-[7.5px]
                 ${
-                  isSelected
-                    ? "bg-[var(--selected-cards)]"
-                    : "bg-transparent hover:bg-[var(--card-hovers)]"
+                  isSelected ? "bg-[var(--selected-cards)]" : "bg-transparent"
                 }`}
             >
               <Image
