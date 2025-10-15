@@ -3,7 +3,7 @@ import { businessProfileData } from '@/lib/api/businessProfileData';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 
-const CompanyInformation = () => {
+const CompanyInformation = ({ changeProfile, setChangeProfile }) => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['businessProfile'],
     queryFn: businessProfileData,
@@ -36,7 +36,7 @@ const CompanyInformation = () => {
                 id="company"
                 type="text"
                 defaultValue={profile?.company_name || ''}
-                readOnly
+                readOnly={!changeProfile}
                 className="bg-[rgba(255,255,255,0.14)] shadow-[4px_5px_6px_0_rgba(255,255,255,0.4)_inset,-1px_-3px_4px_0_rgba(255,255,255,0.4)_inset,0_8px_13px_0_rgba(0,0,0,0.04)] backdrop-blur-[7.5px] p-2rounded px-[18px] border border-[#E3E8EF] rounded-[8px] w-full min-h-[56px] font-bold text-[#000000D4] text-[18px]"
               />
             </div>
@@ -51,7 +51,7 @@ const CompanyInformation = () => {
                 id="industry"
                 type="text"
                 defaultValue={profile?.business_email || ''}
-                readOnly
+                readOnly={!changeProfile}
                 className="bg-[rgba(255,255,255,0.14)] shadow-[4px_5px_6px_0_rgba(255,255,255,0.4)_inset,-1px_-3px_4px_0_rgba(255,255,255,0.4)_inset,0_8px_13px_0_rgba(0,0,0,0.04)] backdrop-blur-[7.5px] p-2rounded px-[18px] border border-[#E3E8EF] rounded-[8px] w-full min-h-[56px] font-bold text-[#000000D4] text-[18px]"
               />
             </div>
@@ -64,7 +64,7 @@ const CompanyInformation = () => {
           <input
             type="text"
             id="description"
-            readOnly
+            readOnly={!changeProfile}
             defaultValue={profile?.description || ''}
             className="bg-[rgba(255,255,255,0.14)] shadow-[4px_5px_6px_0_rgba(255,255,255,0.4)_inset,-1px_-3px_4px_0_rgba(255,255,255,0.4)_inset,0_8px_13px_0_rgba(0,0,0,0.04)] backdrop-blur-[7.5px] p-2rounded px-[18px] border border-[#E3E8EF] rounded-[8px] w-full min-h-[56px] font-bold text-[#000000D4] text-[18px]"
           />
@@ -105,7 +105,7 @@ const CompanyInformation = () => {
                 <input
                   type="email"
                   id="phone"
-                  readOnly
+                  readOnly={!changeProfile}
                   className="bg-[rgba(255,255,255,0.14)] shadow-[4px_5px_6px_0_rgba(255,255,255,0.4)_inset,-1px_-3px_4px_0_rgba(255,255,255,0.4)_inset,0_8px_13px_0_rgba(0,0,0,0.04)] backdrop-blur-[7.5px] p-2rounded px-[18px] border border-[#E3E8EF] rounded-[8px] w-full min-h-[56px] font-bold text-[#000000D4] text-[18px]"
                   defaultValue={profile?.phone || ''}
                 />
@@ -126,7 +126,7 @@ const CompanyInformation = () => {
               <input
                 type="email"
                 id="web"
-                readOnly
+                readOnly={!changeProfile}
                 className="bg-[rgba(255,255,255,0.14)] shadow-[4px_5px_6px_0_rgba(255,255,255,0.4)_inset,-1px_-3px_4px_0_rgba(255,255,255,0.4)_inset,0_8px_13px_0_rgba(0,0,0,0.04)] backdrop-blur-[7.5px] p-2rounded px-[18px] border border-[#E3E8EF] rounded-[8px] w-full min-h-[56px] font-bold text-[#000000D4] text-[18px]"
                 defaultValue={profile?.website_url || ''}
               />
@@ -149,7 +149,7 @@ const CompanyInformation = () => {
                 <input
                   type="text"
                   id="location"
-                  readOnly
+                  readOnly={!changeProfile}
                   className="bg-[rgba(255,255,255,0.14)] shadow-[4px_5px_6px_0_rgba(255,255,255,0.4)_inset,-1px_-3px_4px_0_rgba(255,255,255,0.4)_inset,0_8px_13px_0_rgba(0,0,0,0.04)] backdrop-blur-[7.5px] p-2rounded px-[18px] border border-[#E3E8EF] rounded-[8px] w-full min-h-[56px] font-bold text-[#000000D4] text-[18px]"
                   defaultValue={profile?.description || ''}
                 />
@@ -169,7 +169,7 @@ const CompanyInformation = () => {
                 <input
                   type="email"
                   id="phone"
-                  readOnly
+                  readOnly={!changeProfile}
                   className="bg-[rgba(255,255,255,0.14)] shadow-[4px_5px_6px_0_rgba(255,255,255,0.4)_inset,-1px_-3px_4px_0_rgba(255,255,255,0.4)_inset,0_8px_13px_0_rgba(0,0,0,0.04)] backdrop-blur-[7.5px] p-2rounded px-[18px] border border-[#E3E8EF] rounded-[8px] w-full min-h-[56px] font-bold text-[#000000D4] text-[18px]"
                   defaultValue={profile?.description || ''}
                 />
@@ -178,6 +178,34 @@ const CompanyInformation = () => {
           </div>
         </div>
       </form>
+      {changeProfile && (
+        <div className="flex justify-end m-auto mt-[48px] w-full max-w-[1225px]">
+          <div className="flex gap-[22px]">
+            <button
+              onClick={() =>
+                setChangeProfile((changeProfile) => !changeProfile)
+              }
+              className="shadow-[4px_5px_6px_0px_rgba(255,255,255,0.4)_inset,-1px_-3px_4px_0px_rgba(255,255,255,0.4)_inset,0px_8px_13px_0px_rgba(0,0,0,0.04)] backdrop-blur-[7.5px] px-[77px] py-[16px] border border-[#0866FF] rounded-[8px] font-bold text-[#0061FF] text-[14px] cursor-pointer"
+            >
+              გაუქმება
+            </button>
+            <button
+              className="backdrop-blur-[7.5px] px-[60px] py-[16px] border border-white rounded-[8px] font-bold text-[#FFFFFF]"
+              style={{
+                background: '#0866FFE0',
+                borderWidth: '0.5px',
+                boxShadow: `
+      4px 5px 6px 0px #FFFFFF66 inset,
+      -1px -3px 4px 0px #FFFFFF66 inset,
+      0px 8px 13px 0px #0000000A
+    `,
+              }}
+            >
+              დადასტურება
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
