@@ -5,7 +5,7 @@ import { costOptions } from "../../data/data";
 
 const PaymentStructure = () => {
   return (
-    <div className="flex flex-col bg-transparent mx-auto px-[30px] py-[30px] border rounded-[8px] w-full max-w-[1222px]  border-[var(--createCampaing-border)]">
+    <div className="flex flex-col bg-[var(--payment-strucutre-bg)] mx-auto px-[30px] py-[30px] border rounded-[8px] w-full max-w-[1222px]  border-[var(--createCampaing-border)]">
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
           <Image
@@ -38,7 +38,9 @@ const PaymentStructure = () => {
               <input
                 type="text"
                 placeholder="რაოდენობა"
-                className="px-3 py-2 border border-[var(--auth-input-border)] rounded-[8px] outline-none w-full font-[700] text-[var(--black-color)]"
+                className="px-3 py-2 border  rounded-[8px] outline-none w-full font-[700] text-[var(--black-color)] bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset]
+=
+         backdrop-blur-[7.5px]"
               />
             </div>
 
@@ -49,7 +51,9 @@ const PaymentStructure = () => {
               <input
                 type="text"
                 placeholder="თანხა"
-                className="px-3 py-2 border border-[var(--auth-input-border)] rounded-[8px] outline-none w-full font-[700] text-[var(--black-color)]"
+                className="px-3 py-2 border  rounded-[8px] outline-none w-full font-[700] text-[var(--black-color)] bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset]
+=
+         backdrop-blur-[7.5px]"
               />
             </div>
           </div>
