@@ -5,7 +5,7 @@ import { Calendar22 } from "../../../components/ui/date-picker";
 
 const CompanyDetails = () => {
   return (
-    <div className="max-w-[1222px] w-full bg-[var(--payment-strucutre-bg)] mx-auto rounded-[8px] px-[30px] py-[30px] flex flex-col border  border-[var(--createCampaing-border)]">
+    <div className="max-w-[1222px] w-full bg-[var(--company-basics-bg)] mx-auto rounded-[8px] px-[30px] py-[30px] flex flex-col border  border-[var(--createCampaing-border)]">
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
           <Image

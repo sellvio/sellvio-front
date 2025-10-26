@@ -5,7 +5,7 @@ import { costOptions } from "../../data/data";
 
 const PaymentStructure = () => {
   return (
-    <div className="flex flex-col bg-[var(--payment-strucutre-bg)] mx-auto px-[30px] py-[30px] border rounded-[8px] w-full max-w-[1222px]  border-[var(--createCampaing-border)]">
+    <div className="flex flex-col bg-[var(--company-basics-bg)] mx-auto px-[30px] py-[30px] border rounded-[8px] w-full max-w-[1222px]  border-[var(--createCampaing-border)]">
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
           <Image
