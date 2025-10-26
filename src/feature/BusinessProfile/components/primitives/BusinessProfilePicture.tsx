@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { BusinessProfilePictureProps } from '../../type';
 import { useQuery } from '@tanstack/react-query';
 import { businessProfileData } from '@/lib/api/businessProfileData';
+import BusinessProfilePictureSkeleton from './BusinessProfilePictureSkeleton';
 
 const BusinessProfilePicture = ({
   setChangeProfile,
@@ -42,7 +43,10 @@ const BusinessProfilePicture = ({
   ];
 
   if (isError) return <p>Failed to fetch profile</p>;
-  return (
+
+  return isLoading ? (
+    <BusinessProfilePictureSkeleton />
+  ) : (
     <div className="flex flex-col items-end gap-[24px] m-auto w-full max-w-[1360px] min-h-[548px]">
       <div className="flex flex-col items-center gap-4 mt-[48px] w-full">
         <div
@@ -54,7 +58,7 @@ const BusinessProfilePicture = ({
           }}
         >
           <button
-            onClick={() => setChangeProfile((changeProfile) => !changeProfile)}
+            onClick={() => setChangeProfile((prev) => !prev)}
             className="flex items-center gap-[14px] bg-[#FFFFFF1F] shadow-[4px_5px_6px_0px_#FFFFFF33_inset] backdrop-blur-[7.5px] px-[15px] py-[12px] rounded-[12px] cursor-pointer"
           >
             <Image
@@ -83,7 +87,7 @@ const BusinessProfilePicture = ({
           {tags.map((tag) => (
             <div
               key={tag.id}
-              className="flex items-center gap-[6px] bg-[#0866FF26] shadow-[inset_4px_5px_6px_#FFFFFF66, backdrop-blur-[7.5px] px-[22px] py-[13px] border border-[#1118271F] rounded-[12px] cursor-pointer inset_-1px_-3px_4px_#FFFFFF66]"
+              className="flex items-center gap-[6px] bg-[#0866FF26] shadow-[inset_4px_5px_6px_#FFFFFF66] backdrop-blur-[7.5px] px-[22px] py-[13px] border border-[#1118271F] rounded-[12px] cursor-pointer"
             >
               <Image src={tag.tagsIcon} alt="tags" width={20} height={20} />
               <p className="font-medium text-[#111827] text-[20px]">
