@@ -27,13 +27,11 @@ const CompanyInformation = ({
 
   const { mutate, isPending } = useMutation({
     mutationFn: updateBusinessProfile,
-    onSuccess: (responseData) => {
-      console.log('✅ Update successful:', responseData);
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['businessProfile'] });
       setChangeProfile(false);
     },
     onError: (error: Error) => {
-      console.error('❌ Failed to update profile:', error);
       alert(`შეცდომა: ${error.message}`);
     },
   });
@@ -213,14 +211,31 @@ const CompanyInformation = ({
             </p>
           </div>
           <div className="flex gap-[8px]">
-            {profile?.business_tags.map((tag) => (
-              <div
-                key={tag.tag_id}
-                className="bg-[#3012B31F] px-[22px] py-[10px] border border-[#3012B3] rounded-[8px] font-semibold text-[#111827]"
-              >
-                {tag.tags.name}
-              </div>
-            ))}
+            <div className="flex justify-between items-center bg-[#FFFFFF24] pr-[18px] border border-[#E3E8EF] rounded-[8px] w-full max-w-[463px] min-h-[42px]">
+              <input
+                placeholder="შეიყვანეთ კონტენტის კატეგორია..."
+                type="text"
+                className="px-[18px] outline-none w-full h-full min-h-[42px] font-bold text-[#111827] text-[18px]"
+              />
+              <button className="cursor-pointer">
+                <Image
+                  src={'/images/businessProfileIcon/svg/categoryPlus.svg'}
+                  alt="pluse"
+                  width={22}
+                  height={22}
+                />
+              </button>
+            </div>
+            <div className="flex gap-[8px]">
+              {profile?.business_tags.map((tag) => (
+                <div
+                  key={tag.tag_id}
+                  className="bg-[#3012B31F] px-[22px] py-[10px] border border-[#3012B3] rounded-[8px] font-semibold text-[#111827]"
+                >
+                  {tag.tags.name}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 

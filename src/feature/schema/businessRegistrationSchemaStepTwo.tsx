@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-// StepTwo ფორმის ველები
 export const RegistrationStepTwoSchema = z
   .object({
     contactNumber: z

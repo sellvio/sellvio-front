@@ -15,6 +15,17 @@ export const businessProfileSchema = z.object({
   legal_status: z.string().nullable().optional(),
   location: z.string().nullable().optional(),
   business_industry_name: z.string().nullable().optional(),
+  business_tags: z
+    .array(
+      z.object({
+        tag_id: z.number(),
+        tags: z.object({
+          name: z.string(),
+        }),
+      })
+    )
+    .nullable()
+    .optional(),
 });
 
 export type BusinessProfileSchema = z.infer<typeof businessProfileSchema>;
