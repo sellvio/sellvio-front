@@ -1,16 +1,36 @@
-import Header from '@/feature/components/composites/Header';
+'use client';
+import { useState } from 'react';
+import BusinessProfilePicture from '../primitives/BusinessProfilePicture';
+import CompanyInformation from '../primitives/CompanyInformation';
+import CanseEditlPopup from '../primitives/CanseEditlPopup';
+import ProfileUpdatePopup from '../primitives/ProfileUpdatePopup';
 
 const BusinessProfile = () => {
+  const [changeProfile, setChangeProfile] = useState<boolean>(false);
+  const [successUpdate, setSuccsessUpdate] = useState<boolean>(false);
+  const [popupVisible, setPopupVisible] = useState<boolean>(false);
+
   return (
-    <div>
-      <Header
-        pageName={'ბიზნეს დეშბორდი'}
-        showSearch={true}
-        showProfileButton={true}
-        showNotificationButton={true}
-        closeButton={false}
-        categoryButton={false}
+    <div className="relative">
+      <CanseEditlPopup
+        popupVisible={popupVisible}
+        setPopupVisible={setPopupVisible}
+        setChangeProfile={setChangeProfile}
       />
+      <ProfileUpdatePopup
+        successUpdate={successUpdate}
+        setSuccsessUpdate={setSuccsessUpdate}
+      />
+      <BusinessProfilePicture
+        setChangeProfile={setChangeProfile}
+        changeProfile={changeProfile}
+      />
+      <CompanyInformation
+        changeProfile={changeProfile}
+        setChangeProfile={setChangeProfile}
+        setPopupVisible={setPopupVisible}
+        setSuccsessUpdate={setSuccsessUpdate}
+
     </div>
   );
 };
