@@ -14,10 +14,10 @@ const ExtraMedia = () => {
   };
 
   return (
-    <div className="max-w-[1222px] w-full bg-transparent mx-auto rounded-[8px] px-[30px] py-[30px] flex flex-col border  border-[var(--createCampaing-border)] ">
+    <div className="max-w-[1222px] w-full bg-[var(--company-basics-bg)] mx-auto rounded-[8px] px-[30px] py-[30px] flex flex-col border  border-[var(--createCampaing-border)] ">
       <div className="flex flex-col">
         <div
-          className="flex items-center justify-between max-w-[1222px] cursor-pointer"
+          className="flex items-center justify-between max-w-[1222px] cursor-pointer "
           onClick={() => setOpen((prev) => !prev)}
         >
           <div className="flex items-center gap-2">
@@ -65,7 +65,11 @@ const ExtraMedia = () => {
       </div>
 
       <div className="flex w-full mx-auto gap-5 flex-wrap mt-5">
-        <div className="w-full m-auto lg:max-w-[570px] flex flex-col gap-5 justify-center items-center border border-dashed pt-[21px] pb-[21px] rounded-[8px]">
+        <div
+          className="w-full m-auto lg:max-w-[570px] flex flex-col gap-5 justify-center items-center border border-dashed pt-[21px] pb-[21px] rounded-[8px] bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset]
+=
+         backdrop-blur-[7.5px]"
+        >
           <div
             className={`w-[160px] ${
               file && "mb-[20px] "
@@ -113,7 +117,11 @@ const ExtraMedia = () => {
           </button>
         </div>
 
-        <div className="w-full m-auto lg:max-w-[570px] gap-5 flex flex-col justify-center items-center border border-dashed  pt-[21px] pb-[21px] rounded-[8px]">
+        <div
+          className="w-full m-auto lg:max-w-[570px] gap-5 flex flex-col justify-center items-center border border-dashed  pt-[21px] pb-[21px] rounded-[8px] bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset]
+=
+         backdrop-blur-[7.5px]"
+        >
           <div className="w-[160px] h-[63px] flex items-center justify-center">
             <div className="flex flex-col items-center justify-center ">
               <div className="w-full flex-col flex items-center justify-center">

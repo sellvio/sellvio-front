@@ -19,7 +19,9 @@ const DropDownInput = ({ placeholder, options }: DropDownInputProps) => {
             name="dropdown"
             onChange={handleSelect}
             value={value}
-            className="px-3 py-2 border border-[var(--auth-input-border)] rounded-[8px] outline-none w-full font-[700] text-[var(--black-color)] appearance-none"
+            className="px-3 py-2 border  rounded-[8px] outline-none w-full font-[700] text-[var(--black-color)] appearance-none bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset]
+=
+         backdrop-blur-[7.5px]"
           >
             <option disabled value="">
               {placeholder}

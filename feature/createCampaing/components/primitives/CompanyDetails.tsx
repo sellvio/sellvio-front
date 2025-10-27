@@ -5,7 +5,7 @@ import { Calendar22 } from "../../../components/ui/date-picker";
 
 const CompanyDetails = () => {
   return (
-    <div className="max-w-[1222px] w-full bg-transparent mx-auto rounded-[8px] px-[30px] py-[30px] flex flex-col border  border-[var(--createCampaing-border)]">
+    <div className="max-w-[1222px] w-full bg-[var(--company-basics-bg)] mx-auto rounded-[8px] px-[30px] py-[30px] flex flex-col border  border-[var(--createCampaing-border)]">
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
           <Image
@@ -26,7 +26,7 @@ const CompanyDetails = () => {
       <form>
         <div className="flex items-center justify-between flex-wrap md:w-full mt-[20px]">
           <div className="flex flex-col gap-4 w-full md:w-[543px]">
-            <h3 className="text-[var(--black-color)] font-[700] text-[18px]">
+            <h3 className="text-[var(--black-color)] font-[700] text-[18px] ">
               კამპანიის ხანგრძლივობა (დღეები)
             </h3>
             <Calendar22 />
@@ -39,16 +39,20 @@ const CompanyDetails = () => {
             <input
               type="text"
               placeholder="მაგ: ტექნოლოგიების მოყვარული, 18-35 წლის"
-              className="w-full border border-[var(--auth-input-border)] rounded-[8px] px-3 py-2 text-[var(--black-color)] font-[700] outline-none"
+              className="w-full border rounded-[8px] px-3 py-2 text-[var(--black-color)] font-[700] outline-none  bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset]
+=
+        
+         backdrop-blur-[7.5px]"
             />
           </div>
           <div className="w-full relative mt-[30px]">
             <input
               type="text"
               placeholder="ჩატში გაწევრიანების ტიპი"
-              className="w-full border border-[var(--auth-input-border)] rounded-[8px] px-3 py-2 pr-14 text-[var(--black-color)] font-[700] outline-none"
+              className="w-full border rounded-[8px] px-3 py-2 pr-14 text-[var(--black-color)] font-[700] outline-none bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset]
+=
+         backdrop-blur-[7.5px]"
             />
-            <div className="absolute top-1/2 right-3 transform -translate-y-1/2"></div>
           </div>
         </div>
 
@@ -58,7 +62,9 @@ const CompanyDetails = () => {
           </h3>
           <textarea
             placeholder="მიუთითეთ მოთხოვნები..."
-            className="w-full border border-[var(--auth-input-border)] rounded-[8px] px-3 py-2 text-[var(--black-color)] min-h-[218px] font-[700] outline-none resize-none"
+            className="w-full border rounded-[8px] px-3 py-2 text-[var(--black-color)] min-h-[218px] font-[700] outline-none resize-none  bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset]
+=
+         backdrop-blur-[7.5px]"
           />
 
           <h3 className="text-[var(--black-color)] font-[700] text-[18px] mb-4 mt-6">
@@ -66,7 +72,9 @@ const CompanyDetails = () => {
           </h3>
           <textarea
             placeholder="არასავალდებულო..."
-            className="w-full border border-[var(--auth-input-border)] rounded-[8px] px-3 py-2 text-[var(--black-color)] min-h-[218px] font-[700] outline-none resize-none"
+            className="w-full border  rounded-[8px] px-3 py-2 text-[var(--black-color)] min-h-[218px] font-[700] outline-none resize-none  bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset]
+=
+         backdrop-blur-[7.5px]"
           />
 
           <Tags label="კამპანიის თეგები" placeholder="თეგების დამატება" />

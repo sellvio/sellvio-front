@@ -30,7 +30,7 @@ const BusinessProfile = () => {
         setChangeProfile={setChangeProfile}
         setPopupVisible={setPopupVisible}
         setSuccsessUpdate={setSuccsessUpdate}
-      />
+
     </div>
   );
 };

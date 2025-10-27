@@ -1,5 +1,5 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
+@import "tailwindcss";
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -76,6 +76,8 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --header-icon-bg: #ffffffa3;
+  --header-icon-border: #0000001a;
   --white-color: #ffffff;
   --transperent-white: #ffffff99;
   --company-frame-border: #00000014;
@@ -126,6 +128,23 @@
   --goal-auditory-bg: #99c2ff;
   --createCampaing-border: #0000007a;
   --goal-auditory-icons-bg: #e6f1ff;
+  --analytic-cards-border: #00000005;
+  --performance-card-line: #00000029;
+  --revenue-overview-total-earn-bg: #00d54014;
+  --revenue-overview-total-earn-text: #00d540;
+  --revenue-overview-total-view-bg: #583ccf14;
+  --revenue-overview-total-view-text: #583ccf;
+  --revenue--overview-1k-view-bg: #0866ff14;
+  --revenue-overview-1k-view-bg: #0866ff;
+  --approved-card-status: #00ff4dbd;
+  --videos-status-green: #61ff9138;
+  --videos-status-pending: #fbde18c2;
+  --videos-status-rejected: #c13d3f4f;
+  --videos-status-rejected-text: #ffffffc2;
+  --videos-card-paragraph: #ffffffad;
+  --company-basics-bg: #0866ff33;
+  --platforms-bg: #fb8a2e33;
+  --payment-strucutre-bg: #00d54033;
 }
 
 .dark {
@@ -163,8 +182,8 @@
 }
 
 @font-face {
-  font-family: 'HelveticaNeue';
-  src: url('/fonts/helvetica-neue-regular.ttf') format('truetype');
+  src: url("/fonts/helvetica-neue-regular.ttf") format("truetype");
+  font-family: "HelveticaNeue";
 }
 
 @layer base {
@@ -179,5 +198,5 @@
 body {
   background: #ffffff;
   color: #000000;
-  font-family: 'HelveticaNeue', Helvetica, sans-serif;
+  font-family: "HelveticaNeue", Helvetica, sans-serif;
 }
