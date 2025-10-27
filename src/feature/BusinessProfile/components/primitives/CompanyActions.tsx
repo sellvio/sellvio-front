@@ -5,13 +5,13 @@ type Props = {
   setChangeProfile: (v: boolean) => void;
 };
 
-const CompanyActions: React.FC<Props> = ({ isPending, setChangeProfile }) => {
+const CompanyActions: React.FC<Props> = ({ isPending, setPopupVisible }) => {
   return (
     <div className="flex justify-end m-auto mt-[48px] w-full max-w-[1225px]">
       <div className="flex gap-[22px]">
         <button
           type="button"
-          onClick={() => setChangeProfile(false)}
+          onClick={() => setPopupVisible(true)}
           className="shadow-[4px_5px_6px_0px_rgba(255,255,255,0.4)_inset,-1px_-3px_4px_0px_rgba(255,255,255,0.4)_inset,0px_8px_13px_0px_rgba(0,0,0,0.04)] backdrop-blur-[7.5px] px-[77px] py-[16px] border border-[#0866FF] rounded-[8px] font-bold text-[#0061FF] text-[14px] cursor-pointer"
           disabled={isPending}
         >

@@ -19,7 +19,12 @@ import CompanyLocation from './CompanyLocation';
 import CompanyActions from './CompanyActions';
 import CompanyHeader from './CompanyHeader';
 
-const CompanyInformation = ({ changeProfile, setChangeProfile }) => {
+const CompanyInformation = ({
+  changeProfile,
+  setChangeProfile,
+  setPopupVisible,
+  setSuccsessUpdate,
+}) => {
   const queryClient = useQueryClient();
 
   const { data, isLoading, isError } = useQuery({
@@ -32,6 +37,7 @@ const CompanyInformation = ({ changeProfile, setChangeProfile }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['businessProfile'] });
       setChangeProfile(false);
+      setSuccsessUpdate(true);
     },
     onError: (error: Error) => alert(`შეცდომა: ${error.message}`),
   });
@@ -85,13 +91,8 @@ const CompanyInformation = ({ changeProfile, setChangeProfile }) => {
           errors={errors}
         />
 
-        <CompanyTags
-          profile={profile}
-          changeProfile={changeProfile}
-          register={register}
-          setValue={setValue}
-          watch={watch}
-        />
+        <CompanyTags profile={profile} changeProfile={changeProfile} />
+
         <CompanyLocation
           profile={profile}
           changeProfile={changeProfile}
@@ -101,7 +102,7 @@ const CompanyInformation = ({ changeProfile, setChangeProfile }) => {
         {changeProfile && (
           <CompanyActions
             isPending={isPending}
-            setChangeProfile={setChangeProfile}
+            setPopupVisible={setPopupVisible}
           />
         )}
       </form>

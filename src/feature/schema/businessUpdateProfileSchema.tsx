@@ -9,7 +9,7 @@ export const businessProfileSchema = z.object({
   phone: z.string().nullable().optional(),
   website_url: z.string().nullable().optional(),
   description: z.string().nullable().optional(),
-  business_employee_range: z.number().nullable().optional(),
+  business_employee_range: z.string().nullable().optional(),
   logo_url: z.string().nullable().optional(),
   business_cover_image_url: z.string().nullable().optional(),
   legal_status: z.string().nullable().optional(),

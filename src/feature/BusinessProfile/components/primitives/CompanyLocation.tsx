@@ -54,6 +54,7 @@ const CompanyLocation: React.FC<Props> = ({
               readOnly={!changeProfile}
               defaultValue={profile?.business_employee_range || ''}
               className="bg-[rgba(255,255,255,0.14)] opacity-60 shadow-[4px_5px_6px_0_rgba(255,255,255,0.4)_inset,-1px_-3px_4px_0_rgba(255,255,255,0.4)_inset,0_8px_13px_0_rgba(0,0,0,0.04)] backdrop-blur-[7.5px] px-[18px] border border-[#E3E8EF] rounded-[8px] w-full min-h-[56px] font-bold text-[#000000D4] text-[18px]"
+              {...register('business_employee_range')}
             />
           </div>
         </div>
