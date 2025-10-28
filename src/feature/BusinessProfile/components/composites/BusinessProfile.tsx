@@ -17,20 +17,14 @@ const BusinessProfile = () => {
         setPopupVisible={setPopupVisible}
         setChangeProfile={setChangeProfile}
       />
-      <ProfileUpdatePopup
-        successUpdate={successUpdate}
-        setSuccsessUpdate={setSuccsessUpdate}
-      />
-      <BusinessProfilePicture
-        setChangeProfile={setChangeProfile}
-        changeProfile={changeProfile}
-      />
+      <ProfileUpdatePopup successUpdate={successUpdate} setSuccsessUpdate={setSuccsessUpdate} />
+      <BusinessProfilePicture setChangeProfile={setChangeProfile} changeProfile={changeProfile} />
       <CompanyInformation
         changeProfile={changeProfile}
         setChangeProfile={setChangeProfile}
         setPopupVisible={setPopupVisible}
         setSuccsessUpdate={setSuccsessUpdate}
-
+      />
     </div>
   );
 };
