@@ -1,6 +1,5 @@
 'use client';
 import { useState } from 'react';
-import BusinessProfilePicture from '../primitives/BusinessProfilePicture';
 import CompanyInformation from '../primitives/CompanyInformation';
 import CanseEditlPopup from '../primitives/CanseEditlPopup';
 import ProfileUpdatePopup from '../primitives/ProfileUpdatePopup';
@@ -21,16 +20,16 @@ const BusinessProfile = () => {
         successUpdate={successUpdate}
         setSuccsessUpdate={setSuccsessUpdate}
       />
-      <BusinessProfilePicture
+      {/* <BusinessProfilePicture
         setChangeProfile={setChangeProfile}
         changeProfile={changeProfile}
-      />
+      /> */}
       <CompanyInformation
         changeProfile={changeProfile}
         setChangeProfile={setChangeProfile}
         setPopupVisible={setPopupVisible}
         setSuccsessUpdate={setSuccsessUpdate}
-
+      />
     </div>
   );
 };
