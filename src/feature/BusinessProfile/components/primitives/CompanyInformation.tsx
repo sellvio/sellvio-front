@@ -10,7 +10,6 @@ import {
   businessProfileSchema,
   BusinessProfileSchema,
 } from '@/feature/schema/businessUpdateProfileSchema';
-
 import CompanyInformationSkeleton from './CompanyInformationSkeleton';
 import CompanyDescription from './CompanyDescription';
 import CompanyContacts from './CompanyContacts';

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import CompanyInformation from '../primitives/CompanyInformation';
 import CanseEditlPopup from '../primitives/CanseEditlPopup';
 import ProfileUpdatePopup from '../primitives/ProfileUpdatePopup';
+import BusinessProfilePicture from '../primitives/BusinessProfilePicture';
 
 const BusinessProfile = () => {
   const [changeProfile, setChangeProfile] = useState<boolean>(false);
@@ -20,10 +21,10 @@ const BusinessProfile = () => {
         successUpdate={successUpdate}
         setSuccsessUpdate={setSuccsessUpdate}
       />
-      {/* <BusinessProfilePicture
+      <BusinessProfilePicture
         setChangeProfile={setChangeProfile}
         changeProfile={changeProfile}
-      /> */}
+      />
       <CompanyInformation
         changeProfile={changeProfile}
         setChangeProfile={setChangeProfile}
