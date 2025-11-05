@@ -58,7 +58,7 @@ const BusinessProfilePicture = ({
           }}
         >
           <button
-            onClick={() => setChangeProfile((prev) => !prev)}
+            onClick={() => setChangeProfile(true)}
             className="flex items-center gap-[14px] bg-[#FFFFFF1F] shadow-[4px_5px_6px_0px_#FFFFFF33_inset] backdrop-blur-[7.5px] px-[15px] py-[12px] rounded-[12px] cursor-pointer"
           >
             <Image
