@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 const Footer = () => {
   return (
-    <footer className="flex justify-center px-[35px] py-[102px] w-full">
+    <footer className="flex justify-center bg-[url('/images/landingPageIcons/png/footerBackground.png')] bg-cover bg-center px-[35px] pt-[151px] pb-[102px] w-full">
       <div className="flex justify-between w-full max-w-[1335px]">
         <div className="flex flex-col gap-[46px]">
           <Image
