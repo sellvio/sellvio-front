@@ -2,9 +2,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
-import Link from 'next/link';
 import RegistrationForm from '@/feature/registration/components/primitives/RegistrationForm';
-import RegistrationAs from '@/feature/components/composites/RegistrationAs';
 import {
   RegistrationSchema,
   RegistrationValues,
@@ -14,7 +12,6 @@ import {
   uploadImageSchema,
 } from '@/feature/schema/uploadImageSchema';
 import { useRegistrationType } from '@/feature/components/composites/RegistrationType';
-import RegistrationBusinessForm from '../primitives/RegistrationBusinessForm';
 import BusinessCreatorBtnSlider from '@/feature/Authorization/components/primitives/BusinessCreatorBtnSlider';
 
 const Registration = () => {
@@ -37,47 +34,31 @@ const Registration = () => {
   });
 
   return (
-    <div className="space-y-[30px] m-auto w-full max-w-[621px]">
-      <div className="flex flex-col items-center gap-[8px]">
-        <Link href="/">
-          <Image src="/Sellvio.svg" width={150} height={46} alt="logo" />
-        </Link>
-        <p className="font-bold text-[18px] text-[var(--auth-text-dark)]">
-          შედით პროფილზე
-        </p>
-      </div>
-      <div className="px-[32px] py-[26px] border border-[var(--auth-border)] rounded-[8px] w-full max-w-[621px] min-h-[653px]">
-        <div className="flex flex-col items-center space-y-[9px]">
-          <p className="font-bold text-[35px] text-[var(--auth-text-dark)]">
-            გაიარეთ რეგისტრაცია
-          </p>
-          <p className="font-bold text-[18px] text-[var(--auth-text-dark)]">
-            შეარჩიე შენი პროფილის სტილი
-          </p>
+    <div className="flex m-auto my-[30px] w-full max-w-[1440px]">
+      <Image
+        src="/images/authIcons/png/authMainPhoto.png"
+        width={880}
+        height={880}
+        alt="logo"
+      />
+      <div className="flex flex-col justify-between px-[41px] py-[54px] rounded-[8px] w-full max-w-[563px] min-h-[789px]">
+        <div className="space-y-[9px]">
+          <p className="font-bold text-[35px]">გაიარეთ რეგისტრაცია</p>
         </div>
-
         <BusinessCreatorBtnSlider
           registrationType={registrationType}
           setRegistrationType={handleChangeType}
         />
-
-        {registrationType === 'creator' ? (
-          <RegistrationForm register={registerUser} errors={errorsUser} />
-        ) : (
-          <RegistrationBusinessForm
-            register={registerBusiness}
-            setValue={setValueBusiness}
-            errors={errorsBusiness}
-          />
-        )}
-
-        <RegistrationAs
-          accountInfo={'გაქვს ექაუნთი?'}
-          business={'შედით როგორც ბიზნესი'}
-          creator={'შედით როგორც შემქმნელი'}
-          creatorAuth={'login'}
-          businessAuth={'login'}
-        />
+        <div className="flex items-center m-auto mt-[20px] w-full max-w-[273px]">
+          <div className="flex justify-center items-center border-[#0000001A] border-[3px] rounded-full w-[48px] h-[48px] shrink-0">
+            <p className="font-bold text-[#000000AD] text-[20px]">1</p>
+          </div>
+          <div className="bg-[#0000001A] w-full h-[2px]"></div>
+          <div className="flex justify-center items-center border-[#0000001A] border-[3px] rounded-full w-[48px] h-[48px] shrink-0">
+            <p className="font-bold text-[#000000AD] text-[20px]">2</p>
+          </div>
+        </div>
+        <RegistrationForm register={registerUser} errors={errorsUser} />
       </div>
     </div>
   );

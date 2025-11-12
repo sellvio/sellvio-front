@@ -29,12 +29,14 @@ const Footer = () => {
         <div className="flex gap-[89px] w-full max-w-[1068px]">
           {footerData.map((eachElement) => (
             <div key={eachElement.id} className="flex flex-col gap-[34px]">
-              <p className="font-bold text-[26px]">{eachElement.title}</p>
+              <p className="font-bold text-[26px] text-white">
+                {eachElement.title}
+              </p>
               <ul className="flex flex-col gap-[14px] pl-5 w-full max-w-[217px] list-disc">
                 {eachElement.options.map((option) => (
                   <li
                     key={option.id}
-                    className="font-medium text-[20px] hover:text-[#583CCF] transition-all duration-300 ease-in-out"
+                    className="font-medium text-[20px] text-white hover:text-[#000000] transition-all duration-300 ease-in-out"
                   >
                     <a href={option.href}>{option.label}</a>
                   </li>
