@@ -17,7 +17,7 @@ const RegistrationForm: React.FC<RegistrationFormPropsExtended> = ({
       <div className="space-y-[30px]">
         <ReUsableInput
           label="სახელი"
-          id="firstName"
+          id="first_name"
           type="text"
           placeholder="შეიყვანე სახელი"
           register={register}
@@ -25,7 +25,7 @@ const RegistrationForm: React.FC<RegistrationFormPropsExtended> = ({
         />
         <ReUsableInput
           label="გვარი"
-          id="lastName"
+          id="last_name"
           type="text"
           placeholder="შეიყვანე გვარი"
           register={register}
@@ -41,7 +41,7 @@ const RegistrationForm: React.FC<RegistrationFormPropsExtended> = ({
         />
         <ReUsableInput
           label="დაბადების თარიღი"
-          id="birthDate"
+          id="date_of_birth"
           type="date"
           placeholder="აირჩიე თარიღი"
           register={register}

@@ -10,21 +10,24 @@ import {
 } from '@/feature/schema/registrationSchema';
 import { useRegistrationType } from '@/feature/components/composites/RegistrationType';
 import BusinessCreatorBtnSlider from '@/feature/Authorization/components/primitives/BusinessCreatorBtnSlider';
-import { z } from 'zod';
 import { FormSchema, FormValues } from '@/feature/schema/authorisationSchema';
 import RegistrationStepTwo from '../primitives/RegistrationFormStepTwo';
+import { useRouter } from 'next/navigation';
+import { useMutation } from '@tanstack/react-query';
+import { CreatorRegisterBody } from '@/types/api';
+import { registerUser } from '@/lib/api/login';
 
 const CombinedSchema = RegistrationSchema.merge(FormSchema);
-type CombinedValues = z.infer<typeof CombinedSchema>;
 
 const Registration = () => {
+  const router = useRouter();
   const { registrationType, handleChangeType } =
     useRegistrationType('/registration');
 
   const [currentStep, setCurrentStep] = useState<1 | 2>(1);
 
   const {
-    register: registerUser,
+    register: registerUserForm,
     handleSubmit: handleSubmitUser,
     formState: { errors: errorsUser },
   } = useForm<RegistrationValues>({
@@ -43,19 +46,33 @@ const Registration = () => {
     null
   );
 
+  const { mutateAsync } = useMutation({
+    mutationFn: (payload: CreatorRegisterBody) => registerUser(payload),
+  });
+
   const onSubmitStepOne = (data: RegistrationValues) => {
     setStepOneData(data);
     setCurrentStep(2);
   };
 
-  const onSubmitStepTwo = (data: FormValues) => {
-    if (stepOneData) {
-      const finalData: CombinedValues = {
-        ...stepOneData,
-        ...data,
-      };
+  const onSubmitStepTwo = async (data: FormValues) => {
+    if (!stepOneData) return;
 
-      console.log('საბოლოო მონაცემები:', finalData);
+    const payload: CreatorRegisterBody = {
+      ...stepOneData,
+      email: data.email,
+      password: data.password,
+      user_type: 'creator',
+    };
+
+    console.log('🚀 Payload ბექისთვის:', payload);
+
+    try {
+      await mutateAsync(payload);
+      console.log('რეგისტრაცია წარმატებით დასრულდა');
+      router.push('/');
+    } catch (error) {
+      console.error('რეგისტრაციის შეცდომა:', error);
     }
   };
 
@@ -71,6 +88,7 @@ const Registration = () => {
         <div className="space-y-[9px]">
           <p className="font-bold text-[35px]">გაიარეთ რეგისტრაცია</p>
         </div>
+
         <BusinessCreatorBtnSlider
           registrationType={registrationType}
           setRegistrationType={handleChangeType}
@@ -116,7 +134,7 @@ const Registration = () => {
 
         {currentStep === 1 ? (
           <RegistrationForm
-            register={registerUser}
+            register={registerUserForm}
             errors={errorsUser}
             onSubmit={handleSubmitUser(onSubmitStepOne)}
           />

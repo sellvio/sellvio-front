@@ -1,12 +1,11 @@
 import { z } from 'zod';
 
-// StepOne — ჩვეულებრივი რეგისტრაცია
 export const RegistrationSchema = z.object({
-  firstName: z
+  first_name: z
     .string()
     .min(2, { message: 'სახელი უნდა შეიცავდეს მინიმუმ 2 სიმბოლოს' })
     .max(50, { message: 'სახელი ძალიან გრძელია' }),
-  lastName: z
+  last_name: z
     .string()
     .min(2, { message: 'გვარი უნდა შეიცავდეს მინიმუმ 2 სიმბოლოს' })
     .max(50, { message: 'გვარი ძალიან გრძელია' }),
@@ -14,7 +13,7 @@ export const RegistrationSchema = z.object({
     .string()
     .min(2, { message: 'ზედმეტსახელი უნდა შეიცავდეს მინიმუმ 2 სიმბოლოს' })
     .max(30, { message: 'ზედმეტსახელი ძალიან გრძელია' }),
-  birthDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, {
+  date_of_birth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, {
     message: 'თარიღი უნდა იყოს ფორმატში YYYY-MM-DD',
   }),
 });

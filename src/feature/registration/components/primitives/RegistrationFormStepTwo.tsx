@@ -5,12 +5,14 @@ import { RegistrationFormStepTwo } from '@/feature/registrationSocials/type';
 
 interface RegistrationFormPropsExtended extends RegistrationFormStepTwo {
   onSubmit: (e: React.FormEvent) => void;
+  isLoading?: boolean;
 }
 
 const RegistrationStepTwo: React.FC<RegistrationFormPropsExtended> = ({
   register,
   onSubmit,
   errors,
+  isLoading = false,
 }) => {
   return (
     <form className="space-y-[22px] mt-[20px]" onSubmit={onSubmit}>
@@ -40,8 +42,8 @@ const RegistrationStepTwo: React.FC<RegistrationFormPropsExtended> = ({
           errors={errors}
         />
       </div>
-      <Button variant="auth" type="submit">
-        რეგისტრაცია
+      <Button variant="auth" type="submit" disabled={isLoading}>
+        {isLoading ? 'იტვირთება...' : 'რეგისტრაცია'}
       </Button>
     </form>
   );
