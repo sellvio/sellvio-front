@@ -16,8 +16,7 @@ import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { CreatorRegisterBody } from '@/types/api';
 import { registerUser } from '@/lib/api/login';
-
-const CombinedSchema = RegistrationSchema.merge(FormSchema);
+import { toast } from 'react-toastify';
 
 const Registration = () => {
   const router = useRouter();
@@ -63,16 +62,18 @@ const Registration = () => {
       email: data.email,
       password: data.password,
       user_type: 'creator',
+      date_of_birth: new Date(stepOneData.date_of_birth).toISOString(),
     };
 
-    console.log('🚀 Payload ბექისთვის:', payload);
+    console.log(payload);
 
     try {
       await mutateAsync(payload);
-      console.log('რეგისტრაცია წარმატებით დასრულდა');
+      toast.success('რეგისტრაცია წარმატებით დასრულდა');
       router.push('/');
     } catch (error) {
-      console.error('რეგისტრაციის შეცდომა:', error);
+      toast.error('რეგისტრაციის შეცდომა');
+      console.log(error);
     }
   };
 

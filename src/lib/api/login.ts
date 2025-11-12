@@ -32,8 +32,6 @@ export async function loginUser(value) {
 }
 
 export async function registerUser(value: CreatorRegisterBody) {
-  console.log('Register payload:', value);
-
   const res = await fetch(`${baseURL}/auth/register`, {
     method: 'POST',
     credentials: 'include',
@@ -55,7 +53,6 @@ export async function registerUser(value: CreatorRegisterBody) {
   }
 
   const data = await res.json();
-  console.log('Register response:', data);
 
   if (typeof window !== 'undefined') {
     const { access_token, refresh_token, user } = data.data || data;
