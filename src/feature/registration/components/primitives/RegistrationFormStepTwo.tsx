@@ -3,17 +3,17 @@ import { Button } from '@/components/ui/button';
 import ReUsableInput from '@/feature/Authorization/components/primitives/ReusableInput';
 import { RegistrationFormStepTwo } from '@/feature/registrationSocials/type';
 
-const RegistrationStepTwo: React.FC<RegistrationFormStepTwo> = ({
+interface RegistrationFormPropsExtended extends RegistrationFormStepTwo {
+  onSubmit: (e: React.FormEvent) => void;
+}
+
+const RegistrationStepTwo: React.FC<RegistrationFormPropsExtended> = ({
   register,
+  onSubmit,
   errors,
 }) => {
   return (
-    <form
-      className="space-y-[22px] mt-[39px]"
-      onSubmit={(event) => {
-        event.preventDefault();
-      }}
-    >
+    <form className="space-y-[22px] mt-[20px]" onSubmit={onSubmit}>
       <div className="space-y-[30px]">
         <ReUsableInput
           label="ემაილი"
@@ -41,7 +41,7 @@ const RegistrationStepTwo: React.FC<RegistrationFormStepTwo> = ({
         />
       </div>
       <Button variant="auth" type="submit">
-        შემდეგი
+        რეგისტრაცია
       </Button>
     </form>
   );

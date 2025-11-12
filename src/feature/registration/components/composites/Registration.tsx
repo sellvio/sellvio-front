@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
@@ -7,31 +8,56 @@ import {
   RegistrationSchema,
   RegistrationValues,
 } from '@/feature/schema/registrationSchema';
-import {
-  UploadImageFormValues,
-  uploadImageSchema,
-} from '@/feature/schema/uploadImageSchema';
 import { useRegistrationType } from '@/feature/components/composites/RegistrationType';
 import BusinessCreatorBtnSlider from '@/feature/Authorization/components/primitives/BusinessCreatorBtnSlider';
+import { z } from 'zod';
+import { FormSchema, FormValues } from '@/feature/schema/authorisationSchema';
+import RegistrationStepTwo from '../primitives/RegistrationFormStepTwo';
+
+const CombinedSchema = RegistrationSchema.merge(FormSchema);
+type CombinedValues = z.infer<typeof CombinedSchema>;
 
 const Registration = () => {
   const { registrationType, handleChangeType } =
     useRegistrationType('/registration');
 
+  const [currentStep, setCurrentStep] = useState<1 | 2>(1);
+
   const {
     register: registerUser,
+    handleSubmit: handleSubmitUser,
     formState: { errors: errorsUser },
   } = useForm<RegistrationValues>({
     resolver: zodResolver(RegistrationSchema),
   });
 
   const {
-    register: registerBusiness,
-    setValue: setValueBusiness,
-    formState: { errors: errorsBusiness },
-  } = useForm<UploadImageFormValues>({
-    resolver: zodResolver(uploadImageSchema),
+    register: registerStepTwo,
+    handleSubmit: handleSubmitStepTwo,
+    formState: { errors: errorsStepTwo },
+  } = useForm<FormValues>({
+    resolver: zodResolver(FormSchema),
   });
+
+  const [stepOneData, setStepOneData] = useState<RegistrationValues | null>(
+    null
+  );
+
+  const onSubmitStepOne = (data: RegistrationValues) => {
+    setStepOneData(data);
+    setCurrentStep(2);
+  };
+
+  const onSubmitStepTwo = (data: FormValues) => {
+    if (stepOneData) {
+      const finalData: CombinedValues = {
+        ...stepOneData,
+        ...data,
+      };
+
+      console.log('საბოლოო მონაცემები:', finalData);
+    }
+  };
 
   return (
     <div className="flex m-auto my-[30px] w-full max-w-[1440px]">
@@ -49,16 +75,58 @@ const Registration = () => {
           registrationType={registrationType}
           setRegistrationType={handleChangeType}
         />
+
         <div className="flex items-center m-auto mt-[20px] w-full max-w-[273px]">
-          <div className="flex justify-center items-center border-[#0000001A] border-[3px] rounded-full w-[48px] h-[48px] shrink-0">
-            <p className="font-bold text-[#000000AD] text-[20px]">1</p>
+          <div
+            className={`flex justify-center items-center border-[3px] rounded-full w-[48px] h-[48px] shrink-0 ${
+              currentStep === 1
+                ? 'border-[#3012B3]'
+                : 'border-[#3012B3] bg-[#3012B3]'
+            }`}
+          >
+            <p
+              className={`font-bold text-[20px] ${
+                currentStep === 1 ? 'text-[#3012B3]' : 'text-white'
+              }`}
+            >
+              1
+            </p>
           </div>
-          <div className="bg-[#0000001A] w-full h-[2px]"></div>
-          <div className="flex justify-center items-center border-[#0000001A] border-[3px] rounded-full w-[48px] h-[48px] shrink-0">
-            <p className="font-bold text-[#000000AD] text-[20px]">2</p>
+          <div
+            className={`w-full h-[2px] ${
+              currentStep === 2 ? 'bg-[#3012B3]' : 'bg-[#0000001A]'
+            }`}
+          ></div>
+          <div
+            className={`flex justify-center items-center border-[3px] rounded-full w-[48px] h-[48px] shrink-0 ${
+              currentStep === 2
+                ? 'border-[#3012B3] bg-blue-50'
+                : 'border-[#0000001A]'
+            }`}
+          >
+            <p
+              className={`font-bold text-[20px] ${
+                currentStep === 2 ? 'text-[#3012B3]' : 'text-[#000000AD]'
+              }`}
+            >
+              2
+            </p>
           </div>
         </div>
-        <RegistrationForm register={registerUser} errors={errorsUser} />
+
+        {currentStep === 1 ? (
+          <RegistrationForm
+            register={registerUser}
+            errors={errorsUser}
+            onSubmit={handleSubmitUser(onSubmitStepOne)}
+          />
+        ) : (
+          <RegistrationStepTwo
+            register={registerStepTwo}
+            errors={errorsStepTwo}
+            onSubmit={handleSubmitStepTwo(onSubmitStepTwo)}
+          />
+        )}
       </div>
     </div>
   );

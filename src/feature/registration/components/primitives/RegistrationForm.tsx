@@ -3,17 +3,17 @@ import { Button } from '@/components/ui/button';
 import ReUsableInput from '@/feature/Authorization/components/primitives/ReusableInput';
 import { RegistrationFormProps } from '@/feature/registrationSocials/type';
 
-const RegistrationForm: React.FC<RegistrationFormProps> = ({
+interface RegistrationFormPropsExtended extends RegistrationFormProps {
+  onSubmit: (e: React.FormEvent) => void;
+}
+
+const RegistrationForm: React.FC<RegistrationFormPropsExtended> = ({
   register,
   errors,
+  onSubmit,
 }) => {
   return (
-    <form
-      className="space-y-[22px] mt-[39px]"
-      onSubmit={(event) => {
-        event.preventDefault();
-      }}
-    >
+    <form className="space-y-[22px] mt-[20px]" onSubmit={onSubmit}>
       <div className="space-y-[30px]">
         <ReUsableInput
           label="სახელი"
