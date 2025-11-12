@@ -13,6 +13,7 @@ const RegistrationStepTwo: React.FC<RegistrationFormPropsExtended> = ({
   onSubmit,
   errors,
   isLoading = false,
+  isPending,
 }) => {
   return (
     <form className="space-y-[22px] mt-[20px]" onSubmit={onSubmit}>
@@ -42,8 +43,8 @@ const RegistrationStepTwo: React.FC<RegistrationFormPropsExtended> = ({
           errors={errors}
         />
       </div>
-      <Button variant="auth" type="submit" disabled={isLoading}>
-        {isLoading ? 'იტვირთება...' : 'რეგისტრაცია'}
+      <Button variant="auth" type="submit" disabled={isPending}>
+        {isPending ? 'იგზავნება...' : 'რეგისტრაცია'}
       </Button>
     </form>
   );

@@ -45,7 +45,7 @@ const Registration = () => {
     null
   );
 
-  const { mutateAsync } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: (payload: CreatorRegisterBody) => registerUser(payload),
   });
 
@@ -143,6 +143,7 @@ const Registration = () => {
           <RegistrationStepTwo
             register={registerStepTwo}
             errors={errorsStepTwo}
+            isPending={isPending}
             onSubmit={handleSubmitStepTwo(onSubmitStepTwo)}
           />
         )}

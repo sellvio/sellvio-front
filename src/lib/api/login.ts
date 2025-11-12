@@ -1,8 +1,8 @@
-import { CreatorRegisterBody } from '@/types/api';
+import { CreatorRegisterBody, registrationUser } from '@/types/api';
 
 const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-export async function loginUser(value) {
+export async function loginUser(value: registrationUser) {
   console.log('Login payload:', value);
   const res = await fetch(`${baseURL}/auth/login`, {
     method: 'POST',

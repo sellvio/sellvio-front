@@ -31,7 +31,10 @@ export type CreatorRegisterBody = {
   nickname?: string;
   date_of_birth: string;
 };
-
+export type registrationUser = {
+  email: string;
+  password: string;
+};
 export type BusinessRegisterBody = {
   email: string;
   password: string;
