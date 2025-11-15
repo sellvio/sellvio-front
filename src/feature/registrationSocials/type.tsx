@@ -46,4 +46,5 @@ export type RegistrationBusinessFormProps = {
   register: UseFormRegister<UploadImageFormValues>;
   setValue: UseFormSetValue<UploadImageFormValues>;
   errors: FieldErrors<UploadImageFormValues>;
+  onSubmit: (e: React.FormEvent) => void;
 };

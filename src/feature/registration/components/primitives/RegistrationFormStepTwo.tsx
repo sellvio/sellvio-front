@@ -5,14 +5,13 @@ import { RegistrationFormStepTwo } from '@/feature/registrationSocials/type';
 
 interface RegistrationFormPropsExtended extends RegistrationFormStepTwo {
   onSubmit: (e: React.FormEvent) => void;
-  isLoading?: boolean;
+  isPending?: boolean;
 }
 
 const RegistrationStepTwo: React.FC<RegistrationFormPropsExtended> = ({
   register,
   onSubmit,
   errors,
-  isLoading = false,
   isPending,
 }) => {
   return (
