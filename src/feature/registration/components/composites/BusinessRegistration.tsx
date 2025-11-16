@@ -3,22 +3,33 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
-import {
-  RegistrationSchema,
-  RegistrationValues,
-} from '@/feature/schema/registrationSchema';
 import { useRegistrationType } from '@/feature/components/composites/RegistrationType';
 import BusinessCreatorBtnSlider from '@/feature/Authorization/components/primitives/BusinessCreatorBtnSlider';
-import { FormSchema, FormValues } from '@/feature/schema/authorisationSchema';
-import RegistrationStepTwo from '../primitives/RegistrationFormStepTwo';
 import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
-import { CreatorRegisterBody } from '@/types/api';
-import { registerUser } from '@/lib/api/login';
 import { toast } from 'react-toastify';
 import RegistrationBusinessForm from '../primitives/RegistrationBusinessForm';
+import { CompanySchema, CompanyValues } from '@/feature/schema/companySchema';
+import {
+  RegistrationStepTwoSchema,
+  RegistrationStepTwoValues,
+} from '@/feature/schema/businessRegistrationSchemaStepTwo';
+import BusinessRegistrationLastStep from '../primitives/BusinessRegistrationStepTwo';
 
-const Registration = () => {
+interface BusinessRegisterBody {
+  email: string;
+  password: string;
+  user_type: 'business';
+  company_name: string;
+  company_nickName: string;
+  legal_status: string;
+  website_url: string;
+  business_email: string;
+  phone: string;
+  business_tags: string[];
+}
+
+const BusinessRegistration = () => {
   const router = useRouter();
   const { registrationType, handleChangeType } =
     useRegistrationType('/registration');
@@ -28,52 +39,81 @@ const Registration = () => {
   const {
     register: businessRegistration,
     handleSubmit: handleSubmitBusiness,
-    formState: { errors: errorsUser },
-  } = useForm<RegistrationValues>({
-    resolver: zodResolver(RegistrationSchema),
+    formState: { errors: errorsStepOne },
+    setValue: setValueStepOne,
+  } = useForm<CompanyValues>({
+    resolver: zodResolver(CompanySchema),
   });
 
   const {
     register: registerStepTwo,
     handleSubmit: handleSubmitStepTwo,
     formState: { errors: errorsStepTwo },
-  } = useForm<FormValues>({
-    resolver: zodResolver(FormSchema),
+  } = useForm<RegistrationStepTwoValues>({
+    resolver: zodResolver(RegistrationStepTwoSchema),
   });
 
-  const [stepOneData, setStepOneData] = useState<RegistrationValues | null>(
-    null
-  );
+  const [stepOneData, setStepOneData] = useState<CompanyValues | null>(null);
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: (payload: CreatorRegisterBody) => registerUser(payload),
+    mutationFn: async (payload: BusinessRegisterBody) => {
+      const response = await fetch('/api/business/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'რეგისტრაციის შეცდომა');
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      toast.success('რეგისტრაცია წარმატებით დასრულდა');
+      router.push('/');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'რეგისტრაციის შეცდომა');
+      console.error('Registration error:', error);
+    },
   });
 
-  const onSubmitBusiness = (data: RegistrationValues) => {
+  const onSubmitBusiness = (data: CompanyValues) => {
+    console.log('Step 1 data:', data);
     setStepOneData(data);
     setCurrentStep(2);
   };
 
-  const onSubmitStepTwo = async (data: FormValues) => {
-    if (!stepOneData) return;
+  const onSubmitStepTwo = async (data: RegistrationStepTwoValues) => {
+    if (!stepOneData) {
+      toast.error('გთხოვთ დაიწყოთ თავიდან');
+      setCurrentStep(1);
+      return;
+    }
 
-    const payload: CreatorRegisterBody = {
-      ...stepOneData,
+    const payload: BusinessRegisterBody = {
       email: data.email,
       password: data.password,
-      user_type: 'creator',
-      date_of_birth: new Date(stepOneData.date_of_birth).toISOString(),
+      user_type: 'business',
+      company_name: stepOneData.company_name,
+      company_nickName: data.company_nickName,
+      legal_status: stepOneData.legal_status,
+      website_url: stepOneData.website,
+      business_email: data.email,
+      phone: data.phone,
+      business_tags: stepOneData.business_tags,
     };
 
-    console.log(payload);
+    console.log('Final payload:', payload);
 
     try {
       await mutateAsync(payload);
-      toast.success('რეგისტრაცია წარმატებით დასრულდა');
-      router.push('/');
     } catch (error) {
-      toast.error('რეგისტრაციის შეცდომა');
-      console.log(error);
+      console.error('Submission error:', error);
     }
   };
 
@@ -136,12 +176,12 @@ const Registration = () => {
         {currentStep === 1 ? (
           <RegistrationBusinessForm
             register={businessRegistration}
-            errors={errorsStepTwo}
-            isPending={isPending}
+            errors={errorsStepOne}
             onSubmit={handleSubmitBusiness(onSubmitBusiness)}
+            setValue={setValueStepOne}
           />
         ) : (
-          <RegistrationStepTwo
+          <BusinessRegistrationLastStep
             register={registerStepTwo}
             errors={errorsStepTwo}
             isPending={isPending}
@@ -153,4 +193,4 @@ const Registration = () => {
   );
 };
 
-export default Registration;
+export default BusinessRegistration;
