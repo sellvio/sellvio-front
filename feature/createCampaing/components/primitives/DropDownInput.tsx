@@ -4,11 +4,23 @@ import { useState } from "react";
 import Image from "next/image";
 import { DropDownInputProps } from "../../types";
 
-const DropDownInput = ({ placeholder, options }: DropDownInputProps) => {
+interface ExtendedDropDownInputProps extends DropDownInputProps {
+  onValueChange?: (value: string) => void;
+}
+
+const DropDownInput = ({
+  placeholder,
+  options,
+  onValueChange,
+}: ExtendedDropDownInputProps) => {
   const [value, setValue] = useState("");
 
   const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setValue(event.target.value);
+    const newValue = event.target.value;
+    setValue(newValue);
+    if (onValueChange) {
+      onValueChange(newValue);
+    }
   };
 
   return (
@@ -19,9 +31,7 @@ const DropDownInput = ({ placeholder, options }: DropDownInputProps) => {
             name="dropdown"
             onChange={handleSelect}
             value={value}
-            className="px-3 py-2 border  rounded-[8px] outline-none w-full font-[700] text-[var(--black-color)] appearance-none bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset]
-=
-         backdrop-blur-[7.5px]"
+            className="px-3 py-2 border  rounded-[8px] outline-none w-full font-[700] text-[var(--black-color)] appearance-none bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px]"
           >
             <option disabled value="">
               {placeholder}
