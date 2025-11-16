@@ -21,8 +21,6 @@ const CompanyBasics = () => {
     setIsOn((prev) => !prev);
   };
 
-  const onSubmit = (data: CampaignSchema) => {};
-
   return (
     <div className="max-w-[1222px] w-full bg-[var(--company-basics-bg)] mx-auto rounded-[8px] px-[30px] py-[30px] flex flex-col border justify-center  border-[var(--createCampaing-border)]">
       <div className="flex flex-col">
@@ -42,10 +40,7 @@ const CompanyBasics = () => {
         </p>
       </div>
 
-      <div
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-[37px] mt-[26px] w-full"
-      >
+      <div className="flex flex-col gap-[37px] mt-[26px] w-full">
         <div className="flex flex-col lg:flex-row gap-[75px] w-full">
           <div className="flex-1">
             <h3 className="text-[var(--black-color)] font-[700] text-[18px] mb-4">

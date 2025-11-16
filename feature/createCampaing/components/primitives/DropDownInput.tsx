@@ -6,18 +6,22 @@ import { DropDownInputProps } from "../../types";
 
 interface ExtendedDropDownInputProps extends DropDownInputProps {
   onValueChange?: (value: string) => void;
+  value?: string;
 }
 
 const DropDownInput = ({
   placeholder,
   options,
   onValueChange,
+  value: controlledValue,
 }: ExtendedDropDownInputProps) => {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(controlledValue || "");
 
   const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newValue = event.target.value;
-    setValue(newValue);
+    if (!controlledValue) {
+      setValue(newValue);
+    }
     if (onValueChange) {
       onValueChange(newValue);
     }
@@ -30,7 +34,7 @@ const DropDownInput = ({
           <select
             name="dropdown"
             onChange={handleSelect}
-            value={value}
+            value={controlledValue !== undefined ? controlledValue : value}
             className="px-3 py-2 border  rounded-[8px] outline-none w-full font-[700] text-[var(--black-color)] appearance-none bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px]"
           >
             <option disabled value="">
