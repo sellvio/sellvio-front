@@ -1,9 +1,10 @@
 import { z } from "zod";
 
 export const campaignSchema = z.object({
-  name: z.string().min(1, "Name is required"),
+  name: z.string().min(1, "სახელი აუცილებელია"),
   description: z.string().optional(),
-  budget: z.number(),
+
+  budget: z.number().min(1, { message: "ბიუჯეტი უნდა იყოს 1-ზე მეტი" }),
   budget_hidden: z.boolean(),
   duration_days: z.number(),
   status: z.enum(["draft", "active", "paused", "completed"]).default("draft"),
@@ -36,3 +37,4 @@ export const campaignSchema = z.object({
     })
   ),
 });
+export type CampaignSchema = z.infer<typeof campaignSchema>;
