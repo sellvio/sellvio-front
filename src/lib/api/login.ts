@@ -64,3 +64,23 @@ export async function registerUser(value: CreatorRegisterBody) {
 
   return data;
 }
+export async function getEnums() {
+  try {
+    const response = await fetch(`${baseURL}/enums`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok: ' + response.status);
+    }
+    const data = await response.json();
+    console.log('Enums:', data);
+    return data;
+  } catch (error) {
+    console.error('Error fetching enums:', error);
+  }
+}
+
+getEnums();

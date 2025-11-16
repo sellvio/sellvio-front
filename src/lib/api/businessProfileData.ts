@@ -50,3 +50,36 @@ export async function updateBusinessProfile(
     throw error;
   }
 }
+
+export async function uploadProfileImages(data: {
+  logo?: File;
+  coverImage?: File;
+}) {
+  const token = localStorage.getItem('access_token');
+
+  const formData = new FormData();
+
+  if (data.logo) {
+    formData.append('logo', data.logo);
+  }
+
+  if (data.coverImage) {
+    formData.append('cover_image', data.coverImage);
+  }
+
+  const res = await fetch(`${baseURL}/auth/profile`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    console.error('Image upload error:', errorData);
+    throw new Error(errorData.message || 'Failed to upload images');
+  }
+
+  return res.json();
+}

@@ -15,6 +15,7 @@ import {
   RegistrationStepTwoValues,
 } from '@/feature/schema/businessRegistrationSchemaStepTwo';
 import BusinessRegistrationLastStep from '../primitives/BusinessRegistrationStepTwo';
+import { registerUser } from '@/lib/api/login';
 
 interface BusinessRegisterBody {
   email: string;
@@ -33,8 +34,8 @@ const BusinessRegistration = () => {
   const router = useRouter();
   const { registrationType, handleChangeType } =
     useRegistrationType('/registration');
-
   const [currentStep, setCurrentStep] = useState<1 | 2>(1);
+  const [stepOneData, setStepOneData] = useState<CompanyValues | null>(null);
 
   const {
     register: businessRegistration,
@@ -53,30 +54,13 @@ const BusinessRegistration = () => {
     resolver: zodResolver(RegistrationStepTwoSchema),
   });
 
-  const [stepOneData, setStepOneData] = useState<CompanyValues | null>(null);
-
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: async (payload: BusinessRegisterBody) => {
-      const response = await fetch('/api/business/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'რეგისტრაციის შეცდომა');
-      }
-
-      return response.json();
-    },
+  const { mutateAsync, isLoading } = useMutation({
+    mutationFn: (payload: BusinessRegisterBody) => registerUser(payload),
     onSuccess: () => {
       toast.success('რეგისტრაცია წარმატებით დასრულდა');
       router.push('/');
     },
-    onError: (error: Error) => {
+    onError: (error: any) => {
       toast.error(error.message || 'რეგისტრაციის შეცდომა');
       console.error('Registration error:', error);
     },
@@ -104,8 +88,8 @@ const BusinessRegistration = () => {
       legal_status: stepOneData.legal_status,
       website_url: stepOneData.website,
       business_email: data.email,
-      phone: data.phone,
-      business_tags: stepOneData.business_tags,
+      phone: data.phone || '',
+      business_tags: stepOneData.business_tags || [],
     };
 
     console.log('Final payload:', payload);
@@ -184,7 +168,7 @@ const BusinessRegistration = () => {
           <BusinessRegistrationLastStep
             register={registerStepTwo}
             errors={errorsStepTwo}
-            isPending={isPending}
+            isPending={isLoading}
             onSubmit={handleSubmitStepTwo(onSubmitStepTwo)}
           />
         )}

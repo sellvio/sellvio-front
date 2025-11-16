@@ -3,6 +3,9 @@ import { Button } from '@/components/ui/button';
 import ReUsableInput from '@/feature/Authorization/components/primitives/ReusableInput';
 import TagInput from '@/feature/registration/components/primitives/TagInput';
 import { CompanyFormProps } from '@/feature/registrationSocials/type';
+import EnumSelectInput from './CompanyLegalStatus';
+import { useQuery } from '@tanstack/react-query';
+import { getEnums } from '@/lib/api/login';
 
 const RegistrationBusinessForm: React.FC<CompanyFormProps> = ({
   onSubmit,
@@ -10,6 +13,11 @@ const RegistrationBusinessForm: React.FC<CompanyFormProps> = ({
   errors,
   setValue,
 }) => {
+  const { data, isLoading } = useQuery({
+    queryKey: ['industryEnums'],
+    queryFn: getEnums,
+  });
+  const legalStatusOptions = data?.data?.legal_status || [];
   return (
     <form onSubmit={onSubmit} className="space-y-[22px] mt-[39px]">
       <div className="space-y-[30px]">
@@ -22,14 +30,16 @@ const RegistrationBusinessForm: React.FC<CompanyFormProps> = ({
           errors={errors}
         />
 
-        <ReUsableInput
-          label="კომპანიის სამართლებრივი სტატუსი"
-          id="legal_status"
-          type="text"
-          placeholder="შეიყვანე სტატუსი"
-          register={register}
-          errors={errors}
-        />
+        {!isLoading && (
+          <EnumSelectInput
+            label="კომპანიის სამართლებრივი სტატუსი"
+            name="legal_status"
+            enumOptions={legalStatusOptions}
+            register={register}
+            errors={errors}
+            setValue={setValue}
+          />
+        )}
 
         <ReUsableInput
           label="კომპანიის ვებსაიტი"
@@ -40,7 +50,7 @@ const RegistrationBusinessForm: React.FC<CompanyFormProps> = ({
           errors={errors}
         />
 
-        <div className="space-y-[16px]">
+        {/* <div className="space-y-[16px]">
           <p className="font-bold text-[18px] cursor-default">
             ინდუსტრიის ტაგები:
           </p>
@@ -55,7 +65,7 @@ const RegistrationBusinessForm: React.FC<CompanyFormProps> = ({
               {errors.business_tags.message as string}
             </p>
           )}
-        </div>
+        </div> */}
       </div>
 
       <Button variant="auth" type="submit">
