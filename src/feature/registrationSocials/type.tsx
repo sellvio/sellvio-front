@@ -43,3 +43,21 @@ export type IndustryTag = {
   id: number;
   name: string;
 };
+export type RegistrationFormPropsExtended = {
+  onSubmit: (e: React.FormEvent) => void;
+  isPending?: boolean;
+  register: UseFormRegister<RegistrationStepTwoValues>;
+  errors: FieldErrors<RegistrationStepTwoValues>;
+};
+export type BusinessRegisterBody = {
+  email: string;
+  password: string;
+  user_type: 'business';
+  company_name: string;
+  company_nickName: string;
+  legal_status: string;
+  website_url: string;
+  business_email: string;
+  phone: string;
+  business_tags: number[];
+};

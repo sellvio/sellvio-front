@@ -16,19 +16,7 @@ import {
 } from '@/feature/schema/businessRegistrationSchemaStepTwo';
 import BusinessRegistrationLastStep from '../primitives/BusinessRegistrationStepTwo';
 import { registerUser } from '@/lib/api/login';
-
-interface BusinessRegisterBody {
-  email: string;
-  password: string;
-  user_type: 'business';
-  company_name: string;
-  company_nickName: string;
-  legal_status: string;
-  website_url: string;
-  business_email: string;
-  phone: string;
-  business_tags: string[];
-}
+import { BusinessRegisterBody } from '@/feature/registrationSocials/type';
 
 const BusinessRegistration = () => {
   const router = useRouter();

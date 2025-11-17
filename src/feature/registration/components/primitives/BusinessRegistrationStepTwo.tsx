@@ -1,15 +1,9 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import ReUsableInput from '@/feature/Authorization/components/primitives/ReusableInput';
+import { RegistrationFormPropsExtended } from '@/feature/registrationSocials/type';
 import { RegistrationStepTwoValues } from '@/feature/schema/businessRegistrationSchemaStepTwo';
 import { FieldErrors, UseFormRegister } from 'react-hook-form';
-
-interface RegistrationFormPropsExtended extends RegistrationStepTwoValues {
-  onSubmit: (e: React.FormEvent) => void;
-  isPending?: boolean;
-  register: UseFormRegister<RegistrationStepTwoValues>;
-  errors: FieldErrors<RegistrationStepTwoValues>;
-}
 
 const BusinessRegistrationLastStep: React.FC<RegistrationFormPropsExtended> = ({
   register,
