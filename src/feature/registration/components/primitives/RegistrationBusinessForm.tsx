@@ -13,7 +13,7 @@ const RegistrationBusinessForm: React.FC<CompanyFormProps> = ({
   errors,
   setValue,
 }) => {
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ['industryEnums'],
     queryFn: getEnums,
   });
@@ -30,16 +30,14 @@ const RegistrationBusinessForm: React.FC<CompanyFormProps> = ({
           errors={errors}
         />
 
-        {!isLoading && (
-          <EnumSelectInput
-            label="კომპანიის სამართლებრივი სტატუსი"
-            name="legal_status"
-            enumOptions={legalStatusOptions}
-            register={register}
-            errors={errors}
-            setValue={setValue}
-          />
-        )}
+        <EnumSelectInput
+          label="კომპანიის სამართლებრივი სტატუსი"
+          name="legal_status"
+          enumOptions={legalStatusOptions}
+          register={register}
+          errors={errors}
+          setValue={setValue}
+        />
         <TagInput
           name="business_tags"
           register={register}

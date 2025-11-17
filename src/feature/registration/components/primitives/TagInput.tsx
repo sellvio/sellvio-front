@@ -64,7 +64,7 @@ const TagInput = <T extends Record<string, unknown>>({
         htmlFor="industryTag"
         className="font-bold text-[18px] cursor-pointer"
       >
-        ინდუსტრიის ტაგები:
+        ინდუსტრიის ტაგები
       </label>
       <input
         type="text"
