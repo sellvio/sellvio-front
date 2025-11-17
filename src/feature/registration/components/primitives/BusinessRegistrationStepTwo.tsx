@@ -2,8 +2,6 @@
 import { Button } from '@/components/ui/button';
 import ReUsableInput from '@/feature/Authorization/components/primitives/ReusableInput';
 import { RegistrationFormPropsExtended } from '@/feature/registrationSocials/type';
-import { RegistrationStepTwoValues } from '@/feature/schema/businessRegistrationSchemaStepTwo';
-import { FieldErrors, UseFormRegister } from 'react-hook-form';
 
 const BusinessRegistrationLastStep: React.FC<RegistrationFormPropsExtended> = ({
   register,
@@ -43,6 +41,14 @@ const BusinessRegistrationLastStep: React.FC<RegistrationFormPropsExtended> = ({
           id="password"
           type="password"
           placeholder="შეიყვანე პაროლი"
+          register={register}
+          errors={errors}
+        />
+        <ReUsableInput
+          label="გაიმეორე პაროლი"
+          id="repeatPassword"
+          type="password"
+          placeholder="გაიმეორე პაროლი"
           register={register}
           errors={errors}
         />

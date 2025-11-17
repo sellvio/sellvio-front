@@ -28,11 +28,11 @@ export const RegistrationStepBusinessSchema = z
       .string()
       .min(2, { message: 'ზედმეტსახელი უნდა შეიცავდეს მინიმუმ 2 სიმბოლოს' }),
     password: z.string().min(6, { message: 'პაროლი მინიმუმ 6 სიმბოლო' }),
-    confirmPassword: z.string().min(6, { message: 'გაიმეორეთ პაროლი' }),
+    repeatPassword: z.string().min(6, { message: 'გაიმეორეთ პაროლი' }),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.password === data.repeatPassword, {
     message: 'პაროლები არ ემთხვევა',
-    path: ['confirmPassword'],
+    path: ['repeatPassword'],
   });
 
 export type RegistrationStepBusinesValuess = z.infer<

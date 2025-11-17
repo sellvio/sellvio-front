@@ -42,7 +42,7 @@ const BusinessRegistration = () => {
     resolver: zodResolver(RegistrationStepTwoSchema),
   });
 
-  const { mutateAsync, isLoading } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: (payload: BusinessRegisterBody) => registerUser(payload),
     onSuccess: () => {
       toast.success('რეგისტრაცია წარმატებით დასრულდა');
@@ -156,7 +156,7 @@ const BusinessRegistration = () => {
           <BusinessRegistrationLastStep
             register={registerStepTwo}
             errors={errorsStepTwo}
-            isPending={isLoading}
+            isPending={isPending}
             onSubmit={handleSubmitStepTwo(onSubmitStepTwo)}
           />
         )}
