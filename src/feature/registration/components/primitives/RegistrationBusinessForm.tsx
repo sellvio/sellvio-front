@@ -40,7 +40,17 @@ const RegistrationBusinessForm: React.FC<CompanyFormProps> = ({
             setValue={setValue}
           />
         )}
-
+        <TagInput
+          name="business_tags"
+          register={register}
+          errors={errors}
+          setValue={setValue}
+        />
+        {errors.business_tags && (
+          <p className="text-red-500 text-sm">
+            {errors.business_tags.message as string}
+          </p>
+        )}
         <ReUsableInput
           label="კომპანიის ვებსაიტი"
           id="website"
@@ -49,25 +59,7 @@ const RegistrationBusinessForm: React.FC<CompanyFormProps> = ({
           register={register}
           errors={errors}
         />
-
-        <div className="space-y-[16px]">
-          <p className="font-bold text-[18px] cursor-default">
-            ინდუსტრიის ტაგები:
-          </p>
-          <TagInput
-            name="business_tags"
-            register={register}
-            errors={errors}
-            setValue={setValue}
-          />
-          {errors.business_tags && (
-            <p className="text-red-500 text-sm">
-              {errors.business_tags.message as string}
-            </p>
-          )}
-        </div>
       </div>
-
       <Button variant="auth" type="submit">
         შემდეგი
       </Button>

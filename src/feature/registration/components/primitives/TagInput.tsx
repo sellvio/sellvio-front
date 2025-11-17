@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { IndustryTag, TagInputProps } from '../../../registrationSocials/type';
+import { TagInputProps } from '../../../registrationSocials/type';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import { getIndustryTags } from '@/lib/api/login';
@@ -60,10 +60,17 @@ const TagInput = <T extends Record<string, unknown>>({
 
   return (
     <div className="relative">
+      <label
+        htmlFor="industryTag"
+        className="font-bold text-[18px] cursor-pointer"
+      >
+        ინდუსტრიის ტაგები:
+      </label>
       <input
         type="text"
+        id="industryTag"
         placeholder="აირჩიე ინდუსტრიის ტაგი"
-        className="px-[18px] py-[17px] border border-[var(--auth-input-border)] rounded-[8px] w-full min-h-[56px] font-bold text-[18px]"
+        className="mt-[16px] px-[18px] py-[17px] border border-[var(--auth-input-border)] rounded-[8px] focus:outline-[var(--auth-border)] w-full min-h-[56px] font-bold text-[18px]"
         value={inputValue}
         onChange={(e) => {
           setInputValue(e.target.value);
@@ -77,13 +84,13 @@ const TagInput = <T extends Record<string, unknown>>({
       <input type="hidden" {...register(name as any)} />
 
       {showOptions && filteredOptions.length > 0 && (
-        <div className="z-10 absolute bg-white shadow-lg mt-2 border border-gray-300 rounded-lg w-full max-h-60 overflow-auto">
+        <div className="z-10 absolute bg-white shadow-lg mt-1 border border-[var(--auth-input-border)] rounded-[8px] w-full max-h-60 overflow-y-auto">
           {filteredOptions.map((opt) => (
             <button
               type="button"
               key={opt}
               onClick={() => handleSelect(opt)}
-              className="hover:bg-gray-100 px-4 py-2 w-full font-medium text-left cursor-pointer"
+              className="hover:bg-gray-100 px-[18px] py-[17px] w-full font-bold text-[18px] text-left cursor-pointer"
             >
               {opt}
             </button>
