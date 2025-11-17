@@ -83,4 +83,21 @@ export async function getEnums() {
   }
 }
 
-getEnums();
+export async function getIndustryTags() {
+  try {
+    const response = await fetch(`${baseURL}/enums/tags/all`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok: ' + response.status);
+    }
+    const data = await response.json();
+    console.log('Enums:', data);
+    return data;
+  } catch (error) {
+    console.error('Error fetching enums:', error);
+  }
+}

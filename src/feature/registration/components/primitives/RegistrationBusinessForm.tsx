@@ -50,7 +50,7 @@ const RegistrationBusinessForm: React.FC<CompanyFormProps> = ({
           errors={errors}
         />
 
-        {/* <div className="space-y-[16px]">
+        <div className="space-y-[16px]">
           <p className="font-bold text-[18px] cursor-default">
             ინდუსტრიის ტაგები:
           </p>
@@ -65,7 +65,7 @@ const RegistrationBusinessForm: React.FC<CompanyFormProps> = ({
               {errors.business_tags.message as string}
             </p>
           )}
-        </div> */}
+        </div>
       </div>
 
       <Button variant="auth" type="submit">

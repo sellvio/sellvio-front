@@ -39,3 +39,7 @@ export type RegistrationStepBusinessValues = {
   onSubmit: (e: React.FormEvent) => void;
   isPending?: boolean;
 };
+export type IndustryTag = {
+  id: number;
+  name: string;
+};

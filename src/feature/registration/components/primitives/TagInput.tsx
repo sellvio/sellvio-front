@@ -1,42 +1,46 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { TagInputProps } from '../../../registrationSocials/type';
+import { IndustryTag, TagInputProps } from '../../../registrationSocials/type';
 import Image from 'next/image';
-
-const OPTIONS = [
-  'Technology',
-  'Finance',
-  'Marketing',
-  'Education',
-  'Healthcare',
-  'E-commerce',
-  'Logistics',
-];
+import { useQuery } from '@tanstack/react-query';
+import { getIndustryTags } from '@/lib/api/login';
 
 const TagInput = <T extends Record<string, unknown>>({
   name,
   register,
-  errors,
   setValue,
 }: TagInputProps<T>) => {
-  const [items, setItems] = useState<string[]>([]);
+  const { data } = useQuery({
+    queryKey: ['businessTag'],
+    queryFn: getIndustryTags,
+  });
+
+  const industryTags = Array.isArray(data?.data) ? data.data : [];
+
+  const OPTIONS = industryTags.map((item: any) => item.name);
+
+  const [items, setItems] = useState<{ id: number; name: string }[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [showOptions, setShowOptions] = useState(false);
 
   useEffect(() => {
     if (setValue) {
-      setValue(name, items as any);
+      const onlyIds = items.map((item) => item.id);
+      setValue(name, onlyIds as any);
     }
   }, [items, name, setValue]);
 
-  const filteredOptions = OPTIONS.filter(
-    (opt) =>
+  const filteredOptions: string[] = OPTIONS.filter(
+    (opt: string) =>
       opt.toLowerCase().includes(inputValue.toLowerCase()) &&
-      !items.includes(opt)
+      !items.some((item) => item.name === opt)
   );
 
   const handleSelect = (value: string) => {
-    setItems((prev) => [...prev, value]);
+    const found = industryTags.find((tag: any) => tag.name === value);
+    if (!found) return;
+
+    setItems((prev) => [...prev, { id: found.id, name: found.name }]);
     setInputValue('');
     setShowOptions(false);
   };
@@ -56,7 +60,6 @@ const TagInput = <T extends Record<string, unknown>>({
 
   return (
     <div className="relative">
-      {/* INPUT */}
       <input
         type="text"
         placeholder="აირჩიე ინდუსტრიის ტაგი"
@@ -92,10 +95,10 @@ const TagInput = <T extends Record<string, unknown>>({
         <div className="flex flex-wrap gap-[8px] mt-[12px]">
           {items.map((item, index) => (
             <span
-              key={item}
+              key={item.id}
               className="flex justify-center items-center gap-[5px] bg-[var(--auth-tag-bg)] px-[12px] py-[6px] border border-[var(--auth-border)] rounded-[8px] font-semibold text-[var(--auth-social-input-border)]"
             >
-              {item}
+              {item.name}
               <button
                 className="cursor-pointer"
                 type="button"

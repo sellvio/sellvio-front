@@ -18,9 +18,9 @@ export const CompanySchema = z.object({
     })
     .max(50, { message: 'კომპანიის სამართლებრივი სტატუსი ძალიან გრძელია.' }),
   website: z.string().trim().url({ message: 'უნდა იყოს ვალიდური URL.' }),
-  // business_tags: z
-  //   .array(z.string().min(1))
-  //   .min(1, { message: 'მინიმუმ ერთი თეგი უნდა მიუთითო' }),
+  business_tags: z
+    .array(z.number().min(1))
+    .min(1, { message: 'მინიმუმ ერთი თეგი უნდა მიუთითო' }),
 });
 
 export type CompanyValues = z.infer<typeof CompanySchema>;
