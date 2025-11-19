@@ -1,22 +1,65 @@
-import { Calendar22 } from "../../../components/ui/date-picker";
-import CompanyBasics from "../primitives/CompanyBasics";
-import CompanyDetails from "../primitives/CompanyDetails";
-import ExtraMedia from "../primitives/ExtraMedia";
-import GoalCreatores from "../primitives/GoalCreatores";
-import PaymentStructure from "../primitives/PaymentStructure";
-import Platforms from "../primitives/Platforms";
+"use client";
 
-const Form = () => {
+import { FormProvider, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { campaignSchema, CampaignSchema } from "../../schema/schema";
+import CompanyBasics from "../primitives/CompanyBasics";
+import Platforms from "../primitives/Platforms";
+import PaymentStructure from "../primitives/PaymentStructure";
+import GoalCreatores from "../primitives/GoalCreatores";
+import ExtraMedia from "../primitives/ExtraMedia";
+import CompanyDetails from "../primitives/CompanyDetails";
+import { sendCampaign } from "../../api/sendCampaing";
+
+const CampaingForm = () => {
+  const methods = useForm<CampaignSchema>({
+    resolver: zodResolver(campaignSchema),
+    defaultValues: {
+      media: [],
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: sendCampaign,
+    onSuccess: (data) => {
+      console.log("SUCCESS:", data);
+      alert("Campaign created successfully!");
+    },
+    onError: (err) => {
+      console.error("ERROR:", err);
+      alert("Error sending campaign!");
+    },
+  });
+
+  const onSubmit = (data: CampaignSchema) => {
+    console.log("Submitting:", data);
+    mutation.mutate(data);
+  };
+
   return (
-    <div className="flex gap-16 flex-col">
-      <CompanyBasics />
-      <Platforms />
-      <PaymentStructure />
-      <GoalCreatores />
-      <ExtraMedia />
-      <CompanyDetails />
-    </div>
+    <FormProvider {...methods}>
+      <div
+        onSubmit={methods.handleSubmit(onSubmit)}
+        className="flex gap-16 flex-col"
+      >
+        <CompanyBasics />
+        <Platforms />
+        <PaymentStructure />
+        <GoalCreatores />
+        <ExtraMedia />
+        <CompanyDetails />
+
+        <button
+          type="submit"
+          disabled={mutation.isPending}
+          className="bg-black text-white px-4 py-2 rounded"
+        >
+          {mutation.isPending ? "Saving..." : "Submit"}
+        </button>
+      </div>
+    </FormProvider>
   );
 };
 
-export default Form;
+export default CampaingForm;

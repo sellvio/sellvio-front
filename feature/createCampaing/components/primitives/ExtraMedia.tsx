@@ -210,9 +210,9 @@ const ExtraMedia = () => {
           </button>
         </div>
 
-        <div className="w-full m-auto lg:max-w-[570px] gap-5 flex flex-col justify-center items-center border border-dashed pt-[21px] pb-[21px] rounded-[8px] bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px]">
+        <div className="w-full m-auto lg:max-w-[570px] flex flex-col gap-5 justify-center items-center border border-dashed pt-[21px] pb-[21px] rounded-[8px] bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px]">
           {showLinkInput ? (
-            <div className="w-full px-4 flex flex-col gap-3">
+            <div className="w-full px-4 flex flex-col ">
               <input
                 type="url"
                 value={linkInput}
@@ -234,7 +234,7 @@ const ExtraMedia = () => {
                     setShowLinkInput(false);
                     setLinkInput("");
                   }}
-                  className="flex-1 px-2 py-2 rounded-[8px] cursor-pointer bg-gray-300 text-[var(--black-color)]"
+                  className="flex-1 px-2 py-2 rounded-[8px] cursor-pointer bg-gray-300 text-[var(--black-color)] "
                 >
                   გაუქმება
                 </button>
@@ -244,7 +244,7 @@ const ExtraMedia = () => {
             <>
               <div className="w-[160px] h-[63px] flex items-center justify-center">
                 <div className="flex flex-col items-center justify-center">
-                  <div className="w-full flex-col flex items-center justify-center">
+                  <div className="flex py-[5px] flex-col items-center mt-2">
                     <Image
                       src="/images/svg/upload.svg"
                       alt="ლინკი"
@@ -261,7 +261,7 @@ const ExtraMedia = () => {
               <button
                 type="button"
                 onClick={() => setShowLinkInput(true)}
-                className="w-[267px] px-2 py-3 rounded-[8px] cursor-pointer bg-[var(--button-bg)] text-[var(--white-color)]"
+                className="w-[267px] px-2 py-3 rounded-[8px] cursor-pointer bg-[var(--button-bg)] text-[var(--white-color)] mt-[15px]"
               >
                 აირჩიე ლინკი
               </button>

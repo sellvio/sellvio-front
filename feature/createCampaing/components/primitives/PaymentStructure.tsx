@@ -3,8 +3,23 @@ import { useState } from "react";
 import Image from "next/image";
 import DropDownInput from "./DropDownInput";
 import { costOptions } from "../../data/data";
+import { useFormContext } from "react-hook-form";
+import { CampaignSchema } from "../../schema/schema";
 
 const PaymentStructure = () => {
+  const methods = useFormContext<CampaignSchema>();
+
+  if (!methods) {
+    console.warn("PaymentStructure must be used within a FormProvider");
+    return null;
+  }
+
+  const {
+    register,
+    setValue,
+    formState: { errors },
+  } = methods;
+
   const [description, setDescription] = useState(
     "კონფენსაცია, თუ როგორ მიიღებენ კომპენსაციას შემმნელები"
   );
@@ -14,6 +29,7 @@ const PaymentStructure = () => {
     if (selectedOption && selectedOption.description) {
       setDescription(selectedOption.description);
     }
+    setValue("payment_type", value as any, { shouldValidate: true });
   };
 
   return (
@@ -34,7 +50,7 @@ const PaymentStructure = () => {
           {description}
         </p>
 
-        <form className="flex-col">
+        <div className="flex-col">
           <div className="flex flex-col gap-4">
             <h3 className="mt-[26px] font-[700] text-[var(--black-color)] text-[18px]">
               შეთავაზების ტიპი
@@ -44,6 +60,7 @@ const PaymentStructure = () => {
               options={costOptions}
               onValueChange={handleCostTypeChange}
             />
+            <input {...register("payment_type")} type="hidden" />
           </div>
 
           <div className="flex gap-4 mt-8 flex-wrap">
@@ -52,10 +69,17 @@ const PaymentStructure = () => {
                 გადახდის მოდელი
               </h3>
               <input
-                type="text"
+                {...register("payment_per_quantity", { valueAsNumber: true })}
+                type="number"
                 placeholder="რაოდენობა"
-                className="px-3 py-2 border  rounded-[8px] outline-none w-full font-[700] text-[var(--black-color)] bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px]"
+                className="px-3 py-2 border  rounded-[8px] outline-none w-full font-[700] text-[var(--black-color)] bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                style={{ MozAppearance: "textfield" }}
               />
+              {errors.payment_per_quantity && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.payment_per_quantity.message}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col flex-1 min-w-[250px] max-w-[900px]">
@@ -63,13 +87,20 @@ const PaymentStructure = () => {
                 გადახდის მოდელი
               </h3>
               <input
-                type="text"
+                {...register("payment_amount", { valueAsNumber: true })}
+                type="number"
                 placeholder="თანხა"
-                className="px-3 py-2 border  rounded-[8px] outline-none w-full font-[700] text-[var(--black-color)] bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px]"
+                className="px-3 py-2 border  rounded-[8px] outline-none w-full font-[700] text-[var(--black-color)] bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                style={{ MozAppearance: "textfield" }}
               />
+              {errors.payment_amount && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.payment_amount.message}
+                </p>
+              )}
             </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

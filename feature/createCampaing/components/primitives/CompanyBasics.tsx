@@ -2,20 +2,23 @@
 import { Switch } from "@/components/ui/switch";
 import Image from "next/image";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CampaignSchema, campaignSchema } from "../../schema/schema";
+import { useFormContext } from "react-hook-form";
+import { CampaignSchema } from "../../schema/schema";
 
 const CompanyBasics = () => {
   const [isOn, setIsOn] = useState(true);
 
+  const methods = useFormContext<CampaignSchema>();
+
+  if (!methods) {
+    console.warn("CompanyBasics must be used within a FormProvider");
+    return null;
+  }
+
   const {
     register,
-    handleSubmit,
     formState: { errors },
-  } = useForm<CampaignSchema>({
-    resolver: zodResolver(campaignSchema),
-  });
+  } = methods;
 
   const toggleHandler = () => {
     setIsOn((prev) => !prev);
@@ -58,11 +61,11 @@ const CompanyBasics = () => {
           </div>
 
           <div className="flex-1">
-            <h3 className="font-[700] text-[18px] text-[var(--black-color)]] mb-4">
+            <h3 className="font-[700] text-[18px] text-[var(--black-color)] mb-4">
               ბიუჯეტი (ლარში)
             </h3>
             <input
-              {...register("budget")}
+              {...register("budget", { valueAsNumber: true })}
               type={isOn ? "number" : "password"}
               placeholder="₾ 5000"
               className="w-full border bg-[#FFFFFF1A] border-[#FFFFFF] border-[var(--auth-input-border) rounded-[8px] px-3 py-2 text-[var(--black-color)] font-[700] outline-none shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
