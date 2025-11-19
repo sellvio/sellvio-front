@@ -1,8 +1,10 @@
 "use client";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Tags from "./Tags";
 import { Calendar22 } from "../../../components/ui/date-picker";
 import { useFormContext } from "react-hook-form";
+import { motion, AnimatePresence } from "framer-motion";
 import { CampaignSchema } from "../../schema/schema";
 
 const CompanyDetails = () => {
@@ -14,6 +16,30 @@ const CompanyDetails = () => {
   } = useFormContext<CampaignSchema>();
   const durationDays = watch("duration_days");
   const tagsValue = watch("tags") || [];
+  const chatType = watch("chat_type") || "";
+  const [isChatDropdownOpen, setChatDropdownOpen] = useState(false);
+  const chatDropdownRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        chatDropdownRef.current &&
+        !chatDropdownRef.current.contains(event.target as Node)
+      ) {
+        setChatDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleChatTypeSelect = (value: string) => {
+    setValue("chat_type", value as CampaignSchema["chat_type"], {
+      shouldValidate: true,
+    });
+    setChatDropdownOpen(false);
+  };
 
   return (
     <div className="max-w-[1222px] w-full bg-[var(--company-basics-bg)] mx-auto rounded-[8px] px-[30px] py-[30px] flex flex-col border border-[var(--createCampaing-border)]">
@@ -36,7 +62,7 @@ const CompanyDetails = () => {
 
       <div>
         <div className="flex items-center justify-between flex-wrap md:w-full mt-[20px]">
-          <div className="flex flex-col gap-4 w-full md:w-[543px]">
+          <div className="flex flex-col gap-4 w-full md:w-[543px] rounded-[8px]">
             <h3 className="text-[var(--black-color)] font-[700] text-[18px]">
               კამპანიის ხანგრძლივობა (დღეები)
             </h3>
@@ -64,16 +90,68 @@ const CompanyDetails = () => {
             </p>
           </div>
 
-          <div className="w-full relative mt-[30px]">
-            <select
-              {...register("chat_type")}
-              className="w-full border rounded-[8px] px-3 py-2 pr-14 text-[var(--black-color)] font-[700] outline-none bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px]"
+          <div className="w-full relative mt-[30px]" ref={chatDropdownRef}>
+            <button
+              type="button"
+              onClick={() => setChatDropdownOpen((prev) => !prev)}
+              className="w-full border rounded-[8px] px-3 py-2 pr-14 text-left text-[var(--black-color)] font-[700] outline-none bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] flex items-center justify-between"
             >
-              <option value="">ჩატში გაწევრიანების ტიპი</option>
-              <option value="public">საჯარო</option>
-              <option value="private">პირადი</option>
-            </select>
-            <p className="text-red-500 text-sm min-h-[20px] leading-4">
+              <span
+                className={`${
+                  chatType
+                    ? "text-[var(--black-color)]"
+                    : "text-[var(--campaing-form-paragraphs)]"
+                } font-[700]`}
+              >
+                {chatType === "public"
+                  ? "საჯარო"
+                  : chatType === "private"
+                  ? "პირადი"
+                  : "ჩატში გაწევრიანების ტიპი"}
+              </span>
+              <motion.div
+                animate={{ rotate: isChatDropdownOpen ? 180 : 0 }}
+                transition={{ duration: 0.2 }}
+                className="pointer-events-none flex items-center absolute right-4"
+              >
+                <Image
+                  src="images/svg/dropdown.svg"
+                  width={12}
+                  height={6}
+                  alt="dropDown"
+                />
+              </motion.div>
+            </button>
+            <input type="hidden" {...register("chat_type")} />
+            <AnimatePresence>
+              {isChatDropdownOpen && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden"
+                >
+                  <div className="mt-2 border rounded-[8px] border-[#FFFFFF] bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF33] backdrop-blur-[7.5px]">
+                    {[
+                      { value: "public", label: "საჯარო" },
+                      { value: "private", label: "პირადი" },
+                    ].map((option) => (
+                      <motion.button
+                        key={option.value}
+                        type="button"
+                        onClick={() => handleChatTypeSelect(option.value)}
+                        className="w-full text-left px-3 py-2 font-[700] text-[var(--black-color)] hover:bg-[#FFFFFF33]"
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        {option.label}
+                      </motion.button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <p className="text-red-500 text-sm min-h-[20px] leading-4 mt-4">
               {errors.chat_type?.message ?? "\u00A0"}
             </p>
           </div>
@@ -113,21 +191,6 @@ const CompanyDetails = () => {
           <p className="text-red-500 text-sm min-h-[20px] leading-4">
             {errors.tags?.message ?? "\u00A0"}
           </p>
-        </div>
-
-        <div className="flex justify-end gap-4 mt-10">
-          <button
-            type="button"
-            className="bg-transparent border-[var(--cancel-button-bg)] text-[var(--black-color)] w-[202px] px-4 py-2 cursor-pointer rounded-[8px] border"
-          >
-            გაუქმება
-          </button>
-          <button
-            type="submit"
-            className="bg-[var(--button-bg)] rounded-[8px] text-[var(--white-color)] px-4 py-2 cursor-pointer"
-          >
-            შექმენი კამპანია
-          </button>
         </div>
       </div>
     </div>

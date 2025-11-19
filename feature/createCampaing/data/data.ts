@@ -50,22 +50,22 @@ export const UploadFile: UploadFileProps[] = [
 ];
 export const costOptions = [
   {
-    label: "Cost Per View",
+    label: "ნახვის ღირებულება",
     value: "cost_per_view",
     description: "შემოქმედები მიიღებს კომპენსაციას თითოეული ნახვისთვის",
   },
   {
-    label: "Cost Per Reach",
+    label: "ღირებულება თითო მიღწევაზე",
     value: "cost_per_reach",
     description: "შემოქმედები მიიღებს კომპენსაციას მიღწევის (reach) მიხედვით",
   },
   {
-    label: "Cost Per Engagement",
+    label: "ღირებულება თითო ჩართულობაზე",
     value: "cost_per_engagement",
     description: "შემოქმედები მიიღებს კომპენსაციას თითოეული ჩართულობისთვის",
   },
   {
-    label: "Cost Per Click",
+    label: "დაწკაპუნების ღირებულება",
     value: "cost_per_click",
     description: "შემოქმედები მიიღებს კომპენსაციას თითოეული კლიკისთვის",
   },

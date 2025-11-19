@@ -56,7 +56,7 @@ const CompanyBasics = () => {
               className="w-full border bg-[#FFFFFF1A] border-[#FFFFFF] rounded-[8px] px-3 py-2 text-[var(--black-color)] font-[700] outline-none shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px]"
             />
             {errors.name && (
-              <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+              <p className="text-red-500 text-sm mt-4">{errors.name.message}</p>
             )}
           </div>
 
@@ -72,7 +72,7 @@ const CompanyBasics = () => {
               style={{ MozAppearance: "textfield" }}
             />
             {errors.budget && (
-              <p className="text-red-500 text-sm mt-1">
+              <p className="text-red-500 text-sm mt-4">
                 {errors.budget.message}
               </p>
             )}

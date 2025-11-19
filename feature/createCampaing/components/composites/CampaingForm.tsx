@@ -55,13 +55,20 @@ const CampaingForm = () => {
         <ExtraMedia />
         <CompanyDetails />
 
-        <button
-          type="submit"
-          disabled={mutation.isPending}
-          className="bg-black text-white px-4 py-2 rounded"
-        >
-          {mutation.isPending ? "Saving..." : "Submit"}
-        </button>
+        <div className=" max-w-[1222px] w-full mx-auto flex justify-end gap-4 mb-4 ">
+          <button
+            type="button"
+            className="bg-transparent border-[var(--cancel-button-bg)] text-[var(--black-color)] w-[202px] px-4 py-2 cursor-pointer rounded-[8px] border"
+          >
+            გაუქმება
+          </button>
+          <button
+            type="submit"
+            className="bg-[var(--button-bg)] rounded-[8px] text-[var(--white-color)] px-4 py-2 cursor-pointer"
+          >
+            {mutation.isPending ? "Saving..." : "შექმენი კამპანია"}
+          </button>
+        </div>
       </form>
     </FormProvider>
   );
