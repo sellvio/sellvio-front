@@ -20,19 +20,19 @@ const CompanyDetails = () => {
   const [isChatDropdownOpen, setChatDropdownOpen] = useState(false);
   const chatDropdownRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        chatDropdownRef.current &&
-        !chatDropdownRef.current.contains(event.target as Node)
-      ) {
-        setChatDropdownOpen(false);
-      }
-    };
+  // useEffect(() => {
+  //   const handleClickOutside = (event: MouseEvent) => {
+  //     if (
+  //       chatDropdownRef.current &&
+  //       !chatDropdownRef.current.contains(event.target as Node)
+  //     ) {
+  //       setChatDropdownOpen(false);
+  //     }
+  //   };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => document.removeEventListener("mousedown", handleClickOutside);
+  // }, []);
 
   const handleChatTypeSelect = (value: string) => {
     setValue("chat_type", value as CampaignSchema["chat_type"], {
