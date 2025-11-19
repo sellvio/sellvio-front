@@ -17,6 +17,7 @@ import { useMutation } from '@tanstack/react-query';
 import { CreatorRegisterBody } from '@/types/api';
 import { registerUser } from '@/lib/api/login';
 import { toast } from 'react-toastify';
+import Link from 'next/link';
 
 const Registration = () => {
   const router = useRouter();
@@ -78,13 +79,17 @@ const Registration = () => {
   };
 
   return (
-    <div className="flex m-auto my-[30px] w-full max-w-[1440px]">
-      <Image
-        src="/images/authIcons/png/authMainPhoto.png"
-        width={880}
-        height={880}
-        alt="logo"
-      />
+    <div className="flex m-auto m-y-auto my-[30px] w-full max-w-[1440px]">
+      <div className="bg-[url('/images/authIcons/png/authLeftSidePhoto.png')] bg-cover bg-center w-full max-w-[880px] min-h-[880px]">
+        <Link href="/" className="mt-[28px] ml-[28px]">
+          <Image
+            src="/images/authIcons/svg/sellvioLogoForAuth.svg"
+            alt="logo"
+            width={195}
+            height={51}
+          />
+        </Link>
+      </div>
       <div className="flex flex-col justify-between px-[41px] py-[54px] rounded-[8px] w-full max-w-[563px] min-h-[789px]">
         <div className="space-y-[9px]">
           <p className="font-bold text-[35px]">გაიარეთ რეგისტრაცია</p>
@@ -147,6 +152,17 @@ const Registration = () => {
             onSubmit={handleSubmitStepTwo(onSubmitStepTwo)}
           />
         )}
+        <div className="flex justify-center gap-[6px] mt-[15px] w-full">
+          <p className="font-bold text-[#000000D4] text-[18px]">
+            თუ გაქვთ ექაუნი გაიარეთ
+          </p>
+          <Link
+            href={'/login'}
+            className="font-bold text-[#583CCF] text-[18px] cursor-pointer"
+          >
+            ავტორიზაცია
+          </Link>
+        </div>
       </div>
     </div>
   );

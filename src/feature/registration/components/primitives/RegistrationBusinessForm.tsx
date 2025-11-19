@@ -45,7 +45,7 @@ const RegistrationBusinessForm: React.FC<CompanyFormProps> = ({
           setValue={setValue}
         />
         {errors.business_tags && (
-          <p className="text-red-500 text-sm">
+          <p className="text-[10px] text-red-500">
             {errors.business_tags.message as string}
           </p>
         )}

@@ -59,7 +59,7 @@ const TagInput = <T extends Record<string, unknown>>({
   };
 
   return (
-    <div className="relative">
+    <div className="mb-[1px] relativ">
       <label
         htmlFor="industryTag"
         className="font-bold text-[18px] cursor-pointer"

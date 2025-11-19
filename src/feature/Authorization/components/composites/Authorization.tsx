@@ -39,12 +39,16 @@ const Authorization = () => {
   };
   return (
     <div className="flex w-full max-w-[1343px]">
-      <Image
-        src="/images/authIcons/png/authMainPhoto.png"
-        width={780}
-        height={780}
-        alt="logo"
-      />
+      <div className="bg-[url('/images/authIcons/png/authLeftSidePhoto.png')] bg-cover bg-center w-full max-w-[780px] min-h-[780px]">
+        <Link href="/" className="mt-[28px] ml-[28px]">
+          <Image
+            src="/images/authIcons/svg/sellvioLogoForAuth.svg"
+            alt="logo"
+            width={195}
+            height={51}
+          />
+        </Link>
+      </div>
       <div className="flex flex-col justify-between px-[41px] py-[54px] rounded-[8px] w-full max-w-[563px] min-h-[789px]">
         <div className="space-y-[9px]">
           <div className="flex justify-center mb-[52px] w-full">
@@ -94,7 +98,10 @@ const Authorization = () => {
           <p className="font-bold text-[#000000D4] text-[18px]">
             არ გაქვს ექაუნთი?
           </p>
-          <Link href={'/'} className="font-bold text-[#583CCF] text-[18px]">
+          <Link
+            href={'/registration'}
+            className="font-bold text-[#583CCF] text-[18px]"
+          >
             დარეგისტრირდი
           </Link>
         </div>

@@ -5,15 +5,17 @@ export const dynamic = 'force-dynamic';
 
 const RegistrationBusiness = () => {
   return (
-    <Suspense
-      fallback={
-        <div className="flex justify-center items-center min-h-screen">
-          <div>Loading...</div>
-        </div>
-      }
-    >
-      <BusinessRegistration />
-    </Suspense>
+    <div className="flex justify-center items-center w-full min-h-screen">
+      <Suspense
+        fallback={
+          <div className="flex justify-center items-center min-h-screen">
+            <div>Loading...</div>
+          </div>
+        }
+      >
+        <BusinessRegistration />
+      </Suspense>
+    </div>
   );
 };
 

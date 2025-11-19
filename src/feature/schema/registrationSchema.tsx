@@ -14,7 +14,7 @@ export const RegistrationSchema = z.object({
     .min(2, { message: 'ზედმეტსახელი უნდა შეიცავდეს მინიმუმ 2 სიმბოლოს' })
     .max(30, { message: 'ზედმეტსახელი ძალიან გრძელია' }),
   date_of_birth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, {
-    message: 'თარიღი უნდა იყოს ფორმატში YYYY-MM-DD',
+    message: 'თარიღი უნდა იყოს ფორმატში: წელი.თვე.დღე',
   }),
 });
 
