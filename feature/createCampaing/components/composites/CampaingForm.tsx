@@ -1,6 +1,11 @@
 "use client";
 
-import { FormProvider, useForm } from "react-hook-form";
+import {
+  FormProvider,
+  Resolver,
+  SubmitHandler,
+  useForm,
+} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { campaignSchema, CampaignSchema } from "../../schema/schema";
@@ -14,7 +19,7 @@ import { sendCampaign } from "../../api/sendCampaing";
 
 const CampaingForm = () => {
   const methods = useForm<CampaignSchema>({
-    resolver: zodResolver(campaignSchema),
+    resolver: zodResolver(campaignSchema) as Resolver<CampaignSchema>,
     defaultValues: {
       media: [],
     },
@@ -32,14 +37,14 @@ const CampaingForm = () => {
     },
   });
 
-  const onSubmit = (data: CampaignSchema) => {
+  const onSubmit: SubmitHandler<CampaignSchema> = (data) => {
     console.log("Submitting:", data);
     mutation.mutate(data);
   };
 
   return (
     <FormProvider {...methods}>
-      <div
+      <form
         onSubmit={methods.handleSubmit(onSubmit)}
         className="flex gap-16 flex-col"
       >
@@ -57,7 +62,7 @@ const CampaingForm = () => {
         >
           {mutation.isPending ? "Saving..." : "Submit"}
         </button>
-      </div>
+      </form>
     </FormProvider>
   );
 };

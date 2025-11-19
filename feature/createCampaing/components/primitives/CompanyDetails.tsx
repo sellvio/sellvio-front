@@ -12,6 +12,8 @@ const CompanyDetails = () => {
     watch,
     formState: { errors },
   } = useFormContext<CampaignSchema>();
+  const durationDays = watch("duration_days");
+  const tagsValue = watch("tags") || [];
 
   return (
     <div className="max-w-[1222px] w-full bg-[var(--company-basics-bg)] mx-auto rounded-[8px] px-[30px] py-[30px] flex flex-col border border-[var(--createCampaing-border)]">
@@ -39,13 +41,12 @@ const CompanyDetails = () => {
               კამპანიის ხანგრძლივობა (დღეები)
             </h3>
             <Calendar22
+              value={durationDays}
               onChange={(days: number) => setValue("duration_days", days)}
             />
-            {errors.duration_days && (
-              <p className="text-red-500 text-sm">
-                {errors.duration_days.message}
-              </p>
-            )}
+            <p className="text-red-500 text-sm min-h-[20px] leading-4">
+              {errors.duration_days?.message ?? "\u00A0"}
+            </p>
           </div>
 
           <div className="flex flex-col gap-4 w-full md:w-[543px]">
@@ -58,11 +59,9 @@ const CompanyDetails = () => {
               {...register("target_audience")}
               className="w-full border rounded-[8px] px-3 py-2 text-[var(--black-color)] font-[700] outline-none bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px]"
             />
-            {errors.target_audience && (
-              <p className="text-red-500 text-sm">
-                {errors.target_audience.message}
-              </p>
-            )}
+            <p className="text-red-500 text-sm min-h-[20px] leading-4">
+              {errors.target_audience?.message ?? "\u00A0"}
+            </p>
           </div>
 
           <div className="w-full relative mt-[30px]">
@@ -74,9 +73,9 @@ const CompanyDetails = () => {
               <option value="public">საჯარო</option>
               <option value="private">პირადი</option>
             </select>
-            {errors.chat_type && (
-              <p className="text-red-500 text-sm">{errors.chat_type.message}</p>
-            )}
+            <p className="text-red-500 text-sm min-h-[20px] leading-4">
+              {errors.chat_type?.message ?? "\u00A0"}
+            </p>
           </div>
         </div>
 
@@ -89,11 +88,9 @@ const CompanyDetails = () => {
             {...register("requirements")}
             className="w-full border rounded-[8px] px-3 py-2 text-[var(--black-color)] min-h-[218px] font-[700] outline-none resize-none bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px]"
           />
-          {errors.requirements && (
-            <p className="text-red-500 text-sm">
-              {errors.requirements.message}
-            </p>
-          )}
+          <p className="text-red-500 text-sm min-h-[20px] leading-4">
+            {errors.requirements?.message ?? "\u00A0"}
+          </p>
 
           <h3 className="text-[var(--black-color)] font-[700] text-[18px] mb-4 mt-6">
             დამატებითი მოთხოვნები
@@ -103,21 +100,19 @@ const CompanyDetails = () => {
             {...register("additional_requirements")}
             className="w-full border rounded-[8px] px-3 py-2 text-[var(--black-color)] min-h-[218px] font-[700] outline-none resize-none bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px]"
           />
-          {errors.additional_requirements && (
-            <p className="text-red-500 text-sm">
-              {errors.additional_requirements.message}
-            </p>
-          )}
+          <p className="text-red-500 text-sm min-h-[20px] leading-4">
+            {errors.additional_requirements?.message ?? "\u00A0"}
+          </p>
 
           <Tags
             label="კამპანიის თეგები"
             placeholder="თეგების დამატება"
             onChange={(tags: string[]) => setValue("tags", tags)}
-            value={watch("tags") || []}
+            value={tagsValue}
           />
-          {errors.tags && (
-            <p className="text-red-500 text-sm">{errors.tags.message}</p>
-          )}
+          <p className="text-red-500 text-sm min-h-[20px] leading-4">
+            {errors.tags?.message ?? "\u00A0"}
+          </p>
         </div>
 
         <div className="flex justify-end gap-4 mt-10">

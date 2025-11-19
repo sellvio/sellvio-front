@@ -12,6 +12,7 @@ export type TagsProps = {
   placeholder?: string;
   error?: string;
   onChange?: (values: string[]) => void;
+  value?: string[];
 };
 export type TagFieldProps = {
   label: string;

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TagsProps } from "../../../myProfile/types";
 import Image from "next/image";
 
@@ -7,9 +7,14 @@ const Tags = ({
   placeholder = "ელემენტის დამატება",
   error,
   onChange,
+  value,
 }: TagsProps) => {
-  const [items, setItems] = useState<string[]>([]);
+  const [items, setItems] = useState<string[]>(value || []);
   const [inputValue, setInputValue] = useState("");
+
+  useEffect(() => {
+    setItems(value || []);
+  }, [value]);
 
   const handleAdd = () => {
     if (inputValue.trim()) {

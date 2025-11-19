@@ -10,11 +10,36 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-export function Calendar22() {
+type Calendar22Props = {
+  value?: number;
+  onChange?: (days: number) => void;
+};
+
+export function Calendar22({ value, onChange }: Calendar22Props) {
   const [open, setOpen] = React.useState(false);
-  const [date, setDate] = React.useState<Date | undefined>(undefined);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const today = React.useMemo(() => {
+    const base = new Date();
+    base.setHours(0, 0, 0, 0);
+    return base;
+  }, []);
+  const [date, setDate] = React.useState<Date | undefined>(() => {
+    if (value === undefined) {
+      return undefined;
+    }
+    const nextDate = new Date(today);
+    nextDate.setDate(nextDate.getDate() + value);
+    return nextDate;
+  });
+
+  React.useEffect(() => {
+    if (value === undefined) {
+      setDate(undefined);
+      return;
+    }
+    const nextDate = new Date(today);
+    nextDate.setDate(nextDate.getDate() + value);
+    setDate(nextDate);
+  }, [value, today]);
 
   const calculateDaysDifference = (selected: Date) => {
     const selDate = new Date(selected);
@@ -57,6 +82,7 @@ export function Calendar22() {
               if (!selectedDate) return;
               setDate(selectedDate);
               setOpen(false);
+              onChange?.(calculateDaysDifference(selectedDate));
             }}
             disabled={{ before: new Date() }}
           />

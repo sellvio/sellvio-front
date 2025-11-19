@@ -7,6 +7,10 @@ import { useFormContext } from "react-hook-form";
 import { CampaignSchema } from "../../schema/schema";
 
 const PaymentStructure = () => {
+  const [description, setDescription] = useState(
+    "კონფენსაცია, თუ როგორ მიიღებენ კომპენსაციას შემმნელები"
+  );
+
   const methods = useFormContext<CampaignSchema>();
 
   if (!methods) {
@@ -20,16 +24,14 @@ const PaymentStructure = () => {
     formState: { errors },
   } = methods;
 
-  const [description, setDescription] = useState(
-    "კონფენსაცია, თუ როგორ მიიღებენ კომპენსაციას შემმნელები"
-  );
-
   const handleCostTypeChange = (value: string) => {
     const selectedOption = costOptions.find((option) => option.value === value);
     if (selectedOption && selectedOption.description) {
       setDescription(selectedOption.description);
     }
-    setValue("payment_type", value as any, { shouldValidate: true });
+    setValue("payment_type", value as CampaignSchema["payment_type"], {
+      shouldValidate: true,
+    });
   };
 
   return (
