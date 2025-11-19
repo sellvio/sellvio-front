@@ -11,11 +11,11 @@ import { useMutation } from "@tanstack/react-query";
 import { campaignSchema, CampaignSchema } from "../../schema/schema";
 import CompanyBasics from "../primitives/CompanyBasics";
 import Platforms from "../primitives/Platforms";
-import PaymentStructure from "../primitives/PaymentStructure";
 import GoalCreatores from "../primitives/GoalCreatores";
 import ExtraMedia from "../primitives/ExtraMedia";
 import CompanyDetails from "../primitives/CompanyDetails";
 import { sendCampaign } from "../../api/sendCampaing";
+import PaymentStructure from "../primitives/PaymentStructure";
 
 const CampaingForm = () => {
   const methods = useForm<CampaignSchema>({
@@ -59,6 +59,7 @@ const CampaingForm = () => {
           <button
             type="button"
             className="bg-transparent border-[var(--cancel-button-bg)] text-[var(--black-color)] w-[202px] px-4 py-2 cursor-pointer rounded-[8px] border"
+            onClick={() => methods.reset()}
           >
             გაუქმება
           </button>

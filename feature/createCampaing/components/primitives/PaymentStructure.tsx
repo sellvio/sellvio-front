@@ -1,16 +1,15 @@
 "use client";
-import { useState } from "react";
 import Image from "next/image";
 import DropDownInput from "./DropDownInput";
 import { costOptions } from "../../data/data";
 import { useFormContext } from "react-hook-form";
 import { CampaignSchema } from "../../schema/schema";
 
-const PaymentStructure = () => {
-  const [description, setDescription] = useState(
-    "კონფენსაცია, თუ როგორ მიიღებენ კომპენსაციას შემმნელები"
-  );
+const DEFAULT_DESCRIPTION =
+  "კონფენსაცია, თუ როგორ მიიღებენ კომპენსაციას შემმნელები";
+const DEFAULT_PLACEHOLDER = "რაოდენობა";
 
+const PaymentStructure = () => {
   const methods = useFormContext<CampaignSchema>();
 
   if (!methods) {
@@ -21,14 +20,18 @@ const PaymentStructure = () => {
   const {
     register,
     setValue,
+    watch,
     formState: { errors },
   } = methods;
 
+  const paymentType = watch("payment_type");
+  const selectedCostOption = costOptions.find(
+    (option) => option.value === paymentType
+  );
+  const description = selectedCostOption?.description || DEFAULT_DESCRIPTION;
+  const quantityPlaceholder = selectedCostOption?.label || DEFAULT_PLACEHOLDER;
+
   const handleCostTypeChange = (value: string) => {
-    const selectedOption = costOptions.find((option) => option.value === value);
-    if (selectedOption && selectedOption.description) {
-      setDescription(selectedOption.description);
-    }
     setValue("payment_type", value as CampaignSchema["payment_type"], {
       shouldValidate: true,
     });
@@ -61,6 +64,7 @@ const PaymentStructure = () => {
               placeholder="აირჩიეთ ტიპი"
               options={costOptions}
               onValueChange={handleCostTypeChange}
+              value={paymentType}
             />
             <input {...register("payment_type")} type="hidden" />
           </div>
@@ -73,12 +77,12 @@ const PaymentStructure = () => {
               <input
                 {...register("payment_per_quantity", { valueAsNumber: true })}
                 type="number"
-                placeholder="რაოდენობა"
+                placeholder={quantityPlaceholder}
                 className="px-3 py-2 border  rounded-[8px] outline-none w-full font-[700] text-[var(--black-color)] bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 style={{ MozAppearance: "textfield" }}
               />
               {errors.payment_per_quantity && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="text-red-500 text-sm mt-4">
                   {errors.payment_per_quantity.message}
                 </p>
               )}
@@ -96,7 +100,7 @@ const PaymentStructure = () => {
                 style={{ MozAppearance: "textfield" }}
               />
               {errors.payment_amount && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="text-red-500 text-sm mt-4">
                   {errors.payment_amount.message}
                 </p>
               )}
