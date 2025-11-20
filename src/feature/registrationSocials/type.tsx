@@ -55,7 +55,7 @@ export type BusinessRegisterBody = {
   user_type: 'business';
   company_name: string;
   company_nickName: string;
-  legal_status: string;
+  legal_status_id: string;
   website_url: string;
   business_email: string;
   phone: string;

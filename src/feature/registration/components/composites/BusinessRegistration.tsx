@@ -74,7 +74,7 @@ const BusinessRegistration = () => {
       user_type: 'business',
       company_name: stepOneData.company_name,
       company_nickName: data.company_nickName,
-      legal_status: stepOneData.legal_status_id,
+      legal_status_id: stepOneData.legal_status_id,
       website_url: stepOneData.website,
       business_email: data.email,
       phone: data.phone || '',

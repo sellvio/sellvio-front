@@ -11,7 +11,7 @@ const BusinessRegistrationLastStep: React.FC<RegistrationFormPropsExtended> = ({
 }) => {
   return (
     <form className="space-y-[22px] mt-[20px]" onSubmit={onSubmit}>
-      <div className="space-y-[30px]">
+      <div className="space-y-[12px]">
         <ReUsableInput
           label="საკონტაქტო ნომერი"
           id="phone"
