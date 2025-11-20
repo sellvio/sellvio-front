@@ -9,7 +9,7 @@ export const CompanySchema = z.object({
         'კომპანიის სამართლებრივი სახელი უნდა შეიცავდეს მინიმუმ 2 სიმბოლოს.',
     })
     .max(100, { message: 'კომპანიის სამართლებრივი სახელი ძალიან გრძელია.' }),
-  legal_status: z
+  legal_status_id: z
     .string()
     .trim()
     .min(2, {

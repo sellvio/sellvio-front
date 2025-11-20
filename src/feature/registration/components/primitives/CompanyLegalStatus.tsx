@@ -1,16 +1,6 @@
 'use client';
+import { EnumSelectInputProps } from '@/feature/registrationSocials/type';
 import React, { useState, useRef, useEffect } from 'react';
-import { FieldErrors, UseFormRegister, UseFormSetValue } from 'react-hook-form';
-
-interface EnumSelectInputProps {
-  label: string;
-  name: string;
-  enumOptions: string[];
-  register: UseFormRegister<any>;
-  errors: FieldErrors;
-  setValue?: UseFormSetValue<any>;
-  placeholder?: string;
-}
 
 const EnumSelectInput: React.FC<EnumSelectInputProps> = ({
   label,

@@ -11,7 +11,7 @@ const ReUsableInput = <T extends Record<string, unknown>>({
   type = 'text',
   icon,
 }: ReUsableInputProps<T>) => (
-  <div className="flex flex-col gap-[16px] rounded-[12px] w-full min-h-[94px]">
+  <div className="flex flex-col gap-[16px] pt-[22px] rounded-[12px] w-full min-h-[94px]">
     <label
       htmlFor={id as string}
       className="flex items-center gap-[16px] font-bold text-[18px] cursor-pointer"

@@ -17,7 +17,7 @@ const RegistrationBusinessForm: React.FC<CompanyFormProps> = ({
     queryKey: ['industryEnums'],
     queryFn: getEnums,
   });
-  const legalStatusOptions = data?.data?.legal_status || [];
+  const legalStatusOptions = data?.data?.map((items) => items.name_ka) || [];
   return (
     <form onSubmit={onSubmit} className="space-y-[22px] mt-[39px]">
       <div className="space-y-[30px]">
@@ -32,7 +32,7 @@ const RegistrationBusinessForm: React.FC<CompanyFormProps> = ({
 
         <EnumSelectInput
           label="კომპანიის სამართლებრივი სტატუსი"
-          name="legal_status"
+          name="legal_status_id"
           enumOptions={legalStatusOptions}
           register={register}
           errors={errors}

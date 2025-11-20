@@ -100,12 +100,15 @@ const Registration = () => {
           setRegistrationType={handleChangeType}
         />
 
-        <div className="flex items-center m-auto mt-[20px] w-full max-w-[273px]">
+        <div
+          onClick={() => setCurrentStep(1)}
+          className="flex items-center m-auto mt-[20px] w-full max-w-[273px]"
+        >
           <div
             className={`flex justify-center items-center border-[3px] rounded-full w-[48px] h-[48px] shrink-0 ${
               currentStep === 1
                 ? 'border-[#3012B3]'
-                : 'border-[#3012B3] bg-[#3012B3]'
+                : 'border-[#3012B3] bg-[#3012B3] cursor-pointer'
             }`}
           >
             <p
@@ -113,7 +116,16 @@ const Registration = () => {
                 currentStep === 1 ? 'text-[#3012B3]' : 'text-white'
               }`}
             >
-              1
+              {currentStep === 1 ? (
+                1
+              ) : (
+                <Image
+                  src="/images/authIcons/svg/arrow-back.svg"
+                  alt="logo"
+                  width={30}
+                  height={30}
+                />
+              )}
             </p>
           </div>
           <div

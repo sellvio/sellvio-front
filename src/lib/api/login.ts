@@ -66,7 +66,7 @@ export async function registerUser(value: CreatorRegisterBody) {
 }
 export async function getEnums() {
   try {
-    const response = await fetch(`${baseURL}/enums`, {
+    const response = await fetch(`${baseURL}/enums/legal-statuses/all`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

@@ -61,3 +61,12 @@ export type BusinessRegisterBody = {
   phone: string;
   business_tags: number[];
 };
+export type EnumSelectInputProps = {
+  label: string;
+  name: string;
+  enumOptions: string[];
+  register: UseFormRegister<any>;
+  errors: FieldErrors;
+  setValue?: UseFormSetValue<any>;
+  placeholder?: string;
+};
