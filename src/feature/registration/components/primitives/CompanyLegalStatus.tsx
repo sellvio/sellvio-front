@@ -11,7 +11,13 @@ const EnumSelectInput: React.FC<EnumSelectInputProps> = ({
   setValue,
   placeholder = 'აირჩიე ან ჩაწერე',
 }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const storageKey = `enum_${name}`;
+  const [searchTerm, setSearchTerm] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return sessionStorage.getItem(storageKey) || '';
+    }
+    return '';
+  });
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -37,6 +43,7 @@ const EnumSelectInput: React.FC<EnumSelectInputProps> = ({
   const handleOptionClick = (option: string) => {
     setSelectedValue(option);
     setSearchTerm(option);
+    sessionStorage.setItem(storageKey, option);
     setIsOpen(false);
     if (setValue) {
       setValue(name, option, { shouldValidate: true });
@@ -46,6 +53,7 @@ const EnumSelectInput: React.FC<EnumSelectInputProps> = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchTerm(value);
+    sessionStorage.setItem(storageKey, value);
     setIsOpen(true);
     if (setValue) {
       setValue(name, value, { shouldValidate: true });

@@ -1,4 +1,5 @@
 'use client';
+
 import { useState, useEffect } from 'react';
 import { TagInputProps } from '../../../registrationSocials/type';
 import Image from 'next/image';
@@ -10,25 +11,46 @@ const TagInput = <T extends Record<string, unknown>>({
   register,
   setValue,
 }: TagInputProps<T>) => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const { data } = useQuery({
     queryKey: ['businessTag'],
     queryFn: getIndustryTags,
+    enabled: isMounted,
   });
 
   const industryTags = Array.isArray(data?.data) ? data.data : [];
-
   const OPTIONS = industryTags.map((item: any) => item.name);
 
+  const storageKey = `tags_${name}`;
+
   const [items, setItems] = useState<{ id: number; name: string }[]>([]);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
+    const saved = sessionStorage.getItem(storageKey);
+    setItems(saved ? JSON.parse(saved) : []);
+  }, [isMounted, storageKey]);
+
   const [inputValue, setInputValue] = useState('');
   const [showOptions, setShowOptions] = useState(false);
 
   useEffect(() => {
+    if (!isMounted) return;
+
     if (setValue) {
       const onlyIds = items.map((item) => item.id);
       setValue(name, onlyIds as any);
     }
-  }, [items, name, setValue]);
+    sessionStorage.setItem(storageKey, JSON.stringify(items));
+  }, [items, name, setValue, storageKey, isMounted]);
+
+  if (!isMounted) return null;
 
   const filteredOptions: string[] = OPTIONS.filter(
     (opt: string) =>
@@ -66,6 +88,7 @@ const TagInput = <T extends Record<string, unknown>>({
       >
         ინდუსტრიის ტაგები
       </label>
+
       <input
         type="text"
         id="industryTag"

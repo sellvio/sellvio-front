@@ -16,12 +16,10 @@ const BusinessProfile = () => {
 
   const queryClient = useQueryClient();
 
-  // Mutation ფოტოების ატვირთვისთვის
   const uploadMutation = useMutation({
     mutationFn: uploadProfileImages,
     onSuccess: (data) => {
       console.log('Upload successful:', data);
-      // განვაახლოთ profile data cache-ში
       queryClient.invalidateQueries({ queryKey: ['businessProfile'] });
       setSuccsessUpdate(true);
       setLogoFile(null);

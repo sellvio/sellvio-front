@@ -72,8 +72,8 @@ const Registration = () => {
       await mutateAsync(payload);
       toast.success('რეგისტრაცია წარმატებით დასრულდა');
       router.push('/');
-    } catch (error) {
-      toast.error('რეგისტრაციის შეცდომა');
+    } catch (error: any) {
+      toast.error(error.message || 'რეგისტრაციის შეცდომა');
       console.log(error);
     }
   };
