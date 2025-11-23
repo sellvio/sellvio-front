@@ -68,13 +68,11 @@ const CompanyBasics = () => {
               ბიუჯეტი (ლარში)
             </h3>
             <input
-              {...register("budget")}
+              {...register("budget", { valueAsNumber: true })}
               type={isOn ? "number" : "password"}
               placeholder="₾ 5000"
               className="w-full border bg-[#FFFFFF1A] border-[#FFFFFF] border-[var(--auth-input-border) rounded-[8px] px-3 py-2 text-[var(--black-color)] font-[700] outline-none shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               style={{ MozAppearance: "textfield" }}
-              // inputMode="decimal"
-              // pattern="[0-9]*"
             />
             {errors.budget && (
               <p className="text-red-500 text-sm mt-4">
@@ -99,13 +97,13 @@ const CompanyBasics = () => {
             კამპანიის აღწერა
           </h3>
           <textarea
-            {...register("duration_days")}
+            {...register("description")}
             placeholder="აღწერეთ თქვენი კამპანიის მიზნები, სამიზნე აუდიტორია და რას ეძებთ შემქმნელებში..."
             className="w-full border  rounded-[8px] px-3 py-2 text-[var(--black-color)] min-h-[218px] font-[700] outline-none resize-none  bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px]"
           />
-          {errors.duration_days && (
+          {errors.description && (
             <p className="text-red-500 text-sm mt-1">
-              {errors.duration_days.message}
+              {errors.description.message}
             </p>
           )}
         </div>
