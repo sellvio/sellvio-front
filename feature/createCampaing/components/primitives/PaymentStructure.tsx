@@ -56,8 +56,8 @@ const PaymentStructure = () => {
         </p>
 
         <div className="flex-col">
-          <div className="flex flex-col gap-4">
-            <h3 className="mt-[26px] font-[700] text-[var(--black-color)] text-[18px]">
+          <div className="flex flex-col ">
+            <h3 className="mt-[26px] font-[700] text-[var(--black-color)] text-[18px] mb-[16px]">
               შეთავაზების ტიპი
             </h3>
             <DropDownInput
@@ -67,6 +67,11 @@ const PaymentStructure = () => {
               value={paymentType}
             />
             <input {...register("payment_type")} type="hidden" />
+            {errors.payment_type && (
+              <p className="text-red-500 text-sm ">
+                {errors.payment_type.message}
+              </p>
+            )}
           </div>
 
           <div className="flex gap-4 mt-8 flex-wrap">

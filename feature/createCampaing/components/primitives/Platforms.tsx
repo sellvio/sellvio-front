@@ -1,44 +1,58 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
-import { z } from "zod";
-import { campaignSchema } from "../../schema/schema";
+import { useFormContext } from "react-hook-form";
+import { CampaignSchema } from "../../schema/schema";
 import { Socmedia } from "../../data/data";
 
-const platformsSchema = campaignSchema.pick({ platforms: true });
+// Map platform titles from data to schema enum values
+const platformTitleToEnum = (
+  title: string
+): CampaignSchema["platforms"][number] => {
+  const mapping: Record<string, CampaignSchema["platforms"][number]> = {
+    instagram: "instagram",
+    Instagram: "instagram",
+    "Tik Tok": "tiktok",
+    tiktok: "tiktok",
+    TikTok: "tiktok",
+    Facebook: "facebook",
+    facebook: "facebook",
+    Youtube: "youtube",
+    youtube: "youtube",
+    YouTube: "youtube",
+  };
+  return (
+    mapping[title] ||
+    (title.toLowerCase() as CampaignSchema["platforms"][number])
+  );
+};
 
-interface PlatformsProps {
-  onChange?: (value: string[], errors?: string[]) => void;
-  defaultValue?: string[];
-}
+const Platforms = () => {
+  const methods = useFormContext<CampaignSchema>();
 
-const Platforms = ({ onChange, defaultValue = [] }: PlatformsProps) => {
-  const [selected, setSelected] = useState<string[]>(defaultValue);
-  const [errors, setErrors] = useState<string[]>([]);
+  if (!methods) {
+    console.warn("Platforms must be used within a FormProvider");
+    return null;
+  }
+
+  const {
+    setValue,
+    watch,
+    formState: { errors },
+  } = methods;
+
+  const selectedPlatforms = watch("platforms") || [];
 
   const togglePlatform = (platformTitle: string) => {
-    const newSelected = selected.includes(platformTitle)
-      ? selected.filter((item) => item !== platformTitle)
-      : [...selected, platformTitle];
+    const enumValue = platformTitleToEnum(platformTitle);
+    const currentPlatforms = selectedPlatforms as string[];
 
-    setSelected(newSelected);
-    validateAndNotify(newSelected);
-  };
+    const newPlatforms = currentPlatforms.includes(enumValue)
+      ? currentPlatforms.filter((item) => item !== enumValue)
+      : [...currentPlatforms, enumValue];
 
-  const validateAndNotify = (platforms: string[]) => {
-    try {
-      const result = platformsSchema.parse({ platforms });
-      setErrors([]);
-      onChange?.(result.platforms, []);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        const errorMessages = error.issues.map(
-          (issue: z.ZodIssue) => issue.message
-        );
-        setErrors(errorMessages);
-        onChange?.(platforms, errorMessages);
-      }
-    }
+    setValue("platforms", newPlatforms as CampaignSchema["platforms"], {
+      shouldValidate: true,
+    });
   };
 
   return (
@@ -62,7 +76,8 @@ const Platforms = ({ onChange, defaultValue = [] }: PlatformsProps) => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full mt-[26px]">
         {Socmedia?.map((eachelement) => {
-          const isSelected = selected.includes(eachelement.title);
+          const enumValue = platformTitleToEnum(eachelement.title);
+          const isSelected = selectedPlatforms.includes(enumValue);
 
           return (
             <button
@@ -92,6 +107,10 @@ const Platforms = ({ onChange, defaultValue = [] }: PlatformsProps) => {
           );
         })}
       </div>
+
+      {errors.platforms && (
+        <p className="text-red-500 text-sm mt-4">{errors.platforms.message}</p>
+      )}
     </div>
   );
 };

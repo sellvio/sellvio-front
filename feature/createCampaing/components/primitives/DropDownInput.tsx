@@ -63,14 +63,14 @@ const DropDownInput = ({
         <button
           type="button"
           onClick={() => setIsOpen((prev) => !prev)}
-          className="px-3 py-2 border rounded-[8px] outline-none w-full font-[700] text-left text-[var(--black-color)] bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] flex items-center justify-between"
+          className="px-3 py-2 border rounded-[8px] outline-none w-full font-[700] text-left text-[var(--black-color)] bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] flex items-center justify-between cursor-pointer"
         >
           <span
             className={`${
               selectedOption
                 ? "text-[var(--black-color)]"
                 : "text-[var(--campaing-form-paragraphs)]"
-            } font-[700]`}
+            } font-[700] cursor-pointer`}
           >
             {selectedOption || placeholder}
           </span>
@@ -103,7 +103,7 @@ const DropDownInput = ({
                     key={option.value}
                     type="button"
                     onClick={() => handleSelect(option.value)}
-                    className="w-full text-left px-3 py-2 font-[700] text-[var(--black-color)] hover:bg-[#FFFFFF33]"
+                    className="w-full text-left px-3 py-2 font-[700] text-[var(--black-color)] hover:bg-[#FFFFFF33] cursor-pointer"
                     whileTap={{ scale: 0.98 }}
                   >
                     {option.label}

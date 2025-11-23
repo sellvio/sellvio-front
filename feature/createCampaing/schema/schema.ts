@@ -31,15 +31,48 @@ export const campaignSchema = z.object({
   additional_requirements: z.string(),
 
   payment_type: z.enum(["cost_per_view", "fixed", "cost_per_click"]),
-  payment_amount: z.number().min(2, "აირჩიე გადახდის რაოდენობის ნაწილი"),
-  payment_per_quantity: z.number().min(1, "აირჩიე გადახდის რაოდენობის ნაწილი"),
+  payment_amount: z
+    .any()
+    .refine(
+      (val) => {
+        if (val === "" || val === null || val === undefined) {
+          return false;
+        }
+        const num = Number(val);
+        return !isNaN(num) && num >= 2;
+      },
+      {
+        message: "აირჩიე გადახდის თანხა",
+      }
+    )
+    .transform((val) => Number(val)),
+  payment_per_quantity: z
+    .any()
+    .refine(
+      (val) => {
+        if (val === "" || val === null || val === undefined) {
+          return false;
+        }
+        const num = Number(val);
+        return !isNaN(num) && num >= 1;
+      },
+      {
+        message: "აირჩიე გადახდის რაოდენობის ნაწილი",
+      }
+    )
+    .transform((val) => Number(val)),
 
   requirements: z.string(),
   target_audience: z.string(),
 
   campaign_image_url: z.string().url(),
 
-  platforms: z.array(z.enum(["instagram", "tiktok", "youtube", "facebook"])),
+  platforms: z.preprocess((val) => {
+    if (val === undefined || val === null) {
+      return [];
+    }
+    return val;
+  }, z.array(z.enum(["instagram", "tiktok", "youtube", "facebook"])).min(1, { message: "აირჩიე პლათფორმა შენი კამპანიისთვის" })),
 
   tags: z.array(z.string()),
 
