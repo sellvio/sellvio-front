@@ -30,7 +30,9 @@ export const campaignSchema = z.object({
 
   additional_requirements: z.string(),
 
-  payment_type: z.enum(["cost_per_view", "fixed", "cost_per_click"]),
+  payment_type: z.enum(["cost_per_view", "fixed", "cost_per_click"], {
+    message: "აირჩიე შეთავაზების ტიპი",
+  }),
   payment_amount: z
     .any()
     .refine(
