@@ -37,7 +37,7 @@ const Tags = ({
   };
 
   return (
-    <div className="flex flex-col gap-[5px] mt-[37px] w-full">
+    <div className="flex flex-col gap-[5px]  w-full">
       <label className="text-[18px] text-[var(--black-color)] font-bold mb-4">
         {label}
       </label>

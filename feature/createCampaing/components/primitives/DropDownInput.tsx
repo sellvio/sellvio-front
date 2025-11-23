@@ -59,7 +59,7 @@ const DropDownInput = ({
 
   return (
     <div className="flex flex-col w-full max-w-[1440px]">
-      <div className="mb-6" ref={dropdownRef}>
+      <div className="mb-4" ref={dropdownRef}>
         <button
           type="button"
           onClick={() => setIsOpen((prev) => !prev)}

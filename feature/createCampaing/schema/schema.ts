@@ -20,13 +20,20 @@ export const campaignSchema = z.object({
     )
     .transform((val) => Number(val)),
   budget_hidden: z.boolean(),
-  duration_days: z.number(),
+  duration_days: z
+    .number({
+      message: "მიუთითე კამპანიის ხანგრძლივობა",
+    })
+    .min(1, { message: "მიუთითე კამპანიის ხანგრძლივობა" }),
   status: z.enum(["draft", "active", "paused", "completed"]).default("draft"),
-  chat_type: z.enum(["public", "private"]),
+  chat_type: z.enum(["public", "private"], {
+    message: "აირჩიე ჩატში გაწევრიანების ტიპი",
+  }),
 
-  target_creator_types: z.array(
-    z.enum(["beginner", "influencer", "expert", "creator"])
-  ),
+  target_creator_types: z.preprocess((val) => {
+    if (val === undefined || val === null) return [];
+    return val;
+  }, z.array(z.enum(["beginner", "influencer", "expert", "creator"]))),
 
   additional_requirements: z.string(),
 
@@ -64,10 +71,12 @@ export const campaignSchema = z.object({
     )
     .transform((val) => Number(val)),
 
-  requirements: z.string(),
-  target_audience: z.string(),
+  requirements: z.string().min(15, { message: "მიუთითე კამპანიის მოთხოვნები" }),
+  target_audience: z.string().min(1, {
+    message: "მიუთითე კამპანიის სამიზნე აუდიტორია",
+  }),
 
-  campaign_image_url: z.string().url(),
+  campaign_image_url: z.string().url().optional(),
 
   platforms: z.preprocess((val) => {
     if (val === undefined || val === null) {
@@ -76,14 +85,17 @@ export const campaignSchema = z.object({
     return val;
   }, z.array(z.enum(["instagram", "tiktok", "youtube", "facebook"])).min(1, { message: "აირჩიე პლათფორმა შენი კამპანიისთვის" })),
 
-  tags: z.array(z.string()),
+  tags: z.array(z.string().min(1, { message: "შიყვანე კამპანიის ტაგები" })),
 
   media: z.array(
-    z.object({
-      name: z.string(),
-      url: z.string().url(),
-      type: z.enum(["image", "video"]),
-    })
+    z.object(
+      {
+        name: z.string(),
+        url: z.string().url(),
+        type: z.enum(["image", "video"]),
+      },
+      { message: "ატვირთეთ ფაილი" }
+    )
   ),
 });
 export type CampaignSchema = z.infer<typeof campaignSchema>;

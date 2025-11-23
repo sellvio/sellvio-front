@@ -102,7 +102,7 @@ const CompanyBasics = () => {
             className="w-full border  rounded-[8px] px-3 py-2 text-[var(--black-color)] min-h-[218px] font-[700] outline-none resize-none  bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px]"
           />
           {errors.description && (
-            <p className="text-red-500 text-sm mt-1">
+            <p className="text-red-500 text-sm mt-4">
               {errors.description.message}
             </p>
           )}
