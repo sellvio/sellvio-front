@@ -18,6 +18,7 @@ import { CreatorRegisterBody } from '@/types/api';
 import { registerUser } from '@/lib/api/login';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const Registration = () => {
   const router = useRouter();
@@ -29,6 +30,7 @@ const Registration = () => {
   const {
     register: registerUserForm,
     handleSubmit: handleSubmitUser,
+    control: controlUser,
     formState: { errors: errorsUser },
   } = useForm<RegistrationValues>({
     resolver: zodResolver(RegistrationSchema),
@@ -154,6 +156,7 @@ const Registration = () => {
           <RegistrationForm
             register={registerUserForm}
             errors={errorsUser}
+            control={controlUser}
             onSubmit={handleSubmitUser(onSubmitStepOne)}
           />
         ) : (
