@@ -17,7 +17,9 @@ const RegistrationBusinessForm: React.FC<CompanyFormProps> = ({
     queryKey: ['industryEnums'],
     queryFn: getEnums,
   });
-  const legalStatusOptions = data?.data?.map((items) => items.name_ka) || [];
+
+  const legalStatusOptions = data?.data || [];
+
   return (
     <form onSubmit={onSubmit} className="space-y-[22px] mt-[39px]">
       <div className="space-y-[30px]">
@@ -38,6 +40,7 @@ const RegistrationBusinessForm: React.FC<CompanyFormProps> = ({
           errors={errors}
           setValue={setValue}
         />
+
         <TagInput
           name="business_tags"
           register={register}
@@ -49,6 +52,7 @@ const RegistrationBusinessForm: React.FC<CompanyFormProps> = ({
             {errors.business_tags.message as string}
           </p>
         )}
+
         <ReUsableInput
           label="კომპანიის ვებსაიტი"
           id="website"

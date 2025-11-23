@@ -2,7 +2,19 @@
 import { EnumSelectInputProps } from '@/feature/registrationSocials/type';
 import React, { useState, useRef, useEffect } from 'react';
 
-const EnumSelectInput: React.FC<EnumSelectInputProps> = ({
+interface LegalStatusOption {
+  id: number;
+  code: string;
+  name_en: string;
+  name_ka: string;
+}
+
+interface EnumSelectInputPropsExtended
+  extends Omit<EnumSelectInputProps, 'enumOptions'> {
+  enumOptions: LegalStatusOption[];
+}
+
+const EnumSelectInput: React.FC<EnumSelectInputPropsExtended> = ({
   label,
   name,
   enumOptions,
@@ -23,7 +35,7 @@ const EnumSelectInput: React.FC<EnumSelectInputProps> = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const filteredOptions = enumOptions.filter((option) =>
-    option.toLowerCase().includes(searchTerm.toLowerCase())
+    option.name_ka.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   useEffect(() => {
@@ -40,13 +52,13 @@ const EnumSelectInput: React.FC<EnumSelectInputProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleOptionClick = (option: string) => {
-    setSelectedValue(option);
-    setSearchTerm(option);
-    sessionStorage.setItem(storageKey, option);
+  const handleOptionClick = (option: LegalStatusOption) => {
+    setSelectedValue(option.name_ka);
+    setSearchTerm(option.name_ka);
+    sessionStorage.setItem(storageKey, option.name_ka);
     setIsOpen(false);
     if (setValue) {
-      setValue(name, option, { shouldValidate: true });
+      setValue(name, option.id, { shouldValidate: true });
     }
   };
 
@@ -55,8 +67,10 @@ const EnumSelectInput: React.FC<EnumSelectInputProps> = ({
     setSearchTerm(value);
     sessionStorage.setItem(storageKey, value);
     setIsOpen(true);
-    if (setValue) {
-      setValue(name, value, { shouldValidate: true });
+
+    const exactMatch = enumOptions.find((opt) => opt.name_ka === value);
+    if (setValue && exactMatch) {
+      setValue(name, exactMatch.id, { shouldValidate: true });
     }
   };
 
@@ -91,15 +105,15 @@ const EnumSelectInput: React.FC<EnumSelectInputProps> = ({
 
           {isOpen && filteredOptions.length > 0 && (
             <div className="z-10 absolute bg-white shadow-lg mt-1 border border-[var(--auth-input-border)] rounded-[8px] w-full max-h-60 overflow-y-auto">
-              {filteredOptions.map((option, index) => (
+              {filteredOptions.map((option) => (
                 <div
-                  key={index}
+                  key={option.id}
                   onClick={() => handleOptionClick(option)}
                   className={`px-[18px] py-[17px] cursor-pointer hover:bg-gray-50 transition-colors font-bold text-[18px] ${
-                    selectedValue === option ? 'bg-gray-100' : ''
+                    selectedValue === option.name_ka ? 'bg-gray-100' : ''
                   }`}
                 >
-                  {option}
+                  {option.name_ka}
                 </div>
               ))}
             </div>

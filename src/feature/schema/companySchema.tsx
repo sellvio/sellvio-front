@@ -10,11 +10,9 @@ export const CompanySchema = z.object({
     })
     .max(100, { message: 'კომპანიის სამართლებრივი სახელი ძალიან გრძელია.' }),
   legal_status_id: z
-    .string()
-    .trim()
-    .min(2, {
-      message:
-        'კომპანიის სამართლებრივი სტატუსი უნდა შეიცავდეს მინიმუმ 2 სიმბოლოს.',
+    .number()
+    .min(1, {
+      message: 'არ აგირჩევიათ კომპანიის სამართლებრივი სტატუსი',
     })
     .max(50, { message: 'კომპანიის სამართლებრივი სტატუსი ძალიან გრძელია.' }),
   website: z.string().trim().url({ message: 'უნდა იყოს ვალიდური URL.' }),
