@@ -4,7 +4,6 @@ import { useFormContext } from "react-hook-form";
 import { CampaignSchema } from "../../schema/schema";
 import { Socmedia } from "../../data/data";
 
-// Map platform titles from data to schema enum values
 const platformTitleToEnum = (
   title: string
 ): CampaignSchema["platforms"][number] => {

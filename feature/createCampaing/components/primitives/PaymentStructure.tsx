@@ -7,7 +7,6 @@ import { CampaignSchema } from "../../schema/schema";
 
 const DEFAULT_DESCRIPTION =
   "კონფენსაცია, თუ როგორ მიიღებენ კომპენსაციას შემმნელები";
-const DEFAULT_PLACEHOLDER = "რაოდენობა";
 
 const PaymentStructure = () => {
   const methods = useFormContext<CampaignSchema>();
@@ -25,11 +24,30 @@ const PaymentStructure = () => {
   } = methods;
 
   const paymentType = watch("payment_type");
+  const paymentPerQuantity = watch("payment_per_quantity");
+  const paymentAmount = watch("payment_amount");
+
   const selectedCostOption = costOptions.find(
     (option) => option.value === paymentType
   );
-  const description = selectedCostOption?.description || DEFAULT_DESCRIPTION;
-  const quantityPlaceholder = selectedCostOption?.label || DEFAULT_PLACEHOLDER;
+
+  const getDescription = () => {
+    if (!selectedCostOption || !paymentPerQuantity || !paymentAmount) {
+      return selectedCostOption?.description || DEFAULT_DESCRIPTION;
+    }
+
+    const unitMap: Record<string, string> = {
+      cost_per_view: "ნახვისთვის",
+      cost_per_reach: "მიღწევაზე",
+      cost_per_engagement: "ჩართულობაზე",
+      cost_per_click: "კლიკზე",
+    };
+
+    const unit = unitMap[paymentType] || "";
+    return `ყოველ ${paymentPerQuantity} ${unit}, შემქმნელი მიიღებს ${paymentAmount} ლარს`;
+  };
+
+  const quantityPlaceholder = selectedCostOption?.label || "რაოდენობა";
 
   const handleCostTypeChange = (value: string) => {
     setValue("payment_type", value as CampaignSchema["payment_type"], {
@@ -52,7 +70,7 @@ const PaymentStructure = () => {
           </h2>
         </div>
         <p className="text-[var(--campaing-form-paragraphs)] text-[14px]">
-          {description}
+          {getDescription()}
         </p>
 
         <div className="flex-col">
@@ -100,8 +118,8 @@ const PaymentStructure = () => {
               <input
                 {...register("payment_amount", { valueAsNumber: true })}
                 type="number"
-                placeholder="თანხა"
-                className="px-3 py-2 border  rounded-[8px] outline-none w-full font-[700] text-[var(--black-color)] bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                placeholder={quantityPlaceholder}
+                className="px-3 py-2 border  rounded-[8px] outline-none w-full font-[700] text-[var(--black-color)] bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none overflow-hidden text:sm"
                 style={{ MozAppearance: "textfield" }}
               />
               {errors.payment_amount && (
