@@ -1,6 +1,8 @@
+import { CreatorRegisterBody, registrationUser } from '@/types/api';
+
 const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-export async function loginUser(value) {
+export async function loginUser(value: registrationUser) {
   console.log('Login payload:', value);
   const res = await fetch(`${baseURL}/auth/login`, {
     method: 'POST',
@@ -27,4 +29,75 @@ export async function loginUser(value) {
   }
 
   return data.data;
+}
+
+export async function registerUser(value: CreatorRegisterBody) {
+  const res = await fetch(`${baseURL}/auth/register`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(value),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(
+      errorData.message
+        ? Array.isArray(errorData.message)
+          ? errorData.message.join(', ')
+          : errorData.message
+        : 'Registration failed'
+    );
+  }
+
+  const data = await res.json();
+
+  if (typeof window !== 'undefined') {
+    const { access_token, refresh_token, user } = data.data || data;
+
+    if (access_token) localStorage.setItem('access_token', access_token);
+    if (refresh_token) localStorage.setItem('refresh_token', refresh_token);
+    if (user) localStorage.setItem('user', JSON.stringify(user));
+  }
+
+  return data;
+}
+export async function getEnums() {
+  try {
+    const response = await fetch(`${baseURL}/enums/legal-statuses/all`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok: ' + response.status);
+    }
+    const data = await response.json();
+    console.log('Enums:', data);
+    return data;
+  } catch (error) {
+    console.error('Error fetching enums:', error);
+  }
+}
+
+export async function getIndustryTags() {
+  try {
+    const response = await fetch(`${baseURL}/enums/tags/all`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok: ' + response.status);
+    }
+    const data = await response.json();
+    console.log('Enums:', data);
+    return data;
+  } catch (error) {
+    console.error('Error fetching enums:', error);
+  }
 }

@@ -1,0 +1,152 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { TagInputProps } from '../../../registrationSocials/type';
+import Image from 'next/image';
+import { useQuery } from '@tanstack/react-query';
+import { getIndustryTags } from '@/lib/api/login';
+
+const TagInput = <T extends Record<string, unknown>>({
+  name,
+  register,
+  setValue,
+}: TagInputProps<T>) => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const { data } = useQuery({
+    queryKey: ['businessTag'],
+    queryFn: getIndustryTags,
+    enabled: isMounted,
+  });
+
+  const industryTags = Array.isArray(data?.data) ? data.data : [];
+  const OPTIONS = industryTags.map((item: any) => item.name);
+
+  const storageKey = `tags_${name}`;
+
+  const [items, setItems] = useState<{ id: number; name: string }[]>([]);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
+    const saved = sessionStorage.getItem(storageKey);
+    setItems(saved ? JSON.parse(saved) : []);
+  }, [isMounted, storageKey]);
+
+  const [inputValue, setInputValue] = useState('');
+  const [showOptions, setShowOptions] = useState(false);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
+    if (setValue) {
+      const onlyIds = items.map((item) => item.id);
+      setValue(name, onlyIds as any);
+    }
+    sessionStorage.setItem(storageKey, JSON.stringify(items));
+  }, [items, name, setValue, storageKey, isMounted]);
+
+  if (!isMounted) return null;
+
+  const filteredOptions: string[] = OPTIONS.filter(
+    (opt: string) =>
+      opt.toLowerCase().includes(inputValue.toLowerCase()) &&
+      !items.some((item) => item.name === opt)
+  );
+
+  const handleSelect = (value: string) => {
+    const found = industryTags.find((tag: any) => tag.name === value);
+    if (!found) return;
+
+    setItems((prev) => [...prev, { id: found.id, name: found.name }]);
+    setInputValue('');
+    setShowOptions(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (filteredOptions.length > 0) {
+        handleSelect(filteredOptions[0]);
+      }
+    }
+  };
+
+  const handleRemove = (index: number) => {
+    setItems((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  return (
+    <div className="mb-[1px] relativ">
+      <label
+        htmlFor="industryTag"
+        className="font-bold text-[18px] cursor-pointer"
+      >
+        ინდუსტრიის ტაგები
+      </label>
+
+      <input
+        type="text"
+        id="industryTag"
+        placeholder="აირჩიე ინდუსტრიის ტაგი"
+        className="mt-[16px] px-[18px] py-[17px] border border-[var(--auth-input-border)] rounded-[8px] focus:outline-[var(--auth-border)] w-full min-h-[56px] font-bold text-[18px]"
+        value={inputValue}
+        onChange={(e) => {
+          setInputValue(e.target.value);
+          setShowOptions(true);
+        }}
+        onKeyDown={handleKeyDown}
+        onFocus={() => setShowOptions(true)}
+        onBlur={() => setTimeout(() => setShowOptions(false), 200)}
+      />
+
+      <input type="hidden" {...register(name as any)} />
+
+      {showOptions && filteredOptions.length > 0 && (
+        <div className="z-10 absolute bg-white shadow-lg mt-1 border border-[var(--auth-input-border)] rounded-[8px] w-full max-h-60 overflow-y-auto">
+          {filteredOptions.map((opt) => (
+            <button
+              type="button"
+              key={opt}
+              onClick={() => handleSelect(opt)}
+              className="hover:bg-gray-100 px-[18px] py-[17px] w-full font-bold text-[18px] text-left cursor-pointer"
+            >
+              {opt}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {items.length > 0 && (
+        <div className="flex flex-wrap gap-[8px] mt-[12px]">
+          {items.map((item, index) => (
+            <span
+              key={item.id}
+              className="flex justify-center items-center gap-[5px] bg-[var(--auth-tag-bg)] px-[12px] py-[6px] border border-[var(--auth-border)] rounded-[8px] font-semibold text-[var(--auth-social-input-border)]"
+            >
+              {item.name}
+              <button
+                className="cursor-pointer"
+                type="button"
+                onClick={() => handleRemove(index)}
+              >
+                <Image
+                  src="/close.svg"
+                  alt="closeButton"
+                  width={8}
+                  height={8}
+                />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default TagInput;

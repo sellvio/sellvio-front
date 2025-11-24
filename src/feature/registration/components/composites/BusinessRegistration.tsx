@@ -3,85 +3,95 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
-import RegistrationForm from '@/feature/registration/components/primitives/RegistrationForm';
-import {
-  RegistrationSchema,
-  RegistrationValues,
-} from '@/feature/schema/registrationSchema';
 import { useRegistrationType } from '@/feature/components/composites/RegistrationType';
 import BusinessCreatorBtnSlider from '@/feature/Authorization/components/primitives/BusinessCreatorBtnSlider';
-import { FormSchema, FormValues } from '@/feature/schema/authorisationSchema';
-import RegistrationStepTwo from '../primitives/RegistrationFormStepTwo';
 import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
-import { CreatorRegisterBody } from '@/types/api';
-import { registerUser } from '@/lib/api/login';
 import { toast } from 'react-toastify';
+import RegistrationBusinessForm from '../primitives/RegistrationBusinessForm';
+import { CompanySchema, CompanyValues } from '@/feature/schema/companySchema';
+import {
+  RegistrationStepTwoSchema,
+  RegistrationStepTwoValues,
+} from '@/feature/schema/businessRegistrationSchemaStepTwo';
+import BusinessRegistrationLastStep from '../primitives/BusinessRegistrationStepTwo';
+import { registerUser } from '@/lib/api/login';
+import { BusinessRegisterBody } from '@/feature/registrationSocials/type';
 import Link from 'next/link';
-import 'react-datepicker/dist/react-datepicker.css';
 
-const Registration = () => {
+const BusinessRegistration = () => {
   const router = useRouter();
   const { registrationType, handleChangeType } =
     useRegistrationType('/registration');
-
   const [currentStep, setCurrentStep] = useState<1 | 2>(1);
+  const [stepOneData, setStepOneData] = useState<CompanyValues | null>(null);
 
   const {
-    register: registerUserForm,
-    handleSubmit: handleSubmitUser,
-    control: controlUser,
-    formState: { errors: errorsUser },
-  } = useForm<RegistrationValues>({
-    resolver: zodResolver(RegistrationSchema),
+    register: businessRegistration,
+    handleSubmit: handleSubmitBusiness,
+    formState: { errors: errorsStepOne },
+    setValue: setValueStepOne,
+  } = useForm<CompanyValues>({
+    resolver: zodResolver(CompanySchema),
   });
 
   const {
     register: registerStepTwo,
     handleSubmit: handleSubmitStepTwo,
     formState: { errors: errorsStepTwo },
-  } = useForm<FormValues>({
-    resolver: zodResolver(FormSchema),
+  } = useForm<RegistrationStepTwoValues>({
+    resolver: zodResolver(RegistrationStepTwoSchema),
   });
-
-  const [stepOneData, setStepOneData] = useState<RegistrationValues | null>(
-    null
-  );
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: (payload: CreatorRegisterBody) => registerUser(payload),
+    mutationFn: (payload: BusinessRegisterBody) => registerUser(payload),
+    onSuccess: () => {
+      toast.success('რეგისტრაცია წარმატებით დასრულდა');
+      router.push('/');
+    },
+    onError: (error: any) => {
+      toast.error(error.message || 'რეგისტრაციის შეცდომა');
+      console.error('Registration error:', error);
+    },
   });
 
-  const onSubmitStepOne = (data: RegistrationValues) => {
+  const onSubmitBusiness = (data: CompanyValues) => {
+    console.log('Step 1 data:', data);
     setStepOneData(data);
     setCurrentStep(2);
   };
 
-  const onSubmitStepTwo = async (data: FormValues) => {
-    if (!stepOneData) return;
+  const onSubmitStepTwo = async (data: RegistrationStepTwoValues) => {
+    if (!stepOneData) {
+      toast.error('გთხოვთ დაიწყოთ თავიდან');
+      setCurrentStep(1);
+      return;
+    }
 
-    const payload: CreatorRegisterBody = {
-      ...stepOneData,
+    const payload: BusinessRegisterBody = {
       email: data.email,
       password: data.password,
-      user_type: 'creator',
-      date_of_birth: new Date(stepOneData.date_of_birth).toISOString(),
+      user_type: 'business',
+      company_name: stepOneData.company_name,
+      company_nickName: data.company_nickName,
+      legal_status_id: stepOneData.legal_status_id,
+      website_url: stepOneData.website,
+      business_email: data.email,
+      phone: data.phone || '',
+      business_tags: stepOneData.business_tags || [],
     };
 
-    console.log(payload);
+    console.log('Final payload:', payload);
 
     try {
       await mutateAsync(payload);
-      toast.success('რეგისტრაცია წარმატებით დასრულდა');
-      router.push('/');
-    } catch (error: any) {
-      toast.error(error.message || 'რეგისტრაციის შეცდომა');
-      console.log(error);
+    } catch (error) {
+      console.error('Submission error:', error);
     }
   };
 
   return (
-    <div className="flex m-auto m-y-auto my-[30px] w-full max-w-[1440px]">
+    <div className="flex m-auto my-[30px] w-full max-w-[1440px]">
       <div className="bg-[url('/images/authIcons/png/authLeftSidePhoto.png')] bg-cover bg-center w-full max-w-[880px] min-h-[880px]">
         <Link href="/" className="mt-[28px] ml-[28px]">
           <Image
@@ -153,14 +163,14 @@ const Registration = () => {
         </div>
 
         {currentStep === 1 ? (
-          <RegistrationForm
-            register={registerUserForm}
-            errors={errorsUser}
-            control={controlUser}
-            onSubmit={handleSubmitUser(onSubmitStepOne)}
+          <RegistrationBusinessForm
+            register={businessRegistration}
+            errors={errorsStepOne}
+            onSubmit={handleSubmitBusiness(onSubmitBusiness)}
+            setValue={setValueStepOne}
           />
         ) : (
-          <RegistrationStepTwo
+          <BusinessRegistrationLastStep
             register={registerStepTwo}
             errors={errorsStepTwo}
             isPending={isPending}
@@ -183,4 +193,4 @@ const Registration = () => {
   );
 };
 
-export default Registration;
+export default BusinessRegistration;

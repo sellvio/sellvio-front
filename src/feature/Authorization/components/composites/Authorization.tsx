@@ -1,22 +1,19 @@
 'use client';
-import Image from 'next/image';
-import Link from 'next/link';
+
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import ReUsableInput from '../primitives/ReusableInput';
-import RegistrationAs from '@/feature/components/composites/RegistrationAs';
-import BusinessCreatorBtnSlider from '../primitives/BusinessCreatorBtnSlider';
 import { FormSchema, FormValues } from '../../../schema/authorisationSchema';
-import { useRegistrationType } from '@/feature/components/composites/RegistrationType';
 import { useMutation } from '@tanstack/react-query';
 import { loginUser } from '@/lib/api/login';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import Link from 'next/link';
 
 const Authorization = () => {
   const router = useRouter();
-  const { registrationType, handleChangeType } = useRegistrationType('/login');
 
   const {
     register,
@@ -41,28 +38,34 @@ const Authorization = () => {
     mutate(data);
   };
   return (
-    <div className="space-y-[30px] m-auto w-full max-w-[621px]">
-      <div className="flex flex-col items-center gap-[8px]">
-        <Link href="/">
-          <Image src="/Sellvio.svg" width={150} height={46} alt="logo" />
+    <div className="flex w-full max-w-[1343px]">
+      <div className="bg-[url('/images/authIcons/png/authLeftSidePhoto.png')] bg-cover bg-center w-full max-w-[780px] min-h-[780px]">
+        <Link href="/" className="mt-[28px] ml-[28px]">
+          <Image
+            src="/images/authIcons/svg/sellvioLogoForAuth.svg"
+            alt="logo"
+            width={195}
+            height={51}
+          />
         </Link>
-        <p className="font-bold text-[18px] text-[var(--auth-text-dark)]">
-          შედით პროფილზე
-        </p>
       </div>
-
-      <div className="px-[32px] py-[26px] border border-[var(--auth-border)] rounded-[8px] w-full max-w-[621px] min-h-[653px]">
+      <div className="flex flex-col justify-between px-[41px] py-[54px] rounded-[8px] w-full max-w-[563px] min-h-[789px]">
         <div className="space-y-[9px]">
+          <div className="flex justify-center mb-[52px] w-full">
+            <Link href="/">
+              <Image
+                src="/images/authIcons/svg/selvioAuthLogo.svg"
+                width={160}
+                height={48}
+                alt="logo"
+              />
+            </Link>
+          </div>
           <p className="font-bold text-[35px]">დაბრუნებას გილოცავ</p>
           <p className="text-[18px] text-[var(--auth-text-dark)]">
             შეარჩიე შენი პროფილის სტილი
           </p>
         </div>
-
-        <BusinessCreatorBtnSlider
-          registrationType={registrationType}
-          setRegistrationType={handleChangeType}
-        />
 
         <form
           onSubmit={handleSubmit(submitForm)}
@@ -88,17 +91,20 @@ const Authorization = () => {
             />
           </div>
           <Button variant="auth" disabled={isPending}>
-            {isPending ? 'იგზავნება...' : 'მონაწილეობის მიღება'}
+            {isPending ? 'იგზავნება...' : 'შესვლა'}
           </Button>
         </form>
-
-        <RegistrationAs
-          accountInfo={'არ გაქვს ექაუნთი?'}
-          business={'დარეგისტრირდი როგორც ბიზნესი'}
-          creator={'დარეგისტრირდი როგორც შემქმნელი'}
-          creatorAuth={'registration'}
-          businessAuth={'registration'}
-        />
+        <div className="flex justify-center gap-[6px] w-full">
+          <p className="font-bold text-[#000000D4] text-[18px]">
+            არ გაქვს ექაუნთი?
+          </p>
+          <Link
+            href={'/registration'}
+            className="font-bold text-[#583CCF] text-[18px]"
+          >
+            დარეგისტრირდი
+          </Link>
+        </div>
       </div>
     </div>
   );
