@@ -2,7 +2,7 @@ import Channels from "../primitives/Channels";
 
 const Chat = () => {
   return (
-    <div>
+    <div className="min-h-screen">
       <Channels />
     </div>
   );
