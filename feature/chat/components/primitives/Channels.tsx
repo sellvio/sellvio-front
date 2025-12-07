@@ -1,17 +1,17 @@
-import Image from "next/image";
-import { channelsData } from "../../data/chatData";
+import Image from 'next/image';
+import { channelsData } from '../../data/chatData';
 
 const Channels = () => {
   return (
-    <div className="flex flex-col justify-between max-w-[277px] w-full h-screen border-r border-[#E0E0E0]">
-      <div className="px-[13px] py-[10px] border-b border-[#E0E0E0] text-[#ffffff] text-[16px] font-[600]">
+    <div className="flex flex-col justify-between bg-[#001541D6] border-[#E0E0E0] border-r w-full max-w-[277px] h-screen">
+      <div className="px-[13px] py-[10px] border-[#E0E0E0] border-b font-[600] text-[#ffffff] text-[16px]">
         კარფურის პროდუქტები
       </div>
 
       <div className="flex-1">
         {channelsData.map((section) => (
           <div key={section.sectionTitle}>
-            <div className="px-[13px] py-[10px] text-[#ffffff] text-[16px] font-[600]">
+            <div className="px-[13px] py-[10px] font-[600] text-[#ffffff] text-[16px]">
               {section.sectionTitle}
             </div>
 
@@ -28,14 +28,14 @@ const Channels = () => {
         ))}
       </div>
 
-      <div className="bg-[#FFFFFF36] h-[50px] flex items-center gap-3 px-3 mb-4 rounded-[10px] mx-3">
-        <div className="w-[31px] h-[31px] rounded-full bg-[aqua]"></div>
+      <div className="flex items-center gap-3 bg-[#FFFFFF36] mx-3 mb-4 px-3 rounded-[10px] h-[56px]">
+        <div className="bg-[aqua] rounded-full w-[31px] h-[31px]"></div>
 
         <div className="flex flex-col">
-          <p className="text-[#FFFFFF] text-[15px] font-[600]">
+          <p className="font-[600] text-[#FFFFFF] text-[15px]">
             ვაჩე გაბრინდაშვილი
           </p>
-          <p className="text-[#FFFFFF] text-[12px] font-[600]">ონლაინ</p>
+          <p className="font-[600] text-[#FFFFFF] text-[12px]">ონლაინ</p>
         </div>
       </div>
     </div>
