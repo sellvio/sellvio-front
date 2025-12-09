@@ -138,7 +138,6 @@ const ExtraMedia = () => {
       )}
 
       <div className="flex mt-5">
-        {/* Uploaded Files List */}
         {fileMedia.length > 0 && (
           <div className="w-full">
             <div className="flex flex-wrap gap-4 items-center max-h-[220px] overflow-y-auto pr-2">
@@ -196,7 +195,6 @@ const ExtraMedia = () => {
           </div>
         )}
 
-        {/* Uploaded Links List */}
         {linkMedia.length > 0 && (
           <div className="w-full">
             <div className="flex flex-wrap gap-4 items-center max-h-[220px] overflow-y-auto pr-2">
@@ -295,9 +293,7 @@ const ExtraMedia = () => {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Links */}
         <div className="w-full m-auto lg:max-w-[570px] flex flex-col gap-5">
-          {/* Link Uploader */}
           <div className="flex flex-col gap-5 justify-center items-center border border-dashed pt-[21px] pb-[21px] rounded-[8px] bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px]">
             {showLinkInput ? (
               <div className="w-full px-4 gap-4 flex flex-col ">
