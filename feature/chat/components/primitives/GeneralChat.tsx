@@ -50,7 +50,6 @@ const GeneralChat = () => {
         </div>
         <div className="flex justify-between items-center w-full max-w-[162px]">
           {newChannelsData.map((item) => (
-<<<<<<< Updated upstream
             <button
               key={item.id}
               onClick={() => handleTabClick(item.id)}
@@ -62,20 +61,6 @@ const GeneralChat = () => {
             >
               <Image src={item.image} alt={item.title} width={24} height={24} />
             </button>
-=======
-            <div
-              key={item.id}
-              className="flex justify-center items-center hover:bg-[#FFFFFF36] rounded-[10px] w-[40px] h-[40px] transition-all duration-300 ease-in-out"
-            >
-              <Image
-                src={item.image}
-                alt={item.title}
-                width={24}
-                height={24}
-                className="cursor-pointer"
-              />
-            </div>
->>>>>>> Stashed changes
           ))}
         </div>
       </div>
