@@ -49,10 +49,26 @@ export const UploadFile: UploadFileProps[] = [
   { id: 2, img: "./images/svg/upload.svg", title: "ატვირთე ლინკი" },
 ];
 export const costOptions = [
-  { label: "Cost Per View", value: "cost_per_view" },
-  { label: "Cost Per Reach", value: "cost_per_reach" },
-  { label: "Cost Per Engagement", value: "cost_per_engagement" },
-  { label: "Cost Per Click", value: "cost_per_click" },
+  {
+    label: "ნახვის ღირებულება",
+    value: "cost_per_view",
+    description: "შემოქმედები მიიღებს კომპენსაციას თითოეული ნახვისთვის",
+  },
+  {
+    label: "ღირებულება თითო მიღწევაზე",
+    value: "cost_per_reach",
+    description: "შემოქმედები მიიღებს კომპენსაციას მიღწევის (reach) მიხედვით",
+  },
+  {
+    label: "ღირებულება თითო ჩართულობაზე",
+    value: "cost_per_engagement",
+    description: "შემოქმედები მიიღებს კომპენსაციას თითოეული ჩართულობისთვის",
+  },
+  {
+    label: "დაწკაპუნების ღირებულება",
+    value: "cost_per_click",
+    description: "შემოქმედები მიიღებს კომპენსაციას თითოეული კლიკისთვის",
+  },
 ];
 export const dayOptions = [
   {
