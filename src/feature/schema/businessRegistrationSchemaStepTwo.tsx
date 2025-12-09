@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const RegistrationStepTwoSchema = z
   .object({
-    contactNumber: z
+    phone: z
       .string()
       .trim()
       .min(5, { message: 'საკონტაქტო ნომერი უნდა იყოს მინიმუმ 5 სიმბოლო.' })
@@ -11,7 +11,7 @@ export const RegistrationStepTwoSchema = z
       .string()
       .trim()
       .email({ message: 'უნდა იყოს ვალიდური Email მისამართი.' }),
-    nickname: z
+    company_nickName: z
       .string()
       .trim()
       .min(2, {
@@ -21,14 +21,13 @@ export const RegistrationStepTwoSchema = z
     password: z
       .string()
       .min(6, { message: 'პაროლი უნდა იყოს მინიმუმ 6 სიმბოლო.' }),
-    confirmPassword: z
-      .string()
-      .min(6, { message: 'გაიმეორე პაროლი უნდა იყოს მინიმუმ 6 სიმბოლო.' }),
+    repeatPassword: z.string().min(6, { message: 'პაროლები არ ემთხვევა' }),
   })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'პაროლები უნდა ემთხვეოდეს ერთმანეთს',
-    path: ['confirmPassword'],
+  .refine((data) => data.password === data.repeatPassword, {
+    message: 'პაროლები არ ემთხვევა',
+    path: ['repeatPassword'],
   });
+
 export type RegistrationStepTwoValues = z.infer<
   typeof RegistrationStepTwoSchema
 >;

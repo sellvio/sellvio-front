@@ -3,7 +3,7 @@ import Registration from '@/feature/registration/components/composites/Registrat
 
 const RegistrationBusinessPage = () => {
   return (
-    <div>
+    <div className="flex justify-center items-center w-full min-h-screen">
       <Suspense fallback={null}>
         <Registration />
       </Suspense>

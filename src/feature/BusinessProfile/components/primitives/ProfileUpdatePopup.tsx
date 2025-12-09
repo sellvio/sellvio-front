@@ -8,7 +8,7 @@ const ProfileUpdatePopup = ({ successUpdate, setSuccsessUpdate }) => {
         </p>
         <button
           onClick={() => setSuccsessUpdate(false)}
-          className="bg-[#FFFFFF1A] hover:bg-[#EB165440] shadow-[4px_5px_6px_0px_#FFFFFF66_inset,-1px_-3px_4px_0px_#FFFFFF66_inset,0px_8px_13px_0px_#0000000A] px-[102px] py-[16px] border border-[#E3E8EF] rounded-[8px] font-bold text-[#000000D4] text-[20px] cursor-pointer"
+          className="bg-[#FFFFFF1A] hover:bg-[#0ACF4640] shadow-[4px_5px_6px_0px_#FFFFFF66_inset,-1px_-3px_4px_0px_#FFFFFF66_inset,0px_8px_13px_0px_#0000000A] px-[102px] py-[16px] border border-[#E3E8EF] rounded-[8px] font-bold text-[#000000D4] text-[20px] cursor-pointer"
         >
           დეშბორდზე დაბრუნება
         </button>
