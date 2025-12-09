@@ -4,9 +4,12 @@ import { users } from '../../data/chatData';
 
 const Member = () => {
   return (
-    <div className="[border-bottom-left-radius:10px] [border-top-left-radius:10px] gap-[14px] bg-[linear-gradient(0deg,rgba(17,24,39,0.42),rgba(17,24,39,0.42)),linear-gradient(0deg,rgba(255,255,255,0.1),rgba(255,255,255,0.1))] px-[22px] py-[11px] w-full max-w-[304px] h-full overflow-y-auto">
+    <div className="[border-bottom-left-radius:10px] [border-top-left-radius:10px] gap-[14px] bg-[linear-gradient(0deg,rgba(17,24,39,0.42),rgba(17,24,39,0.42)),linear-gradient(0deg,rgba(255,255,255,0.1),rgba(255,255,255,0.1))] w-full max-w-[304px] h-full overflow-y-auto">
       {users.map((eachElement) => (
-        <div key={eachElement.id} className="flex items-center min-h-[56px]">
+        <div
+          key={eachElement.id}
+          className="flex items-center hover:bg-[#FFFFFF36] px-[22px] py-[11px] min-h-[56px] duration-300 ease-in-out cursor-pointer"
+        >
           <div className="flex items-center gap-[15px]">
             <div className="relative bg-[#999999] rounded-full w-[31px] h-[31px]">
               <Image
