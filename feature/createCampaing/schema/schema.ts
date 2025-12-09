@@ -85,7 +85,9 @@ export const campaignSchema = z.object({
     return val;
   }, z.array(z.enum(["instagram", "tiktok", "youtube", "facebook"])).min(1, { message: "აირჩიე პლათფორმა შენი კამპანიისთვის" })),
 
-  tags: z.array(z.string().min(1, { message: "შიყვანე კამპანიის ტაგები" })),
+  tags: z
+    .array(z.string().min(1, { message: "შიყვანე კამპანიის ტაგები" }))
+    .optional(),
 
   media: z.array(
     z.object(

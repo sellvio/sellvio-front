@@ -210,11 +210,11 @@ const CompanyDetails = () => {
                 value={field.value || []}
                 onChange={field.onChange}
               />
-              {fieldState.error && (
+              {/* {fieldState.error && (
                 <p className="text-red-500 text-sm mt-4">
                   {fieldState.error.message}
                 </p>
-              )}
+              )} */}
             </>
           )}
         />
