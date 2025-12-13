@@ -89,3 +89,37 @@ export const users = [
     profileImage: '/images/user3.png',
   },
 ];
+export const PinedMessageData = [
+  {
+    id: 1,
+    data: 'დღეს 2:30 PM',
+    userName: 'dato_dev',
+    profileImage: '/images/user3.png',
+    message:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem porroveniam quibusdam provident tenetur animi repellat laudantium enim,ullam sunt temporibus. Iure quas laborum quasi. Aspernatur illotenetur enim minus!',
+  },
+  {
+    id: 2,
+    data: 'დღეს 2:30 PM',
+    userName: 'dato_dev',
+    profileImage: '/images/user3.png',
+    message:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem porroveniam quibusdam provident tenetur animi repellat laudantium enim,ullam sunt temporibus. Iure quas laborum quasi. Aspernatur illotenetur enim minus!',
+  },
+  {
+    id: 3,
+    data: 'დღეს 2:30 PM',
+    userName: 'dato_dev',
+    profileImage: '/images/user3.png',
+    message:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem porroveniam quibusdam provident tenetur animi repellat laudantium enim,ullam sunt temporibus. Iure quas laborum quasi. Aspernatur illotenetur enim minus!',
+  },
+  {
+    id: 4,
+    data: 'დღეს 2:30 PM',
+    userName: 'dato_dev',
+    profileImage: '/images/user3.png',
+    message:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem porroveniam quibusdam provident tenetur animi repellat laudantium enim,ullam sunt temporibus. Iure quas laborum quasi. Aspernatur illotenetur enim minus!',
+  },
+];

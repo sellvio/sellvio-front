@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { channelsData, newChannelsData } from '../../data/chatData';
 import Member from './Member';
+import PinedMessage from './PinedMessage';
 
 const GeneralChat = () => {
   const [activeTab, setActiveTab] = useState(null);
@@ -17,14 +18,15 @@ const GeneralChat = () => {
 
   const tabContent = {
     profile: <Member />,
-    'frame-128760': (
-      <div className="flex justify-center items-center h-full text-white">
-        <h2 className="mb-2 font-semibold text-xl">Frame Content</h2>
-      </div>
-    ),
+    'frame-128760': <PinedMessage />,
     'component-2': (
       <div className="flex justify-center items-center h-full text-white">
-        <h2 className="mb-2 font-semibold text-xl">Component Content</h2>
+        <h2 className="mb-2 font-semibold text-xl">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem porro
+          veniam quibusdam provident tenetur animi repellat laudantium enim,
+          ullam sunt temporibus. Iure quas laborum quasi. Aspernatur illo
+          tenetur enim minus!
+        </h2>
       </div>
     ),
     notification: (
