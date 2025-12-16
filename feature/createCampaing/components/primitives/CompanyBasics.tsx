@@ -10,11 +10,6 @@ const CompanyBasics = () => {
 
   const methods = useFormContext<CampaignSchema>();
 
-  if (!methods) {
-    console.warn("CompanyBasics must be used within a FormProvider");
-    return null;
-  }
-
   const {
     register,
     formState: { errors },

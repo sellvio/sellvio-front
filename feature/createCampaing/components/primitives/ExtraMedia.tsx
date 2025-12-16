@@ -257,9 +257,7 @@ const ExtraMedia = () => {
       </div>
 
       <div className="flex w-full mx-auto gap-5 flex-wrap mt-5">
-        {/* LEFT COLUMN: Files */}
         <div className="w-full m-auto lg:max-w-[570px] flex flex-col gap-5">
-          {/* File Uploader */}
           <div className="flex flex-col gap-5 justify-center items-center border border-dashed pt-[21px] pb-[21px] rounded-[8px] bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px]">
             <div className="w-[160px] h-[80px] flex items-center justify-center">
               <div className="w-full flex-col flex items-center justify-center">
