@@ -20,25 +20,25 @@ export const Socmedia: Item[] = [
 
 export const GoalCards: CreatoreGoalProps[] = [
   {
-    id: "1",
+    id: "influencer", // ← შეცვალე "1"-დან
     img: "/images/svg/star.svg",
     title: "ინფლუენსერი",
     descr: "ცნობილი შემქმნელები დამკვიდრებული აუდიტორიით",
   },
   {
-    id: "2",
+    id: "expert", // ← "2"-დან expert-ზე (ან როგორც გინდა შესაბამისობა)
     img: "/images/svg/cup.svg",
     title: "გამოცდილი შემქმნელი",
     descr: "შემქმნელები დადასტურებული კონტენტის გამოცდილებით",
   },
   {
-    id: "3",
+    id: "beginner", // ← "3"-დან beginner-ზე
     img: "/images/svg/profileGoal.svg",
     title: "დამწყები შემქმნელი",
     descr: "ახალი შემქმნელები რომლებიც ცდილობენ გამოცდილების დაგროვებას",
   },
   {
-    id: "4",
+    id: "creator", // ← "4"-დან creator-ზე (ან ახალი ტიპი თუ გინდა)
     img: "/images/svg/scissors.svg",
     title: "კლიპერი",
     descr: "ვიდეო მონტაჟის სპეციალისტები",

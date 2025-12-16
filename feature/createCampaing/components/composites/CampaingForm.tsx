@@ -1,34 +1,39 @@
-
 "use client";
 
-import {
-  FormProvider,
-  Resolver,
-  SubmitHandler,
-  useForm,
-} from "react-hook-form";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+
 import { campaignSchema, CampaignSchema } from "../../schema/schema";
+import { sendCampaign } from "../../api/sendCampaing";
+
 import CompanyBasics from "../primitives/CompanyBasics";
 import Platforms from "../primitives/Platforms";
+import PaymentStructure from "../primitives/PaymentStructure";
 import GoalCreatores from "../primitives/GoalCreatores";
 import ExtraMedia from "../primitives/ExtraMedia";
 import CompanyDetails from "../primitives/CompanyDetails";
-import { sendCampaign } from "../../api/sendCampaing";
-import PaymentStructure from "../primitives/PaymentStructure";
-import { useState } from "react";
 
 const CampaingForm = () => {
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const methods = useForm<CampaignSchema>({
-    resolver: zodResolver(campaignSchema) as Resolver<CampaignSchema>,
+    resolver: zodResolver(campaignSchema),
     defaultValues: {
       media: [],
+      platforms: [],
+      target_creator_types: [],
+      tags: [],
+      status: "draft",
+      budget_hidden: false,
+      additional_requirements: "",
+      target_audience: "",
     },
   });
+
+  console.log("Form errors:", methods.formState.errors);
 
   const mutation = useMutation({
     mutationFn: sendCampaign,
@@ -38,7 +43,7 @@ const CampaingForm = () => {
     },
     onError: (err: any) => {
       console.error("შეცდომა:", err);
-      alert("შეცდომა კამპანიის შექმნისას: " + (err?.message || err));
+      alert("შეცდომა კამპანიის შექმნისას: " + (err?.message || String(err)));
     },
   });
 
@@ -56,11 +61,7 @@ const CampaingForm = () => {
     setShowCancelConfirm(false);
   };
 
-  console.log("hello world");
-
-
   return (
-
     <FormProvider {...methods}>
       <form
         onSubmit={methods.handleSubmit(onSubmit)}
@@ -76,11 +77,12 @@ const CampaingForm = () => {
         <div className="max-w-[1222px] w-full mx-auto flex justify-end gap-4 mb-8">
           <button
             type="button"
-            className="bg-transparent border-[var(--cancel-button-bg)] text-[var(--black-color)] w-[202px] px-6 py-3 cursor-pointer rounded-[8px] border font-medium"
             onClick={handleCancelClick}
+            className="bg-transparent border border-[var(--cancel-button-bg)] text-[var(--black-color)] w-[202px] px-6 py-3 cursor-pointer rounded-[8px] font-medium"
           >
             გაუქმება
           </button>
+
           <button
             type="submit"
             disabled={mutation.isPending}
@@ -100,14 +102,14 @@ const CampaingForm = () => {
                 <button
                   type="button"
                   onClick={() => setShowCancelConfirm(false)}
-                  className="bg-[#FFFFFF1A] border-[#FFFFFF] rounded-[8px] px-3 py-2 text-[var(--black-color)] font-[700] outline-none shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] w-[200px] cursor-pointer"
+                  className="bg-[#FFFFFF1A] border border-[#FFFFFF] rounded-[8px] px-3 py-2 text-[var(--black-color)] font-[700] outline-none shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] w-[200px] cursor-pointer"
                 >
                   არა
                 </button>
                 <button
                   type="button"
                   onClick={confirmCancel}
-                  className=" bg-[#FFFFFF1A] border-[#FFFFFF] rounded-[8px] px-3 py-2 text-[var(--black-color)] font-[700] outline-none shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] w-[200px] cursor-pointer"
+                  className="bg-[#FFFFFF1A] border border-[#FFFFFF] rounded-[8px] px-3 py-2 text-[var(--black-color)] font-[700] outline-none shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] w-[200px] cursor-pointer"
                 >
                   დიახ
                 </button>
@@ -118,7 +120,7 @@ const CampaingForm = () => {
 
         {showSuccessModal && (
           <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-            <div className="bg-white rounded-[16px] p-10 max-w-md w-full mx-4 shadow-2xl text-center animate-in fade-in zoom-in duration-300">
+            <div className="bg-white rounded-[16px] p-10 max-w-md w-full mx-4 shadow-2xl text-center">
               <div className="w-20 h-20 mx-auto mb-6 bg-green-100 rounded-full flex items-center justify-center">
                 <span className="text-5xl text-green-600">✓</span>
               </div>
@@ -143,7 +145,6 @@ const CampaingForm = () => {
         )}
       </form>
     </FormProvider>
-
   );
 };
 
