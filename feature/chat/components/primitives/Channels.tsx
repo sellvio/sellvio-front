@@ -18,10 +18,22 @@ const Channels = () => {
             {section.channels.map((ch) => (
               <div
                 key={ch.id}
-                className="flex items-center gap-[8px] hover:bg-[#FFFFFF36] py-[8px] pl-[8px] rounded-tl-[6px] rounded-bl-[6px] text-[#cfcfcf] text-[14px] transition-all duration-300 ease-in-out cursor-pointer"
+                className="group flex justify-between items-center gap-[8px] hover:bg-[#FFFFFF36] py-[8px] pr-[7px] pl-[8px] rounded-tl-[6px] rounded-bl-[6px] text-[#cfcfcf] text-[14px] transition-all duration-300 ease-in-out cursor-pointer"
               >
-                <Image src={ch.image} alt={ch.title} width={20} height={20} />
-                <span>{ch.title}</span>
+                <div className="flex gap-[10px]">
+                  <Image src={ch.image} alt={ch.title} width={17} height={17} />
+                  <span>{ch.title}</span>
+                </div>
+                {ch.settings === true && (
+                  <button className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer">
+                    <Image
+                      src="/images/chatIcons/svg/setting.svg"
+                      alt="setting"
+                      width={18}
+                      height={16}
+                    />
+                  </button>
+                )}
               </div>
             ))}
           </div>
