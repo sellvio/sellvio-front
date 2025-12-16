@@ -1,7 +1,11 @@
 import Image from 'next/image';
 import { channelsData } from '../../data/chatData';
 
-const Channels = () => {
+type ChannelsProps = {
+  setChatInfoOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const Channels = ({ setChatInfoOpen }: ChannelsProps) => {
   return (
     <div className="flex flex-col justify-between bg-[#001541D6] border-[#E0E0E0] border-r w-full max-w-[277px] h-screen">
       <div className="px-[13px] py-[10px] border-[#E0E0E0] border-b min-h-[49px] font-[600] text-[#ffffff] text-[16px]">
@@ -25,7 +29,10 @@ const Channels = () => {
                   <span>{ch.title}</span>
                 </div>
                 {ch.settings === true && (
-                  <button className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer">
+                  <button
+                    onClick={() => setChatInfoOpen((prev) => !prev)}
+                    className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer"
+                  >
                     <Image
                       src="/images/chatIcons/svg/setting.svg"
                       alt="setting"

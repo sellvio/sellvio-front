@@ -5,8 +5,6 @@ import { channelsData, newChannelsData } from '../../data/chatData';
 import Member from './Member';
 import PinedMessage from './PinedMessage';
 import Clarification from './Clarification';
-import Header from '@/feature/components/composites/Header';
-import ChatHeader from '../../../components/composites/ChatHeader';
 
 const GeneralChat = () => {
   const [activeTab, setActiveTab] = useState(null);
