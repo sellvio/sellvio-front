@@ -29,19 +29,6 @@ const CompanyDetails = () => {
     setChatDropdownOpen(false);
   };
 
-  // useEffect(() => {
-  //   const handleClickOutside = (event: MouseEvent) => {
-  //     if (
-  //       chatDropdownRef.current &&
-  //       !chatDropdownRef.current.contains(event.target as Node)
-  //     ) {
-  //       setChatDropdownOpen(false);
-  //     }
-  //   };
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => document.removeEventListener("mousedown", handleClickOutside);
-  // }, []);
-
   return (
     <div className="max-w-[1222px] w-full bg-[var(--company-basics-bg)] mx-auto rounded-[8px] px-[30px] py-[30px] flex flex-col border border-[var(--createCampaing-border)] gap-4">
       <div className="flex flex-col">
