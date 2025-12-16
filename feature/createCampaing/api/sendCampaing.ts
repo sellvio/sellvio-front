@@ -12,6 +12,5 @@ export const sendCampaign = async (data: CampaignSchema) => {
   if (!res.ok) {
     throw new Error("Campaign create failed");
   }
-
   return res.json();
 };
