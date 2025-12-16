@@ -1,9 +1,6 @@
 import Image from 'next/image';
 import { channelsData } from '../../data/chatData';
-
-type ChannelsProps = {
-  setChatInfoOpen: React.Dispatch<React.SetStateAction<boolean>>;
-};
+import { ChannelsProps } from '../../types';
 
 const Channels = ({ setChatInfoOpen }: ChannelsProps) => {
   return (

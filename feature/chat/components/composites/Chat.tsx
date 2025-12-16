@@ -13,7 +13,11 @@ const Chat = () => {
       <ChatHeader />
       <div className="flex rounded-[10px] overflow-hidden">
         <Channels setChatInfoOpen={setChatInfoOpen} />
-        {chatInfoOpen ? <ChanelInfo /> : <GeneralChat />}
+        {chatInfoOpen ? (
+          <ChanelInfo setChatInfoOpen={setChatInfoOpen} />
+        ) : (
+          <GeneralChat />
+        )}
       </div>
     </div>
   );
