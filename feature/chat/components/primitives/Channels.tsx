@@ -8,17 +8,17 @@ const Channels = () => {
         კარფურის პროდუქტები
       </div>
 
-      <div className="flex-1">
+      <div className="flex-1 pl-[13px]">
         {channelsData.map((section) => (
           <div key={section.sectionTitle}>
-            <div className="px-[13px] py-[10px] font-[600] text-[#ffffff] text-[16px]">
+            <div className="py-[10px] pl-[8px] font-[600] text-[#ffffff] text-[16px]">
               {section.sectionTitle}
             </div>
 
             {section.channels.map((ch) => (
               <div
                 key={ch.id}
-                className="flex items-center gap-[8px] px-[13px] py-[8px] text-[#cfcfcf] text-[14px] cursor-pointer"
+                className="flex items-center gap-[8px] hover:bg-[#FFFFFF36] py-[8px] pl-[8px] rounded-tl-[6px] rounded-bl-[6px] text-[#cfcfcf] text-[14px] transition-all duration-300 ease-in-out cursor-pointer"
               >
                 <Image src={ch.image} alt={ch.title} width={20} height={20} />
                 <span>{ch.title}</span>

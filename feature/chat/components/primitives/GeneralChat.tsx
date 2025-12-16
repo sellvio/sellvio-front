@@ -63,7 +63,7 @@ const GeneralChat = () => {
       <div className="flex justify-end w-full h-full overflow-hidden">
         {activeTab && tabContent[activeTab]}
       </div>
-      <div className="flex items-center gap-2 mt-2 px-[7px] pb-[10px] min-h-[56px]">
+      <div className="flex items-center gap-2 mt-2 mb-4 px-[7px] min-h-[56px]">
         <div className="relative flex items-center w-full">
           <Image
             src="/images/chatIcons/svg/plus.svg"
