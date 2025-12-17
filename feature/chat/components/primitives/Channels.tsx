@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { ChannelsProps } from '../../types';
 import { useQuery } from '@tanstack/react-query';
 import { ChatFromCampaing } from '../../api/chatApi';
+import ChannelSkeleton from './ChannelSkeleton';
 
 const Channels = ({ setChatInfoOpen }: ChannelsProps) => {
   const { isLoading, isError, data } = useQuery({
@@ -10,7 +11,6 @@ const Channels = ({ setChatInfoOpen }: ChannelsProps) => {
     queryFn: () => ChatFromCampaing(31),
   });
 
-  if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error loading channels</div>;
 
   const channels = data?.data?.chat_channels || [];
@@ -26,23 +26,25 @@ const Channels = ({ setChatInfoOpen }: ChannelsProps) => {
           ჩათის არხები
         </div>
 
-        {channels.map((ch) => (
-          <div
-            key={ch.id}
-            className="group flex justify-between items-center gap-[8px] hover:bg-[#FFFFFF36] py-[8px] pr-[7px] pl-[8px] rounded-tl-[6px] rounded-bl-[6px] text-[#cfcfcf] text-[14px] transition-all duration-300 ease-in-out cursor-pointer"
-          >
-            <div className="flex gap-[10px]">
-              <Image
-                src={'/images/chatIcons/svg/hashtag.svg'}
-                alt="reshotka"
-                width={16}
-                height={19}
-              />
-              <span className="font-semibold text-[15px] text-white">
-                {ch.name}
-              </span>
-            </div>
-            {ch.settings === true && (
+        {isLoading ? (
+          <ChannelSkeleton />
+        ) : (
+          channels.map((ch) => (
+            <div
+              key={ch.id}
+              className="group flex justify-between items-center gap-[8px] hover:bg-[#FFFFFF36] py-[8px] pr-[7px] pl-[8px] rounded-tl-[6px] rounded-bl-[6px] text-[#cfcfcf] text-[14px] transition-all duration-300 ease-in-out cursor-pointer"
+            >
+              <div className="flex gap-[10px]">
+                <Image
+                  src={'/images/chatIcons/svg/hashtag.svg'}
+                  alt="reshotka"
+                  width={16}
+                  height={19}
+                />
+                <span className="font-semibold text-[15px] text-white">
+                  {ch.name}
+                </span>
+              </div>
               <button
                 onClick={() => setChatInfoOpen((prev) => !prev)}
                 className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer"
@@ -54,9 +56,9 @@ const Channels = ({ setChatInfoOpen }: ChannelsProps) => {
                   height={16}
                 />
               </button>
-            )}
-          </div>
-        ))}
+            </div>
+          ))
+        )}
       </div>
 
       <div className="flex items-center gap-3 bg-[#FFFFFF36] mx-3 mb-4 px-3 rounded-[10px] h-[56px]">
