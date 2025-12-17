@@ -14,7 +14,7 @@ export const ChatFromCampaing = async (id: number) => {
 
 export async function addChanel() {
   const token = localStorage.getItem('access_token');
-  const res = await fetch(`${baseUrl}/chat-servers/28/channels`, {
+  const res = await fetch(`${baseUrl}/chat-servers/7/channels`, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
