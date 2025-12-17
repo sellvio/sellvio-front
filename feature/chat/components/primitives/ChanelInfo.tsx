@@ -3,35 +3,36 @@ import Image from 'next/image';
 import { ChannelsProps } from '../../types';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import { loginUser } from '@/lib/api/login';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import ToggleSwitch from './ToggleSwitch';
+import { channelSchema, channelValue } from '../../schema/channelSchema';
+import { addChanel } from '../../api/chatApi';
 
 const ChanelInfo = ({ setChatInfoOpen }: ChannelsProps) => {
   const [isVisible, setIsVisible] = useState(true);
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors },
-  // } = useForm<FormValues>({
-  //   resolver: zodResolver(FormSchema),
-  // });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<channelValue>({
+    resolver: zodResolver(channelSchema),
+  });
 
-  // const { mutate, isPending } = useMutation({
-  //   mutationFn: loginUser,
-  //   onSuccess: () => {
-  //     toast.success('Login successful');
-  //   },
-  //   onError: () => {
-  //     toast.error('Login failed');
-  //   },
-  // });
+  const { mutate, isPending } = useMutation({
+    mutationFn: addChanel,
+    onSuccess: () => {
+      toast.success('Login successful');
+    },
+    onError: () => {
+      toast.error('Login failed');
+    },
+  });
 
-  // const submitForm = (data) => {
-  //   mutate(data);
-  // };
+  const submitForm = (data) => {
+    mutate(data);
+  };
   return (
     <div className="flex flex-col justify-between bg-[#001541D6] w-full max-w-[1440px] h-screen">
       <div className="flex flex-col">
@@ -52,7 +53,7 @@ const ChanelInfo = ({ setChatInfoOpen }: ChannelsProps) => {
           </button>
         </div>
         <form
-          // onSubmit={handleSubmit(submitForm)}
+          onSubmit={handleSubmit(submitForm)}
           className="flex flex-col gap-[29px] mt-[14px] px-[26px]"
         >
           <div className="flex flex-col gap-[10px]">
@@ -113,7 +114,7 @@ const ChanelInfo = ({ setChatInfoOpen }: ChannelsProps) => {
               არხის ხილვადობა
             </div>
 
-            <div className="relative flex justify-between items-center px-[50px] border border-white rounded-[8px] w-full min-h-[58px]">
+            <div className="relative flex justify-between items-center pr-[18px] pl-[50px] border border-white rounded-[8px] w-full min-h-[58px]">
               <Image
                 src={'/images/chatIcons/svg/visibility.svg'}
                 alt="visibility icon"
@@ -121,12 +122,16 @@ const ChanelInfo = ({ setChatInfoOpen }: ChannelsProps) => {
                 height={22}
                 className="top-1/2 left-[16px] absolute -translate-y-1/2"
               />
+              <p className="font-semibold text-white">ხილვადობა</p>
+              <div className="flex justify-between items-center gap-[10px] w-full max-w-[140px]">
+                <div>
+                  <p className="font-semibold text-white">
+                    {isVisible ? 'საჯარო' : 'დახურული'}
+                  </p>
+                </div>
 
-              <p className="font-semibold text-white">
-                {isVisible ? 'ხილვადია' : 'დამალულია'}
-              </p>
-
-              <ToggleSwitch value={isVisible} onToggle={setIsVisible} />
+                <ToggleSwitch value={isVisible} onToggle={setIsVisible} />
+              </div>
             </div>
           </div>
 
