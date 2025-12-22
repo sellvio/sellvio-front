@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-const ChanelInfoSidebar = () => {
+const ChanellUpdateSidebar = () => {
   return (
     <div className="flex flex-col gap-[10px] bg-[#001541D6] py-[16px] border-[#E0E0E0] border-r w-full max-w-[277px] h-screen">
       <div className="flex items-center gap-[10px] px-[13px] w-full">
@@ -38,4 +38,4 @@ const ChanelInfoSidebar = () => {
   );
 };
 
-export default ChanelInfoSidebar;
+export default ChanellUpdateSidebar;

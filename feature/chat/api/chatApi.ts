@@ -43,3 +43,24 @@ export async function addChanel(data) {
 
   return res.json();
 }
+
+export async function updateChamel(data, channelId) {
+  const token = localStorage.getItem('access_token');
+
+  const res = await fetch(`${baseUrl}/chat-servers/7/channels/${channelId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    console.error('Channel patch error:', errorData);
+    throw new Error('Failed to patch channel');
+  }
+
+  return res.json();
+}

@@ -4,6 +4,7 @@ import { ChannelsProps } from '../../types';
 import { useQuery } from '@tanstack/react-query';
 import { ChatFromCampaing } from '../../api/chatApi';
 import ChannelSkeleton from './ChannelSkeleton';
+import Link from 'next/link';
 
 const Channels = ({ setChatInfoOpen }: ChannelsProps) => {
   const { isLoading, isError, data } = useQuery({
@@ -22,8 +23,19 @@ const Channels = ({ setChatInfoOpen }: ChannelsProps) => {
       </div>
 
       <div className="flex-1 pl-[13px]">
-        <div className="py-[10px] pl-[8px] font-[600] text-[#ffffff] text-[16px]">
-          ჩათის არხები
+        <div className="flex justify-between items-center py-[10px] pr-[8px] pl-[8px] font-[600] text-[#ffffff] text-[16px]">
+          <p className="font-semibold text-[14px]">ჩათის არხები</p>
+          <button
+            className="cursor-pointer"
+            onClick={() => setChatInfoOpen((prev) => !prev)}
+          >
+            <Image
+              src={'/images/chatIcons/svg/pluse.svg'}
+              alt="adding chat"
+              width={9}
+              height={9}
+            />
+          </button>
         </div>
 
         {isLoading ? (
@@ -45,8 +57,9 @@ const Channels = ({ setChatInfoOpen }: ChannelsProps) => {
                   {ch.name}
                 </span>
               </div>
-              <button
-                onClick={() => setChatInfoOpen((prev) => !prev)}
+
+              <Link
+                href={`updateChat/${ch.id}`}
                 className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer"
               >
                 <Image
@@ -55,7 +68,7 @@ const Channels = ({ setChatInfoOpen }: ChannelsProps) => {
                   width={18}
                   height={16}
                 />
-              </button>
+              </Link>
             </div>
           ))
         )}
