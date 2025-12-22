@@ -168,3 +168,29 @@ export const ClarificationData = [
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem porroveniam quibusdam provident tenetur animi repellat laudantium enim,ullam sunt temporibus. Iure quas laborum quasi. Aspernatur illotenetur enim minus!',
   },
 ];
+export const chanenelType = [
+  {
+    id: 1,
+    image: '/images/chatIcons/svg/star.svg',
+    text: 'ინფლუენსერი',
+    type: 'general',
+  },
+  {
+    id: 2,
+    image: '/images/chatIcons/svg/cup.svg',
+    text: 'გამოცდილი შემქმნელი',
+    type: 'influencer',
+  },
+  {
+    id: 3,
+    image: '/images/chatIcons/svg/user.svg',
+    text: 'დამწყები შემქმნელი',
+    type: 'starterInfluenser',
+  },
+  {
+    id: 4,
+    image: '/images/chatIcons/svg/scissors.svg',
+    text: 'კლიპერი',
+    type: 'test',
+  },
+];
