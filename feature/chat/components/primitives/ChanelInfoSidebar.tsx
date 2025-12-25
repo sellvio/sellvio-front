@@ -24,16 +24,6 @@ const ChanelInfoSidebar = () => {
           </p>
         </div>
       </div>
-      <div className="bg-[#FFFFFF75] w-full h-[1px]"></div>
-      <div className="flex items-center gap-[10px] pl-[21px] w-full cursor-pointer">
-        <Image
-          src={'/images/chatIcons/svg/deleteSvg.svg'}
-          alt="# icon"
-          width={16}
-          height={16}
-        />
-        <p className="text-[#FF86AC] text-[15px]">არხის წაშლა</p>
-      </div>
     </div>
   );
 };

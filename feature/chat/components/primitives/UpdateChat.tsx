@@ -22,6 +22,7 @@ const UpdateChat = ({ updateChatId }: UpdateChatProps) => {
         <ChanellUpdateSidebar
           setChatChanel={setChatChanel}
           chatChanel={chatChanel}
+          channelId={updateChatId}
         />
         {chatChanel === 'chatInfo' ? (
           <UpdateChanel channelId={updateChatId} />

@@ -64,3 +64,22 @@ export async function updateChamel(data, channelId) {
 
   return res.json();
 }
+
+export async function deleteChannel(channelId) {
+  const token = localStorage.getItem('access_token');
+
+  const res = await fetch(`${baseUrl}/chat-servers/7/channels/${channelId}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    console.error('Channel delete error:', errorData);
+    throw new Error('Failed to delete channel');
+  }
+
+  return true;
+}

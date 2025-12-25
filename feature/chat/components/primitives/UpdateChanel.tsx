@@ -5,10 +5,10 @@ import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import ToggleSwitch from './ToggleSwitch';
-import { channelSchema, channelValue } from '../../schema/channelSchema';
+// import ToggleSwitch from './ToggleSwitch';
 import { updateChamel } from '../../api/chatApi';
 import Link from 'next/link';
+import { updateChanel, updateChanelValue } from '../../schema/updateChanel';
 
 type UpdateChanelProps = {
   channelId: number;
@@ -18,22 +18,17 @@ const UpdateChanel = ({ channelId }: UpdateChanelProps) => {
   const {
     register,
     handleSubmit,
-    setValue,
-    watch,
+    // setValue,
+    // watch,
     formState: { errors },
-  } = useForm<channelValue>({
-    resolver: zodResolver(channelSchema),
-    defaultValues: {
-      name: 'საერთო-ჩატი',
-      description: 'არხის აღწერა',
-      channel_state: 'public',
-    },
+  } = useForm<updateChanelValue>({
+    resolver: zodResolver(updateChanel),
   });
 
-  const channelState = watch('channel_state');
+  // const channelState = watch('channel_state');
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (data: channelValue) => updateChamel(data, channelId),
+    mutationFn: (data: updateChanelValue) => updateChamel(data, channelId),
     onSuccess: () => {
       toast.success('Channel updated successfully');
     },
@@ -42,7 +37,7 @@ const UpdateChanel = ({ channelId }: UpdateChanelProps) => {
     },
   });
 
-  const submitForm = (data: channelValue) => {
+  const submitForm = (data: updateChanelValue) => {
     mutate(data);
   };
 
@@ -85,7 +80,6 @@ const UpdateChanel = ({ channelId }: UpdateChanelProps) => {
               <input
                 {...register('name')}
                 className="bg-transparent px-[44px] border-[2px] border-white rounded-[8px] outline-none w-full min-h-[58px] text-[18px] text-white"
-                placeholder="საერთო-ჩატი"
               />
             </div>
 
@@ -102,7 +96,6 @@ const UpdateChanel = ({ channelId }: UpdateChanelProps) => {
             <input
               {...register('description')}
               className="bg-transparent px-[18px] border-[2px] border-white rounded-[8px] outline-none w-full min-h-[58px] text-[18px] text-white"
-              placeholder="არხის აღწერა"
             />
 
             {errors.description && (
@@ -112,7 +105,7 @@ const UpdateChanel = ({ channelId }: UpdateChanelProps) => {
             )}
           </div>
 
-          <div className="flex flex-col gap-[10px]">
+          {/* <div className="flex flex-col gap-[10px]">
             <p className="font-semibold text-[15px] text-white">
               არხის ხილვადობა
             </p>
@@ -133,12 +126,12 @@ const UpdateChanel = ({ channelId }: UpdateChanelProps) => {
                 {errors.channel_state.message}
               </p>
             )}
-          </div>
+          </div> */}
 
-          <div className="flex justify-end">
+          <div className="w-full">
             <button
               disabled={isPending}
-              className="hover:bg-[#0866FF] disabled:opacity-50 border border-[#0866FF] rounded-[10px] w-[200px] min-h-[50px] text-white"
+              className="hover:bg-[#0866FF] disabled:opacity-50 border border-[#0866FF] rounded-[10px] w-full min-h-[50px] text-white cursor-pointer"
             >
               {isPending ? 'იგზავნება...' : 'დადასტურება'}
             </button>
