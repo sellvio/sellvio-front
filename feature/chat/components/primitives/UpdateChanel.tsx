@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import ToggleSwitch from './ToggleSwitch';
 import { channelSchema, channelValue } from '../../schema/channelSchema';
 import { updateChamel } from '../../api/chatApi';
+import Link from 'next/link';
 
 type UpdateChanelProps = {
   channelId: number;
@@ -53,14 +54,14 @@ const UpdateChanel = ({ channelId }: UpdateChanelProps) => {
             არხის ინფორმაცია
           </p>
 
-          <button className="cursor-pointer">
+          <Link href={'/chat'} className="cursor-pointer">
             <Image
               src="/images/chatIcons/svg/closeButton.svg"
               alt="close"
               width={40}
               height={40}
             />
-          </button>
+          </Link>
         </div>
 
         <form
