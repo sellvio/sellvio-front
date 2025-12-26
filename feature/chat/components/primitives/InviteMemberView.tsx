@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { Props } from '../../types';
@@ -21,37 +23,30 @@ const InviteMemberView = ({
   const channelId = Number(params.updateChatId);
 
   const {
-    register,
-    handleSubmit,
     setValue,
     formState: { errors },
   } = useForm<addMemberValue>({
     resolver: zodResolver(addMemberSchema),
+    defaultValues: { user_ids: selectedIds.map(Number) },
   });
 
   const { isPending, mutate } = useMutation({
     mutationFn: (data: addMemberValue) => addMember(data, channelId),
-    onSuccess: () => {
-      toast.success('Channel created successfully');
-    },
-    onError: () => {
-      toast.error('Channel creation failed');
-    },
+    onSuccess: () => toast.success('add member successfully'),
+    onError: () => toast.error('failed'),
   });
 
-  const submitForm = (data: addMemberValue) => {
-    mutate(data);
+  const submitForm = () => {
+    setValue('user_ids', selectedIds.map(Number));
+    mutate({ user_ids: selectedIds.map(Number) });
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(submitForm)}
-      className="flex flex-col justify-between bg-[#001541D6] px-[30px] w-full max-w-[1440px] h-screen"
-    >
+    <div className="flex flex-col justify-between bg-[#001541D6] px-[30px] w-full max-w-[1440px] h-screen">
       <div className="flex flex-col gap-[38px]">
         <div className="flex justify-between items-center min-h-[72px]">
           <p className="font-semibold text-[18px] text-white">
-            მოწვეის გაკეთება
+            მოწვევის გაკეთება
           </p>
 
           <Link href="/chat">
@@ -95,7 +90,6 @@ const InviteMemberView = ({
               <div className="flex gap-[10px] w-1/2">
                 <div className="relative bg-[#FFFFFF0A] rounded-[6px] w-full">
                   <input
-                    {...register('user_ids')}
                     type="search"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -110,15 +104,6 @@ const InviteMemberView = ({
                     className="top-1/2 left-[10px] absolute -translate-y-1/2"
                   />
                 </div>
-
-                <button className="flex justify-center items-center bg-[#FFFFFF0A] rounded-[6px] w-[38px] h-[38px]">
-                  <Image
-                    src="/images/chatIcons/svg/link.svg"
-                    alt="copy link"
-                    width={18}
-                    height={18}
-                  />
-                </button>
               </div>
             </div>
 
@@ -154,17 +139,21 @@ const InviteMemberView = ({
           </div>
         </div>
       </div>
+
       <div className="flex justify-end w-full">
         <div className="flex gap-[13px] mb-[40px] w-full max-w-[414px] min-h-[38px]">
           <button className="bg-[#FFFFFF36] border border-[#FFFFFF36] rounded-[8px] w-1/2 min-h-[38px] font-semibold text-[13px] text-white cursor-pointer">
             უკან დაბრუნება
           </button>
-          <button className="bg-[#0866FF] border border-[#C13D3F36] rounded-[8px] w-1/2 min-h-[38px] font-semibold text-[13px] text-white cursor-pointer">
+          <button
+            onClick={submitForm}
+            className="bg-[#0866FF] border border-[#C13D3F36] rounded-[8px] w-1/2 min-h-[38px] font-semibold text-[13px] text-white cursor-pointer"
+          >
             {isPending ? 'იგზავნება...' : 'დაამატე'}
           </button>
         </div>
       </div>
-    </form>
+    </div>
   );
 };
 
