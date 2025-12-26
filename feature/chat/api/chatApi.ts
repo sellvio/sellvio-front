@@ -44,6 +44,29 @@ export async function addChanel(data) {
   return res.json();
 }
 
+export async function addMember(data, channelId) {
+  const token = localStorage.getItem('access_token');
+  const res = await fetch(
+    `${baseUrl}/chat-servers/7/channels/${channelId}/members/bulk`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    console.error('Profile fetch error:', errorData);
+    throw new Error('Failed to fetch profile');
+  }
+
+  return res.json();
+}
+
 export async function updateChamel(data, channelId) {
   const token = localStorage.getItem('access_token');
 

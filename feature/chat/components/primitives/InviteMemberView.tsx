@@ -1,6 +1,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Props, User } from '../../types';
+import { Props } from '../../types';
+import { addMember } from '../../api/chatApi';
+import { toast } from 'react-toastify';
+import { useParams } from 'next/navigation';
+import { useMutation } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
+import { addMemberSchema, addMemberValue } from '../../schema/addMemberSchema';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const InviteMemberView = ({
   searchTerm,
@@ -10,8 +17,37 @@ const InviteMemberView = ({
   selectedIds,
   toggleUser,
 }: Props) => {
+  const params = useParams();
+  const channelId = Number(params.updateChatId);
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<addMemberValue>({
+    resolver: zodResolver(addMemberSchema),
+  });
+
+  const { isPending, mutate } = useMutation({
+    mutationFn: (data: addMemberValue) => addMember(data, channelId),
+    onSuccess: () => {
+      toast.success('Channel created successfully');
+    },
+    onError: () => {
+      toast.error('Channel creation failed');
+    },
+  });
+
+  const submitForm = (data: addMemberValue) => {
+    mutate(data);
+  };
+
   return (
-    <div className="flex flex-col justify-between bg-[#001541D6] px-[30px] w-full max-w-[1440px] h-screen">
+    <form
+      onSubmit={handleSubmit(submitForm)}
+      className="flex flex-col justify-between bg-[#001541D6] px-[30px] w-full max-w-[1440px] h-screen"
+    >
       <div className="flex flex-col gap-[38px]">
         <div className="flex justify-between items-center min-h-[72px]">
           <p className="font-semibold text-[18px] text-white">
@@ -59,6 +95,7 @@ const InviteMemberView = ({
               <div className="flex gap-[10px] w-1/2">
                 <div className="relative bg-[#FFFFFF0A] rounded-[6px] w-full">
                   <input
+                    {...register('user_ids')}
                     type="search"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -84,6 +121,10 @@ const InviteMemberView = ({
                 </button>
               </div>
             </div>
+
+            {errors.user_ids && (
+              <p className="text-red-400 text-sm">{errors.user_ids.message}</p>
+            )}
 
             <div className="my-[10px] border border-[#FFFFFF75]" />
 
@@ -119,11 +160,11 @@ const InviteMemberView = ({
             უკან დაბრუნება
           </button>
           <button className="bg-[#0866FF] border border-[#C13D3F36] rounded-[8px] w-1/2 min-h-[38px] font-semibold text-[13px] text-white cursor-pointer">
-            დაამატე
+            {isPending ? 'იგზავნება...' : 'დაამატე'}
           </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 
