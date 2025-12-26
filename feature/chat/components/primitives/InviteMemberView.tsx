@@ -114,8 +114,13 @@ const InviteMemberView = ({
         </div>
       </div>
       <div className="flex justify-end w-full">
-        <div className="gap-[13px] w-full max-w-[414px] min-h-[38px]">
-          <button></button>
+        <div className="flex gap-[13px] mb-[40px] w-full max-w-[414px] min-h-[38px]">
+          <button className="bg-[#FFFFFF36] border border-[#FFFFFF36] rounded-[8px] w-1/2 min-h-[38px] font-semibold text-[13px] text-white cursor-pointer">
+            უკან დაბრუნება
+          </button>
+          <button className="bg-[#0866FF] border border-[#C13D3F36] rounded-[8px] w-1/2 min-h-[38px] font-semibold text-[13px] text-white cursor-pointer">
+            დაამატე
+          </button>
         </div>
       </div>
     </div>
