@@ -5,6 +5,8 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { deleteChannel } from '../../api/chatApi';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import DeleteChatPopup from './DeleteChatPopup';
 
 const ChanellUpdateSidebar = ({ chatChanel, setChatChanel, channelId }) => {
   const queryClient = useQueryClient();
@@ -15,6 +17,8 @@ const ChanellUpdateSidebar = ({ chatChanel, setChatChanel, channelId }) => {
     queryFn: () => deleteChannel(channelId),
     enabled: false,
   });
+
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleDeleteChannel = async () => {
     const toastId = toast.loading('არხი იშლება...');
@@ -83,7 +87,8 @@ const ChanellUpdateSidebar = ({ chatChanel, setChatChanel, channelId }) => {
       <div className="bg-[#FFFFFF75] w-full h-[1px]"></div>
 
       <div
-        onClick={handleDeleteChannel}
+        // onClick={handleDeleteChannel}
+        onClick={() => setIsOpen(true)}
         className="flex items-center gap-[10px] pl-[21px] w-full cursor-pointer"
       >
         <Image
@@ -96,6 +101,14 @@ const ChanellUpdateSidebar = ({ chatChanel, setChatChanel, channelId }) => {
           {isFetching ? 'იშლება...' : 'არხის წაშლა'}
         </p>
       </div>
+      {isOpen === true ? (
+        <DeleteChatPopup
+          handleDeleteChannel={handleDeleteChannel}
+          setIsOpen={setIsOpen}
+        />
+      ) : (
+        ''
+      )}
     </div>
   );
 };

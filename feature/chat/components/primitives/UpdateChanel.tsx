@@ -40,7 +40,6 @@ const UpdateChanel = ({ channelId }: UpdateChanelProps) => {
   const submitForm = (data: updateChanelValue) => {
     mutate(data);
   };
-
   return (
     <div className="flex flex-col justify-between bg-[#001541D6] w-full max-w-[1440px] h-screen">
       <div className="flex flex-col">
@@ -80,6 +79,7 @@ const UpdateChanel = ({ channelId }: UpdateChanelProps) => {
               <input
                 {...register('name')}
                 className="bg-transparent px-[44px] border-[2px] border-white rounded-[8px] outline-none w-full min-h-[58px] text-[18px] text-white"
+                placeholder="შეიყვანეთ არხის სახელი"
               />
             </div>
 
@@ -96,6 +96,7 @@ const UpdateChanel = ({ channelId }: UpdateChanelProps) => {
             <input
               {...register('description')}
               className="bg-transparent px-[18px] border-[2px] border-white rounded-[8px] outline-none w-full min-h-[58px] text-[18px] text-white"
+              placeholder="შეიყვანეთ დამატებითი ინფორმაცია"
             />
 
             {errors.description && (
