@@ -10,6 +10,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { addMemberSchema, addMemberValue } from '../../schema/addMemberSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
+import AddMemberSkeleton from './AddMemberSkeleton';
 
 const InviteMemberView = ({
   searchTerm,
@@ -18,6 +19,7 @@ const InviteMemberView = ({
   selectedUsers,
   selectedIds,
   toggleUser,
+  isLoading,
 }: Props) => {
   const params = useParams();
   const channelId = Number(params.updateChatId);
@@ -118,6 +120,7 @@ const InviteMemberView = ({
             </p>
 
             <div className="max-h-[300px] overflow-y-auto">
+              {isLoading && <AddMemberSkeleton />}
               {filteredUsers.map(({ user }) => (
                 <div
                   key={user.id}
