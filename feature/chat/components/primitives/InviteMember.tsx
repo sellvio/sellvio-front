@@ -1,55 +1,48 @@
 'use client';
 
-import Image from 'next/image';
-// import { useMutation } from '@tanstack/react-query';
-// import { toast } from 'react-toastify';
-// import { zodResolver } from '@hookform/resolvers/zod';
-// import { useForm } from 'react-hook-form';
-// import ToggleSwitch from './ToggleSwitch';
-// import { channelSchema, channelValue } from '../../schema/channelSchema';
-// import { updateChamel } from '../../api/chatApi';
-import Link from 'next/link';
+import { useQuery } from '@tanstack/react-query';
+import { useMemo, useState } from 'react';
+import { ChatMember } from '../../api/chatApi';
+import { User } from '../../types';
+import InviteMemberView from './InviteMemberView';
 
 const InviteMember = () => {
-  //   const {
-  //     formState: { errors },
-  //   } = useForm<channelValue>({
-  //     resolver: zodResolver(channelSchema),
-  //   });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  //   const { mutate, isPending } = useMutation({
-  //     mutationFn: (data: channelValue) => updateChamel(data, channelId),
-  //     onSuccess: () => {
-  //       toast.success('Channel updated successfully');
-  //     },
-  //     onError: () => {
-  //       toast.error('Channel update failed');
-  //     },
-  //   });
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['member'],
+    queryFn: ChatMember,
+  });
 
-  //   const submitForm = (data: channelValue) => {
-  //     mutate(data);
-  //   };
+  const users: User[] = data?.data ?? [];
+
+  const filteredUsers = useMemo(() => {
+    if (!searchTerm.trim()) return users;
+    return users.filter((u) =>
+      u.user.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [users, searchTerm]);
+
+  const toggleUser = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  };
+
+  const selectedUsers = users.filter((u) => selectedIds.includes(u.user.id));
 
   return (
-    <div className="flex flex-col justify-between bg-[#001541D6] w-full max-w-[1440px] h-screen">
-      <div className="flex flex-col">
-        <div className="flex justify-between items-center px-[26px] w-full min-h-[72px]">
-          <p className="font-semibold text-[18px] text-white">
-            მოწვეის გაკეთება
-          </p>
-
-          <Link href={'/chat'} className="cursor-pointer">
-            <Image
-              src="/images/chatIcons/svg/closeButton.svg"
-              alt="close"
-              width={40}
-              height={40}
-            />
-          </Link>
-        </div>
-      </div>
-    </div>
+    <InviteMemberView
+      searchTerm={searchTerm}
+      setSearchTerm={setSearchTerm}
+      filteredUsers={filteredUsers}
+      selectedUsers={selectedUsers}
+      selectedIds={selectedIds}
+      toggleUser={toggleUser}
+      isLoading={isLoading}
+      isError={isError}
+    />
   );
 };
 
