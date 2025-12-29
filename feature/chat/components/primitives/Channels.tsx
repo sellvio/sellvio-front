@@ -19,7 +19,7 @@ const Channels = ({ setChatInfoOpen, setIsOpen }: ChannelsProps) => {
     <div className="flex flex-col justify-between bg-[#001541D6] border-[#E0E0E0] border-r w-full max-w-[277px] h-screen">
       <div className="flex justify-between items-center px-[13px] py-[10px] border-[#E0E0E0] border-b min-h-[49px] font-[600] text-[#ffffff] text-[16px]">
         <p>კარფურის პროდუქტები</p>
-        <button onClick={() => setIsOpen(true)}>
+        <button onClick={() => setChatInfoOpen((prev) => !prev)}>
           <Image
             src={'/images/chatIcons/svg/setting.svg'}
             alt="reshotka"
@@ -33,10 +33,7 @@ const Channels = ({ setChatInfoOpen, setIsOpen }: ChannelsProps) => {
       <div className="flex-1 pl-[13px]">
         <div className="flex justify-between items-center py-[10px] pr-[8px] pl-[8px] font-[600] text-[#ffffff] text-[16px]">
           <p className="font-semibold text-[14px]">ჩათის არხები</p>
-          <button
-            className="cursor-pointer"
-            onClick={() => setChatInfoOpen((prev) => !prev)}
-          >
+          <button className="cursor-pointer" onClick={() => setIsOpen(true)}>
             <Image
               src={'/images/chatIcons/svg/pluse.svg'}
               alt="adding chat"

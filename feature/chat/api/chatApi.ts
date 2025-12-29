@@ -12,6 +12,21 @@ export const ChatFromCampaing = async (id: number) => {
   return res.json();
 };
 
+export const whoCanSeeChat = async (channelId) => {
+  const token = localStorage.getItem('access_token');
+  const res = await fetch(
+    `${baseUrl}/chat-servers/7/channels/${channelId}/members/bulk`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      cache: 'no-store',
+    }
+  );
+  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+  return res.json();
+};
+
 export const ChatMember = async () => {
   const token = localStorage.getItem('access_token');
   const res = await fetch(`${baseUrl}/chat-servers/7/channels/get/members`, {

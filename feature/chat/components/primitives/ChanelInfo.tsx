@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import ToggleSwitch from './ToggleSwitch';
 import { channelSchema, channelValue } from '../../schema/channelSchema';
 import { addChanel } from '../../api/chatApi';
-import { chanenelType } from '../../data/chatData';
+// import { chanenelType } from '../../data/chatData';
 
 const ChanelInfo = ({ setChatInfoOpen }: ChannelsProps) => {
   const {
@@ -25,7 +25,7 @@ const ChanelInfo = ({ setChatInfoOpen }: ChannelsProps) => {
   });
 
   const channelState = watch('channel_state');
-  const selectedChannelType = watch('channel_type');
+  // const selectedChannelType = watch('channel_type');
 
   const { mutate, isPending } = useMutation({
     mutationFn: addChanel,
@@ -99,7 +99,7 @@ const ChanelInfo = ({ setChatInfoOpen }: ChannelsProps) => {
             )}
           </div>
 
-          <div className="flex flex-col gap-[10px]">
+          {/* <div className="flex flex-col gap-[10px]">
             <label className="font-semibold text-[15px] text-white">
               არხის აღწერა
             </label>
@@ -125,7 +125,7 @@ const ChanelInfo = ({ setChatInfoOpen }: ChannelsProps) => {
                 {errors.description.message}
               </p>
             )}
-          </div>
+          </div> */}
 
           <div className="flex flex-col gap-[10px] w-full">
             <div className="font-semibold text-[15px] text-white">
@@ -157,7 +157,7 @@ const ChanelInfo = ({ setChatInfoOpen }: ChannelsProps) => {
               </p>
             )}
           </div>
-          <div className="flex flex-col gap-[10px]">
+          {/* <div className="flex flex-col gap-[10px]">
             <p className="font-semibold text-[15px] text-white">
               სამიზნე შემქმნელების ტიპი
             </p>
@@ -192,7 +192,7 @@ const ChanelInfo = ({ setChatInfoOpen }: ChannelsProps) => {
                 {errors.channel_type.message}
               </p>
             )}
-          </div>
+          </div> */}
 
           <div className="flex justify-end items-center w-full">
             <button
