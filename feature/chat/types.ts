@@ -1,5 +1,6 @@
 export type ChannelsProps = {
   setChatInfoOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export type User = {
   user: {

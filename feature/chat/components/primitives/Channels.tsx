@@ -6,20 +6,28 @@ import { ChatFromCampaing } from '../../api/chatApi';
 import ChannelSkeleton from './ChannelSkeleton';
 import Link from 'next/link';
 
-const Channels = ({ setChatInfoOpen }: ChannelsProps) => {
+const Channels = ({ setChatInfoOpen, setIsOpen }: ChannelsProps) => {
   const { isLoading, isError, data } = useQuery({
     queryKey: ['chanelName', 31],
     queryFn: () => ChatFromCampaing(31),
   });
-
   if (isError) return <div>Error loading channels</div>;
 
   const channels = data?.data?.chat_channels || [];
 
   return (
     <div className="flex flex-col justify-between bg-[#001541D6] border-[#E0E0E0] border-r w-full max-w-[277px] h-screen">
-      <div className="px-[13px] py-[10px] border-[#E0E0E0] border-b min-h-[49px] font-[600] text-[#ffffff] text-[16px]">
-        კარფურის პროდუქტები
+      <div className="flex justify-between items-center px-[13px] py-[10px] border-[#E0E0E0] border-b min-h-[49px] font-[600] text-[#ffffff] text-[16px]">
+        <p>კარფურის პროდუქტები</p>
+        <button onClick={() => setIsOpen(true)}>
+          <Image
+            src={'/images/chatIcons/svg/setting.svg'}
+            alt="reshotka"
+            width={16}
+            height={19}
+            className="cursor-pointer"
+          />
+        </button>
       </div>
 
       <div className="flex-1 pl-[13px]">
