@@ -5,12 +5,21 @@ import { useQuery } from '@tanstack/react-query';
 import { ChatFromCampaing } from '../../api/chatApi';
 import ChannelSkeleton from './ChannelSkeleton';
 import Link from 'next/link';
+import { useEffect } from 'react';
+import { useChatStore } from '@/feature/common/stores/useChatStore';
 
 const Channels = ({ setChatInfoOpen, setIsOpen }: ChannelsProps) => {
   const { isLoading, isError, data } = useQuery({
     queryKey: ['chanelName', 31],
     queryFn: () => ChatFromCampaing(31),
   });
+
+  const { isAdmin, fetchMembers } = useChatStore();
+
+  useEffect(() => {
+    fetchMembers();
+  }, [fetchMembers]);
+
   if (isError) return <div>Error loading channels</div>;
 
   const channels = data?.data?.chat_channels || [];
@@ -22,28 +31,33 @@ const Channels = ({ setChatInfoOpen, setIsOpen }: ChannelsProps) => {
     <div className="flex flex-col justify-between bg-[#001541D6] border-[#E0E0E0] border-r w-full max-w-[277px] h-screen">
       <div className="flex justify-between items-center px-[13px] py-[10px] border-[#E0E0E0] border-b min-h-[49px] font-[600] text-[#ffffff] text-[16px]">
         {data?.data && <p>{truncate(data.data.name, 25)}</p>}
-        <button onClick={() => setChatInfoOpen((prev) => !prev)}>
-          <Image
-            src={'/images/chatIcons/svg/setting.svg'}
-            alt="reshotka"
-            width={16}
-            height={19}
-            className="cursor-pointer"
-          />
-        </button>
+
+        {isAdmin && (
+          <button onClick={() => setChatInfoOpen((prev) => !prev)}>
+            <Image
+              src={'/images/chatIcons/svg/setting.svg'}
+              alt="reshotka"
+              width={16}
+              height={19}
+              className="cursor-pointer"
+            />
+          </button>
+        )}
       </div>
 
       <div className="flex-1 pl-[13px]">
         <div className="flex justify-between items-center py-[10px] pr-[8px] pl-[8px] font-[600] text-[#ffffff] text-[16px]">
           <p className="font-semibold text-[14px]">ჩათის არხები</p>
-          <button className="cursor-pointer" onClick={() => setIsOpen(true)}>
-            <Image
-              src={'/images/chatIcons/svg/pluse.svg'}
-              alt="adding chat"
-              width={9}
-              height={9}
-            />
-          </button>
+          {isAdmin && (
+            <button className="cursor-pointer" onClick={() => setIsOpen(true)}>
+              <Image
+                src={'/images/chatIcons/svg/pluse.svg'}
+                alt="adding chat"
+                width={9}
+                height={9}
+              />
+            </button>
+          )}
         </div>
 
         {isLoading ? (
@@ -66,17 +80,19 @@ const Channels = ({ setChatInfoOpen, setIsOpen }: ChannelsProps) => {
                 </span>
               </div>
 
-              <Link
-                href={`updateChat/${ch.id}`}
-                className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer"
-              >
-                <Image
-                  src="/images/chatIcons/svg/setting.svg"
-                  alt="setting"
-                  width={18}
-                  height={16}
-                />
-              </Link>
+              {isAdmin && (
+                <Link
+                  href={`updateChat/${ch.id}`}
+                  className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer"
+                >
+                  <Image
+                    src="/images/chatIcons/svg/setting.svg"
+                    alt="setting"
+                    width={18}
+                    height={16}
+                  />
+                </Link>
+              )}
             </div>
           ))
         )}
