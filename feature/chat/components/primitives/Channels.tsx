@@ -15,10 +15,13 @@ const Channels = ({ setChatInfoOpen, setIsOpen }: ChannelsProps) => {
 
   const channels = data?.data?.chat_channels || [];
 
+  const truncate = (text: string, maxLength: number) =>
+    text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+
   return (
     <div className="flex flex-col justify-between bg-[#001541D6] border-[#E0E0E0] border-r w-full max-w-[277px] h-screen">
       <div className="flex justify-between items-center px-[13px] py-[10px] border-[#E0E0E0] border-b min-h-[49px] font-[600] text-[#ffffff] text-[16px]">
-        <p>კარფურის პროდუქტები</p>
+        {data?.data && <p>{truncate(data.data.name, 25)}</p>}
         <button onClick={() => setChatInfoOpen((prev) => !prev)}>
           <Image
             src={'/images/chatIcons/svg/setting.svg'}
