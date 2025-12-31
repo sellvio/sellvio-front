@@ -33,7 +33,7 @@ const Channels = ({ setChatInfoOpen, setIsOpen }: ChannelsProps) => {
       {isLoading ? (
         <ChannelHeaderSkeleton />
       ) : (
-        <div className="flex justify-between items-center px-[13px] py-[10px] border-[#E0E0E0] border-b min-h-[49px] font-[600] text-[#ffffff] text-[16px]">
+        <div className="flex justify-between items-center py-[10px] pr-[5px] pl-[13px] border-[#E0E0E0] border-b min-h-[49px] font-[600] text-[#ffffff] text-[16px]">
           {data?.data && <p>{truncate(data.data.name, 25)}</p>}
 
           {isAdmin && (

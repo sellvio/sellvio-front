@@ -47,10 +47,10 @@ const GeneralChat = () => {
             <button
               key={item.id}
               onClick={() => handleTabClick(item.id)}
-              className={`cursor-pointer transition-opacity ${
+              className={`cursor-pointer transition-opacity  w-[40px] h-[40px] flex items-center justify-center ${
                 activeTab === item.id
-                  ? 'opacity-100'
-                  : 'opacity-60 hover:opacity-80'
+                  ? 'opacity-100 bg-[#FFFFFF36] rounded-[10px]'
+                  : 'opacity-60 hover:opacity-80 '
               }`}
             >
               <Image src={item.image} alt={item.title} width={24} height={24} />
