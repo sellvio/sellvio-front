@@ -7,8 +7,13 @@ import { deleteChannel } from '../../api/chatApi';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import DeleteChatPopup from './DeleteChatPopup';
+import { ChanellUpdateSidebarProps } from '../../types';
 
-const ChanellUpdateSidebar = ({ chatChanel, setChatChanel, channelId }) => {
+const ChanellUpdateSidebar = ({
+  chatChanel,
+  setChatChanel,
+  channelId,
+}: ChanellUpdateSidebarProps) => {
   const queryClient = useQueryClient();
   const router = useRouter();
 

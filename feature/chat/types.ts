@@ -18,3 +18,11 @@ export type Props = {
   isLoading: boolean;
   isError: boolean;
 };
+
+export type ChanellUpdateSidebarProps = {
+  chatChanel: 'chatInfo' | 'invitePeople';
+  setChatChanel: React.Dispatch<
+    React.SetStateAction<'chatInfo' | 'invitePeople'>
+  >;
+  channelId: number;
+};
