@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { ChannelsProps } from '../../types';
+import { ChannelsProps, ChatChannel } from '../../types';
 import { useQuery } from '@tanstack/react-query';
 import { ChatFromCampaing } from '../../api/chatApi';
 import ChannelSkeleton from './ChannelSkeleton';
@@ -23,7 +23,7 @@ const Channels = ({ setChatInfoOpen, setIsOpen }: ChannelsProps) => {
 
   if (isError) return <div>Error loading channels</div>;
 
-  const channels = data?.data?.chat_channels || [];
+  const channels: ChatChannel[] = data?.data?.chat_channels || [];
 
   const truncate = (text: string, maxLength: number) =>
     text.length > maxLength ? text.slice(0, maxLength) + '...' : text;

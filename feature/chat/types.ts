@@ -1,6 +1,6 @@
 export type ChannelsProps = {
   setChatInfoOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export type User = {
   user: {
@@ -25,4 +25,8 @@ export type ChanellUpdateSidebarProps = {
     React.SetStateAction<'chatInfo' | 'invitePeople'>
   >;
   channelId: number;
+};
+export type ChatChannel = {
+  id: number;
+  name: string;
 };
