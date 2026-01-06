@@ -1,6 +1,10 @@
 import React from 'react';
+import { DeleteChatPopupProps } from '../../types';
 
-const DeleteChatPopup = ({ handleDeleteChannel, setIsOpen }) => {
+const DeleteChatPopup = ({
+  handleDeleteChannel,
+  setIsOpen,
+}: DeleteChatPopupProps) => {
   return (
     <div className="z-50 fixed inset-0 flex justify-center items-center bg-black/50">
       <div className="relative flex flex-col justify-center items-center gap-[46px] bg-[#FFFFFF36] border border-[#FFFFFF36] rounded-[8px] w-full max-w-[392px] min-h-[159px]">

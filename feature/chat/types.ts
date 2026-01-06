@@ -33,3 +33,7 @@ export type ChatChannel = {
 export type CreateChanelPopupProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
+export type DeleteChatPopupProps = {
+  handleDeleteChannel: () => Promise<void> | void;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
