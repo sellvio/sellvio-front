@@ -9,8 +9,9 @@ import {
   createChatValue,
 } from '../../schema/createChanelSchema';
 import { addChanel } from '../../api/chatApi';
+import { CreateChanelPopupProps } from '../../types';
 
-const CreateChanelPopup = ({ setIsOpen }) => {
+const CreateChanelPopup = ({ setIsOpen }: CreateChanelPopupProps) => {
   const {
     register,
     handleSubmit,

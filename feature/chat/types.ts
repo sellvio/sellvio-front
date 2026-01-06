@@ -30,3 +30,6 @@ export type ChatChannel = {
   id: number;
   name: string;
 };
+export type CreateChanelPopupProps = {
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
