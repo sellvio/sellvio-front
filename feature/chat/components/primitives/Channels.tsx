@@ -54,7 +54,10 @@ const Channels = ({ setChatInfoOpen, setIsOpen }: ChannelsProps) => {
         <div className="flex justify-between items-center py-[10px] pr-[8px] pl-[8px] font-[600] text-[#ffffff] text-[16px]">
           <p className="font-semibold text-[14px]">ჩათის არხები</p>
           {isAdmin && (
-            <button className="cursor-pointer" onClick={() => setIsOpen(true)}>
+            <button
+              className="cursor-pointer"
+              onClick={() => setIsOpen && setIsOpen(true)}
+            >
               <Image
                 src={'/images/chatIcons/svg/pluse.svg'}
                 alt="adding chat"
