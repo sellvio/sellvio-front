@@ -6,7 +6,7 @@ import Member from './Member';
 import PinedMessage from './PinedMessage';
 import Clarification from './Clarification';
 
-const GeneralChat = () => {
+const GeneralChat = ({ chatFull }) => {
   const [activeTab, setActiveTab] = useState(null);
 
   const generalChannel = channelsData[0].channels.find(
@@ -29,7 +29,11 @@ const GeneralChat = () => {
   };
 
   return (
-    <div className="flex flex-col bg-[#001541D6] w-full max-w-[1440px] h-screen">
+    <div
+      className={`flex flex-col bg-[#001541D6] w-full ${
+        chatFull ? '' : 'max-w-[1440px]'
+      } h-screen`}
+    >
       <div className="flex justify-between items-center px-[26px] border-[#E0E0E0] border-b min-h-[49px]">
         <div className="flex items-center gap-2">
           <Image

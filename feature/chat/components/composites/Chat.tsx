@@ -10,9 +10,14 @@ import CreateChanelPopup from '../primitives/CreateChanelPopup';
 const Chat = () => {
   const [chatInfoOpen, setChatInfoOpen] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [chatFull, isChatFull] = useState<boolean>(false);
 
   return (
-    <div className="flex flex-col m-auto w-full max-w-[1440px] min-h-screen">
+    <div
+      className={`flex flex-col m-auto w-full ${
+        chatFull ? '' : 'max-w-[1440px]'
+      } min-h-screen`}
+    >
       <ChatHeader />
       <div className="flex rounded-[10px] overflow-hidden">
         {chatInfoOpen ? (
@@ -26,7 +31,7 @@ const Chat = () => {
         {chatInfoOpen ? (
           <ChanelInfo setChatInfoOpen={setChatInfoOpen} />
         ) : (
-          <GeneralChat />
+          <GeneralChat chatFull={chatFull} />
         )}
       </div>
     </div>
