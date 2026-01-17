@@ -1,9 +1,22 @@
 import Image from 'next/image';
+import { ChanelInfoSidebarProps } from '../../types';
 
-const ChanelInfoSidebar = () => {
+const ChanelInfoSidebar = ({
+  isChatFull,
+  chatFull,
+}: ChanelInfoSidebarProps) => {
   return (
     <div className="flex flex-col gap-[10px] bg-[#001541D6] py-[16px] border-[#E0E0E0] border-r w-full max-w-[277px] h-screen">
       <div className="flex items-center gap-[10px] px-[13px] w-full">
+        <button onClick={() => isChatFull?.((prev) => !prev)}>
+          <Image
+            src={`${chatFull ? '/images/chatIcons/svg/sizeDownChat.svg' : '/images/chatIcons/svg/sizeUpChat.svg'}`}
+            alt="chatSize"
+            width={21}
+            height={21}
+            className="cursor-pointer"
+          />
+        </button>
         <Image
           src={'/images/chatIcons/svg/hashtag.svg'}
           alt="# icon"

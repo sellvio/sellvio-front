@@ -15,15 +15,21 @@ const Chat = () => {
   return (
     <div
       className={`flex flex-col m-auto w-full ${
-        chatFull ? '' : 'max-w-[1440px]'
+        chatFull ? 'p-[10px]' : 'max-w-[1440px]'
       } min-h-screen`}
     >
-      <ChatHeader />
+      {chatFull ? '' : <ChatHeader />}
+
       <div className="flex rounded-[10px] overflow-hidden">
         {chatInfoOpen ? (
-          <ChanelInfoSidebar />
+          <ChanelInfoSidebar isChatFull={isChatFull} chatFull={chatFull} />
         ) : (
-          <Channels setChatInfoOpen={setChatInfoOpen} setIsOpen={setIsOpen} />
+          <Channels
+            setChatInfoOpen={setChatInfoOpen}
+            isChatFull={isChatFull}
+            chatFull={chatFull}
+            setIsOpen={setIsOpen}
+          />
         )}
 
         {isOpen && <CreateChanelPopup setIsOpen={setIsOpen} />}

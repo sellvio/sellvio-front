@@ -8,7 +8,6 @@ import { useForm } from 'react-hook-form';
 import ToggleSwitch from './ToggleSwitch';
 import { channelSchema, channelValue } from '../../schema/channelSchema';
 import { addChanel } from '../../api/chatApi';
-// import { chanenelType } from '../../data/chatData';
 
 const ChanelInfo = ({ setChatInfoOpen }: ChannelsProps) => {
   const {
@@ -25,7 +24,6 @@ const ChanelInfo = ({ setChatInfoOpen }: ChannelsProps) => {
   });
 
   const channelState = watch('channel_state');
-  // const selectedChannelType = watch('channel_type');
 
   const { mutate, isPending } = useMutation({
     mutationFn: addChanel,
@@ -99,34 +97,6 @@ const ChanelInfo = ({ setChatInfoOpen }: ChannelsProps) => {
             )}
           </div>
 
-          {/* <div className="flex flex-col gap-[10px]">
-            <label className="font-semibold text-[15px] text-white">
-              არხის აღწერა
-            </label>
-
-            <div className="relative w-full min-h-[58px]">
-              <input
-                {...register('description')}
-                className="shadow-[4px_5px_6px_0px_#FFFFFF42_inset,-1px_-3px_4px_0px_#FFFFFF42_inset,0px_8px_13px_0px_#0000000A] pr-[44px] pl-[18px] border-[2px] border-white rounded-[8px] outline-none w-full min-h-[58px] text-[18px] text-white"
-                placeholder="გააგებინე ყველას თუ როგორ გამოიყენონ ეს არხი"
-              />
-
-              <Image
-                src={'/images/chatIcons/svg/smile.svg'}
-                alt="smile icon"
-                width={24}
-                height={24}
-                className="top-1/2 right-[16px] absolute -translate-y-1/2 cursor-pointer"
-              />
-            </div>
-
-            {errors.description && (
-              <p className="text-red-400 text-sm">
-                {errors.description.message}
-              </p>
-            )}
-          </div> */}
-
           <div className="flex flex-col gap-[10px] w-full">
             <div className="font-semibold text-[15px] text-white">
               არხის ხილვადობა
@@ -157,42 +127,6 @@ const ChanelInfo = ({ setChatInfoOpen }: ChannelsProps) => {
               </p>
             )}
           </div>
-          {/* <div className="flex flex-col gap-[10px]">
-            <p className="font-semibold text-[15px] text-white">
-              სამიზნე შემქმნელების ტიპი
-            </p>
-            <div className="flex flex-wrap gap-[10px]">
-              {chanenelType.map((eachELemenet) => (
-                <button
-                  type="button"
-                  key={eachELemenet.id}
-                  onClick={() => setValue('channel_type', eachELemenet.type)}
-                  className={`flex justify-center items-center gap-[8px] shadow-[4px_5px_6px_0px_#FFFFFF42_inset,-1px_-3px_4px_0px_#FFFFFF42_inset,0px_8px_13px_0px_#0000000A] border-[2px] rounded-[8px] w-full max-w-[546px] min-h-[58px] cursor-pointer
-                    ${
-                      selectedChannelType === eachELemenet.type
-                        ? 'bg-[#3012B333] backdrop-blur-[7.5px] shadow-[0px_8px_13px_0px_#0000000A,4px_5px_6px_0px_#FFFFFF42_inset,-1px_-3px_4px_0px_#FFFFFF42_inset]'
-                        : 'border-white'
-                    }
-                  `}
-                >
-                  <Image
-                    src={eachELemenet.image}
-                    alt="icon"
-                    width={24}
-                    height={24}
-                  />
-                  <p className="font-semibold text-white">
-                    {eachELemenet.text}
-                  </p>
-                </button>
-              ))}
-            </div>
-            {errors.channel_type && (
-              <p className="text-red-400 text-sm">
-                {errors.channel_type.message}
-              </p>
-            )}
-          </div> */}
 
           <div className="flex justify-end items-center w-full">
             <button

@@ -18,10 +18,13 @@ const ToggleSwitch = ({ value, onToggle }: ToggleSwitchProps) => {
       }`}
     >
       <motion.div
-        layout
-        transition={{ type: 'spring' }}
+        animate={{ x: isPublic ? 18 : 0 }}
+        transition={{
+          type: 'spring',
+          stiffness: 500,
+          damping: 30,
+        }}
         className="bg-white shadow-md rounded-full w-[18px] h-[18px]"
-        style={{ x: isPublic ? 17.5 : 1 }}
       />
     </div>
   );

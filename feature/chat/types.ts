@@ -1,7 +1,14 @@
 export type ChannelsProps = {
   setChatInfoOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  isChatFull?: React.Dispatch<React.SetStateAction<boolean>>;
+  chatFull?: boolean;
 };
+export type ChanelInfoSidebarProps = {
+  isChatFull?: React.Dispatch<React.SetStateAction<boolean>>;
+  chatFull?: boolean;
+};
+
 export type User = {
   user: {
     id: string;

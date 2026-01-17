@@ -9,7 +9,12 @@ import { useEffect } from 'react';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
 import ChannelHeaderSkeleton from './ChannelHeaderSkeleton';
 
-const Channels = ({ setChatInfoOpen, setIsOpen }: ChannelsProps) => {
+const Channels = ({
+  setChatInfoOpen,
+  setIsOpen,
+  isChatFull,
+  chatFull,
+}: ChannelsProps) => {
   const { isLoading, isError, data } = useQuery({
     queryKey: ['chanelName', 31],
     queryFn: () => ChatFromCampaing(31),
@@ -34,7 +39,16 @@ const Channels = ({ setChatInfoOpen, setIsOpen }: ChannelsProps) => {
         <ChannelHeaderSkeleton />
       ) : (
         <div className="flex justify-between items-center py-[10px] pr-[5px] pl-[13px] border-[#E0E0E0] border-b min-h-[49px] font-[600] text-[#ffffff] text-[16px]">
-          {data?.data && <p>{truncate(data.data.name, 25)}</p>}
+          <button onClick={() => isChatFull?.((prev) => !prev)}>
+            <Image
+              src={`${chatFull ? '/images/chatIcons/svg/sizeDownChat.svg' : '/images/chatIcons/svg/sizeUpChat.svg'}`}
+              alt="chatSize"
+              width={21}
+              height={21}
+              className="cursor-pointer"
+            />
+          </button>
+          {data?.data && <p>{truncate(data.data.name, 20)}</p>}
 
           {isAdmin && (
             <button onClick={() => setChatInfoOpen((prev) => !prev)}>
@@ -79,7 +93,7 @@ const Channels = ({ setChatInfoOpen, setIsOpen }: ChannelsProps) => {
               <div className="flex gap-[10px]">
                 <Image
                   src={'/images/chatIcons/svg/hashtag.svg'}
-                  alt="reshotka"
+                  alt="hashtag"
                   width={16}
                   height={19}
                 />
