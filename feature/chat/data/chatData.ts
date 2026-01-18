@@ -57,22 +57,26 @@ export const newChannelsData = [
     id: 'profile',
     title: 'შეტყობინებები',
     image: '/images/chatIcons/svg/users-svgrepo-com 1.svg',
+    isAdmin: false,
   },
   {
     id: 'frame-128760',
     title: 'ფრეიმი 128760',
     image: '/images/chatIcons/svg/Frame 128760.svg',
+    isAdmin: false,
   },
   {
     id: 'component-2',
     title: 'კომპონენტი',
     image: '/images/chatIcons/svg/Component 2.svg',
+    isAdmin: true,
   },
 
   {
     id: 'notification',
     title: 'შეტყობინებები',
     image: '/images/chatIcons/svg/notification-alarm-bell_svgrepo.com.svg',
+    isAdmin: false,
   },
 ];
 

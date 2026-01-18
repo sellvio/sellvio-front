@@ -5,8 +5,9 @@ import { channelsData, newChannelsData } from '../../data/chatData';
 import Member from './Member';
 import PinedMessage from './PinedMessage';
 import Clarification from './Clarification';
+import { GeneralChatProps } from '../../types';
 
-const GeneralChat = ({ chatFull }) => {
+const GeneralChat = ({ chatFull }: GeneralChatProps) => {
   const [activeTab, setActiveTab] = useState(null);
 
   const generalChannel = channelsData[0].channels.find(

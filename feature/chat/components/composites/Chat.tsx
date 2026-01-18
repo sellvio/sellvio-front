@@ -1,4 +1,5 @@
 'use client';
+
 import { useState } from 'react';
 import ChatHeader from '../../../components/composites/ChatHeader';
 import ChanelInfo from '../primitives/ChanelInfo';
@@ -6,11 +7,13 @@ import Channels from '../primitives/Channels';
 import GeneralChat from '../primitives/GeneralChat';
 import ChanelInfoSidebar from '../primitives/ChanelInfoSidebar';
 import CreateChanelPopup from '../primitives/CreateChanelPopup';
+import { useChatLayout } from '@/feature/common/stores/useChatLayout';
 
 const Chat = () => {
   const [chatInfoOpen, setChatInfoOpen] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [chatFull, isChatFull] = useState<boolean>(false);
+
+  const { chatFull, toggleChatFull } = useChatLayout();
 
   return (
     <div
@@ -18,24 +21,27 @@ const Chat = () => {
         chatFull ? 'p-[10px]' : 'max-w-[1440px]'
       } min-h-screen`}
     >
-      {chatFull ? '' : <ChatHeader />}
+      {!chatFull && <ChatHeader />}
 
       <div className="flex rounded-[10px] overflow-hidden">
         {chatInfoOpen ? (
-          <ChanelInfoSidebar isChatFull={isChatFull} chatFull={chatFull} />
+          <ChanelInfoSidebar
+            toggleChatFull={toggleChatFull}
+            chatFull={chatFull}
+          />
         ) : (
           <Channels
             setChatInfoOpen={setChatInfoOpen}
-            isChatFull={isChatFull}
-            chatFull={chatFull}
             setIsOpen={setIsOpen}
+            toggleChatFull={toggleChatFull}
+            chatFull={chatFull}
           />
         )}
 
         {isOpen && <CreateChanelPopup setIsOpen={setIsOpen} />}
 
         {chatInfoOpen ? (
-          <ChanelInfo setChatInfoOpen={setChatInfoOpen} />
+          <ChanelInfo setChatInfoOpen={setChatInfoOpen} chatFull={chatFull} />
         ) : (
           <GeneralChat chatFull={chatFull} />
         )}

@@ -13,6 +13,8 @@ const ChanellUpdateSidebar = ({
   chatChanel,
   setChatChanel,
   channelId,
+  toggleChatFull,
+  chatFull,
 }: ChanellUpdateSidebarProps) => {
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -56,6 +58,15 @@ const ChanellUpdateSidebar = ({
   return (
     <div className="flex flex-col gap-[10px] bg-[#001541D6] py-[16px] border-[#E0E0E0] border-r w-full max-w-[277px] h-screen">
       <div className="flex items-center gap-[10px] px-[13px] w-full">
+        <button onClick={() => toggleChatFull()}>
+          <Image
+            src={`${chatFull ? '/images/chatIcons/svg/sizeDownChat.svg' : '/images/chatIcons/svg/sizeUpChat.svg'}`}
+            alt="chatSize"
+            width={21}
+            height={21}
+            className="cursor-pointer"
+          />
+        </button>
         <Image
           src={'/images/chatIcons/svg/hashtag.svg'}
           alt="# icon"
@@ -92,7 +103,6 @@ const ChanellUpdateSidebar = ({
       <div className="bg-[#FFFFFF75] w-full h-[1px]"></div>
 
       <div
-        // onClick={handleDeleteChannel}
         onClick={() => setIsOpen(true)}
         className="flex items-center gap-[10px] pl-[21px] w-full cursor-pointer"
       >

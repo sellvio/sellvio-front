@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { ChannelsProps } from '../../types';
+import { ChanelInfoProps } from '../../types';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -9,7 +9,7 @@ import ToggleSwitch from './ToggleSwitch';
 import { channelSchema, channelValue } from '../../schema/channelSchema';
 import { addChanel } from '../../api/chatApi';
 
-const ChanelInfo = ({ setChatInfoOpen }: ChannelsProps) => {
+const ChanelInfo = ({ setChatInfoOpen }: ChanelInfoProps) => {
   const {
     register,
     handleSubmit,

@@ -1,12 +1,18 @@
 export type ChannelsProps = {
   setChatInfoOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
-  isChatFull?: React.Dispatch<React.SetStateAction<boolean>>;
-  chatFull?: boolean;
+  toggleChatFull: () => void;
+  chatFull: boolean;
 };
+
 export type ChanelInfoSidebarProps = {
-  isChatFull?: React.Dispatch<React.SetStateAction<boolean>>;
-  chatFull?: boolean;
+  toggleChatFull: () => void;
+  chatFull: boolean;
+};
+
+export type ChanelInfoProps = {
+  setChatInfoOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  chatFull: boolean;
 };
 
 export type User = {
@@ -32,6 +38,8 @@ export type ChanellUpdateSidebarProps = {
     React.SetStateAction<'chatInfo' | 'invitePeople'>
   >;
   channelId: number;
+  chatFull: boolean;
+  toggleChatFull: () => void;
 };
 export type ChatChannel = {
   id: number;
@@ -43,4 +51,8 @@ export type CreateChanelPopupProps = {
 export type DeleteChatPopupProps = {
   handleDeleteChannel: () => Promise<void> | void;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export type GeneralChatProps = {
+  chatFull?: boolean;
 };

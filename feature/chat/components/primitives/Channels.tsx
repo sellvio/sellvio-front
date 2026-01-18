@@ -12,7 +12,7 @@ import ChannelHeaderSkeleton from './ChannelHeaderSkeleton';
 const Channels = ({
   setChatInfoOpen,
   setIsOpen,
-  isChatFull,
+  toggleChatFull,
   chatFull,
 }: ChannelsProps) => {
   const { isLoading, isError, data } = useQuery({
@@ -39,9 +39,13 @@ const Channels = ({
         <ChannelHeaderSkeleton />
       ) : (
         <div className="flex justify-between items-center py-[10px] pr-[5px] pl-[13px] border-[#E0E0E0] border-b min-h-[49px] font-[600] text-[#ffffff] text-[16px]">
-          <button onClick={() => isChatFull?.((prev) => !prev)}>
+          <button onClick={() => toggleChatFull()}>
             <Image
-              src={`${chatFull ? '/images/chatIcons/svg/sizeDownChat.svg' : '/images/chatIcons/svg/sizeUpChat.svg'}`}
+              src={
+                chatFull
+                  ? '/images/chatIcons/svg/sizeDownChat.svg'
+                  : '/images/chatIcons/svg/sizeUpChat.svg'
+              }
               alt="chatSize"
               width={21}
               height={21}
