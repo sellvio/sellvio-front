@@ -5,7 +5,7 @@ import UpdateChat from '../../../../feature/chat/components/primitives/UpdateCha
 import { useChatLayout } from '@/feature/common/stores/useChatLayout';
 
 const ChangeChatInfo = () => {
-  const { chatFull, toggleChatFull } = useChatLayout();
+  const { chatFull } = useChatLayout();
   const params = useParams();
   const updateChatId = Number(params.updateChatId);
 
