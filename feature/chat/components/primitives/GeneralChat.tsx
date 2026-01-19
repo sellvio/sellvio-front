@@ -1,24 +1,30 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect, JSX } from 'react';
 import Image from 'next/image';
 import { channelsData, newChannelsData } from '../../data/chatData';
 import Member from './Member';
 import PinedMessage from './PinedMessage';
 import Clarification from './Clarification';
 import { GeneralChatProps } from '../../types';
+import { useChatStore } from '@/feature/common/stores/useChatStore';
 
 const GeneralChat = ({ chatFull }: GeneralChatProps) => {
-  const [activeTab, setActiveTab] = useState(null);
+  const [activeTab, setActiveTab] = useState<string | null>(null);
+  const { isAdmin, fetchMembers } = useChatStore();
+
+  useEffect(() => {
+    fetchMembers();
+  }, [fetchMembers]);
 
   const generalChannel = channelsData[0].channels.find(
     (ch) => ch.id === 'general-chat'
   );
 
-  const handleTabClick = (tabId) => {
+  const handleTabClick = (tabId: string) => {
     setActiveTab(activeTab === tabId ? null : tabId);
   };
 
-  const tabContent = {
+  const tabContent: Record<string, JSX.Element> = {
     profile: <Member />,
     'frame-128760': <PinedMessage />,
     'component-2': <Clarification />,
@@ -28,6 +34,10 @@ const GeneralChat = ({ chatFull }: GeneralChatProps) => {
       </div>
     ),
   };
+
+  const visibleChannels = newChannelsData.filter(
+    (item) => !item.isAdmin || isAdmin
+  );
 
   return (
     <div
@@ -48,14 +58,14 @@ const GeneralChat = ({ chatFull }: GeneralChatProps) => {
           </span>
         </div>
         <div className="flex justify-between items-center w-full max-w-[162px]">
-          {newChannelsData.map((item) => (
+          {visibleChannels.map((item) => (
             <button
               key={item.id}
               onClick={() => handleTabClick(item.id)}
-              className={`cursor-pointer transition-opacity  w-[40px] h-[40px] flex items-center justify-center ${
+              className={`cursor-pointer transition-opacity w-[40px] h-[40px] flex items-center justify-center ${
                 activeTab === item.id
                   ? 'opacity-100 bg-[#FFFFFF36] rounded-[10px]'
-                  : 'opacity-60 hover:opacity-80 '
+                  : 'opacity-60 hover:opacity-80'
               }`}
             >
               <Image src={item.image} alt={item.title} width={24} height={24} />
