@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import ToggleSwitch from './ToggleSwitch';
 import { channelSchema, channelValue } from '../../schema/channelSchema';
 import { addChanel } from '../../api/chatApi';
+import { useChatLayout } from '@/feature/common/stores/useChatLayout';
 
 const ChanelInfo = ({ setChatInfoOpen }: ChanelInfoProps) => {
   const {
@@ -38,9 +39,12 @@ const ChanelInfo = ({ setChatInfoOpen }: ChanelInfoProps) => {
   const submitForm = (data: channelValue) => {
     mutate(data);
   };
+  const { chatFull } = useChatLayout();
 
   return (
-    <div className="flex flex-col justify-between bg-[#001541D6] w-full max-w-[1440px] h-screen">
+    <div
+      className={`flex flex-col justify-between bg-[#001541D6] w-full ${chatFull ? '' : 'max-w-[1440px]'} h-screen`}
+    >
       <div className="flex flex-col">
         <div className="flex justify-between items-center px-[26px] w-full min-h-[72px]">
           <p className="font-semibold text-[18px] text-white">

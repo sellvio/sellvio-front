@@ -5,10 +5,10 @@ import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-// import ToggleSwitch from './ToggleSwitch';
 import { updateChamel } from '../../api/chatApi';
 import Link from 'next/link';
 import { updateChanel, updateChanelValue } from '../../schema/updateChanel';
+import { useChatLayout } from '@/feature/common/stores/useChatLayout';
 
 type UpdateChanelProps = {
   channelId: number;
@@ -18,14 +18,10 @@ const UpdateChanel = ({ channelId }: UpdateChanelProps) => {
   const {
     register,
     handleSubmit,
-    // setValue,
-    // watch,
     formState: { errors },
   } = useForm<updateChanelValue>({
     resolver: zodResolver(updateChanel),
   });
-
-  // const channelState = watch('channel_state');
 
   const { mutate, isPending } = useMutation({
     mutationFn: (data: updateChanelValue) => updateChamel(data, channelId),
@@ -37,11 +33,15 @@ const UpdateChanel = ({ channelId }: UpdateChanelProps) => {
     },
   });
 
+  const { chatFull } = useChatLayout();
+
   const submitForm = (data: updateChanelValue) => {
     mutate(data);
   };
   return (
-    <div className="flex flex-col justify-between bg-[#001541D6] w-full max-w-[1440px] h-screen">
+    <div
+      className={`flex flex-col justify-between bg-[#001541D6] w-full ${chatFull ? '' : 'max-w-[1440px]'} h-screen`}
+    >
       <div className="flex flex-col">
         <div className="flex justify-between items-center px-[26px] w-full min-h-[72px]">
           <p className="font-semibold text-[18px] text-white">
@@ -105,29 +105,6 @@ const UpdateChanel = ({ channelId }: UpdateChanelProps) => {
               </p>
             )}
           </div>
-
-          {/* <div className="flex flex-col gap-[10px]">
-            <p className="font-semibold text-[15px] text-white">
-              არხის ხილვადობა
-            </p>
-
-            <div className="flex justify-between items-center px-[18px] border border-white rounded-[8px] min-h-[58px]">
-              <p className="font-semibold text-white">
-                {channelState === 'public' ? 'საჯარო' : 'დახურული'}
-              </p>
-
-              <ToggleSwitch
-                value={channelState}
-                onToggle={(val) => setValue('channel_state', val)}
-              />
-            </div>
-
-            {errors.channel_state && (
-              <p className="text-red-400 text-sm">
-                {errors.channel_state.message}
-              </p>
-            )}
-          </div> */}
 
           <div className="w-full">
             <button

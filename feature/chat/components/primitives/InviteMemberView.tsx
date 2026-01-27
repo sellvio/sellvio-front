@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form';
 import { addMemberSchema, addMemberValue } from '../../schema/addMemberSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import AddMemberSkeleton from './AddMemberSkeleton';
+import { useChatLayout } from '@/feature/common/stores/useChatLayout';
 
 const InviteMemberView = ({
   searchTerm,
@@ -42,9 +43,12 @@ const InviteMemberView = ({
     setValue('user_ids', selectedIds.map(Number));
     mutate({ user_ids: selectedIds.map(Number) });
   };
+  const { chatFull } = useChatLayout();
 
   return (
-    <div className="flex flex-col justify-between bg-[#001541D6] px-[30px] w-full max-w-[1440px] h-screen">
+    <div
+      className={`flex flex-col justify-between bg-[#001541D6] px-[30px] w-full ${chatFull ? '' : 'max-w-[1440px]'} h-screen`}
+    >
       <div className="flex flex-col gap-[38px]">
         <div className="flex justify-between items-center min-h-[72px]">
           <p className="font-semibold text-[18px] text-white">

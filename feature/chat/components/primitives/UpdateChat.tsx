@@ -18,7 +18,9 @@ const UpdateChat = ({ updateChatId }: UpdateChatProps) => {
   );
   return (
     <div
-      className={`flex flex-col m-auto w-full ${chatFull ? '' : 'max-w-[1440px]'}  min-h-screen`}
+      className={`flex flex-col m-auto w-full ${
+        chatFull ? 'p-[10px]' : 'max-w-[1440px]'
+      } min-h-screen`}
     >
       {!chatFull && <ChatHeader />}
 
