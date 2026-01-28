@@ -1,15 +1,17 @@
 'use client';
 
 import CompanyCard from '../primitives/CompanyCard';
-import { CompanyCardProps } from '../../type';
 import { useQuery } from '@tanstack/react-query';
 import { fetchCompanyCards } from '@/lib/api/BusinessCards';
+import { Campaign } from '../../type';
 
 const CompanyCards = () => {
-  const { data, isLoading, isError } = useQuery<CompanyCardProps[]>({
+  const { data, isLoading, isError } = useQuery<Campaign[]>({
     queryKey: ['cards'],
     queryFn: fetchCompanyCards,
   });
+
+  const campaigns = data ?? [];
 
   if (isError) return <p>Failed to fetch Cards</p>;
 
@@ -26,10 +28,8 @@ const CompanyCards = () => {
         <p className="justify-center w-full">Loading ...</p>
       ) : (
         <div className="flex flex-wrap justify-center gap-[26px]">
-          {data?.map((task) => (
-            <div key={task.id}>
-              <CompanyCard task={task} />
-            </div>
+          {campaigns.map((task) => (
+            <CompanyCard key={task.id} task={task} />
           ))}
         </div>
       )}

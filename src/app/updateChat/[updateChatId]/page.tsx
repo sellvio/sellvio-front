@@ -1,8 +1,8 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import UpdateChat from '../../../../feature/chat/components/primitives/UpdateChat';
 import { useChatLayout } from '@/feature/common/stores/useChatLayout';
+import UpdateChat from '@/feature/chat/components/primitives/UpdateChat';
 
 const ChangeChatInfo = () => {
   const { chatFull } = useChatLayout();

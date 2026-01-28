@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { ChatMember } from '../../../../feature/chat/api/chatApi';
 import { ChatStore, Member } from '../type';
+import { ChatMember } from '@/feature/chat/api/chatApi';
 
 function parseJwt(token: string) {
   try {

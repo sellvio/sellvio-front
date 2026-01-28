@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import ChatHeader from '../../../components/composites/ChatHeader';
 import ChanellUpdateSidebar from './ChanellUpdateSidebar';
 import UpdateChanel from './UpdateChanel';
 import InviteMember from './InviteMember';
 import { useChatLayout } from '@/feature/common/stores/useChatLayout';
+import ChatHeader from '../../../../../feature/components/composites/ChatHeader';
 
 type UpdateChatProps = {
   updateChatId: number;

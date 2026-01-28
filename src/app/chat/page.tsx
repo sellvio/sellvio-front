@@ -1,4 +1,4 @@
-import Chat from '../../../feature/chat/components/composites/Chat';
+import Chat from '@/feature/chat/components/composites/Chat';
 
 const page = () => {
   return (

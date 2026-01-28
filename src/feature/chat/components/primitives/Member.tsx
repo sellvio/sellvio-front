@@ -1,5 +1,4 @@
 'use client';
-import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import { ChatMember } from '../../api/chatApi';
 import MemberSkeleton from './MemberSkeleton';
