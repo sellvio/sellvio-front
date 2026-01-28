@@ -4,6 +4,7 @@ import CompanyCard from '../primitives/CompanyCard';
 import { useQuery } from '@tanstack/react-query';
 import { fetchCompanyCards } from '@/lib/api/BusinessCards';
 import { Campaign } from '../../type';
+import CompanyCardSkeleton from './CompanyCardSkeleton';
 
 const CompanyCards = () => {
   const { data, isLoading, isError } = useQuery<Campaign[]>({
@@ -25,10 +26,10 @@ const CompanyCards = () => {
       </p>
 
       {isLoading ? (
-        <p className="justify-center w-full">Loading ...</p>
+        <CompanyCardSkeleton />
       ) : (
         <div className="flex flex-wrap justify-center gap-[26px]">
-          {campaigns.map((task) => (
+          {campaigns.slice(0, 3).map((task) => (
             <CompanyCard key={task.id} task={task} />
           ))}
         </div>
