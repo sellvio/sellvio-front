@@ -1,4 +1,4 @@
-const SocialMediaSliderData = [
+export const SocialMediaSliderData = [
   {
     id: 1,
     socialMedia: 'მიმოხილვა',

@@ -26,7 +26,7 @@ export type Campaign = {
   business_id: number;
   name: string;
   description: string;
-  budget: string; // ბექიდან მოდის როგორც string "500"
+  budget: string;
   budget_hidden: boolean;
   duration_days: number;
   finish_date: string | null;
@@ -37,8 +37,8 @@ export type Campaign = {
   target_creator_types: CreatorType[];
   additional_requirements: string | null;
   payment_type: PaymentType;
-  payment_amount: string; // მაგ: "5" ან "50"
-  payment_per_quantity: number; // მაგ: 1000
+  payment_amount: string;
+  payment_per_quantity: number;
   requirements: string;
   target_audience: string | null;
   campaign_image_url: string | null;
@@ -49,13 +49,12 @@ export type Campaign = {
   _count: CampaignCount;
 };
 
-// კომპონენტებისთვის საჭირო Props ტიპები
 export type CompanyCardProps = {
   task: Campaign;
 };
 
 export type CompanyCardsProps = {
-  task: Campaign; // აქ პირდაპირ Campaign უნდა იყოს, რომ task.payment_amount-ზე წვდომა გქონდეს
+  task: Campaign;
 };
 
 export type ProgressBarProps = {
@@ -63,7 +62,6 @@ export type ProgressBarProps = {
   goalAmount: number;
 };
 
-// სხვა დამხმარე ტიპები
 export type ButtonProps = {
   id: number;
   label: string;
@@ -86,4 +84,9 @@ export type Item = {
 export type DataProps = {
   business: Item[];
   creator: Item[];
+};
+
+export type CampaingPopupSocialMediaSliderProps = {
+  isActive: number;
+  setIsActive: (id: number) => void;
 };
