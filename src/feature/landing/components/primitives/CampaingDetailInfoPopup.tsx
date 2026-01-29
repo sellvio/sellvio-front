@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import CampaignDetailHeader from './CampaignDetailHeader';
 import CampaignDetailStats from './CampaignDetailStats';
 import CampaingPopupSocialMediaSlider from './CampaingPopupSocialMediaSlider';
+import Review from './Review';
 
 const CampaingDetailInfoPopup = () => {
   const [isActive, setIsActive] = useState<number>(1);
@@ -16,6 +17,7 @@ const CampaingDetailInfoPopup = () => {
           setIsActive={setIsActive}
           isActive={isActive}
         />
+        <Review />
       </div>
     </div>
   );

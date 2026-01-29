@@ -15,7 +15,7 @@ const CampaignDetailHeader = () => {
             გახსენი ჩატი
           </button>
           <button className="bg-[#0866FFDB] border border-[#C13D3F36] rounded-[8px] w-full max-w-[135px] min-h-[30px] font-semibold text-[#FFFFFF] text-[13px] cursor-pointer">
-            გახსენი ჩატი
+            დაამატე URL
           </button>
         </div>
       </div>
