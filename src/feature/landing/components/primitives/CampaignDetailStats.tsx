@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 
 const CampaignDetailStats = () => {
@@ -5,7 +6,13 @@ const CampaignDetailStats = () => {
     <div className="flex gap-[18px] mt-[16px] w-full">
       <div className="bg-[#00000005] px-[24px] py-[22px] border border-[#0000001F] rounded-[8px] w-full max-w-[212px] min-h-[100px]">
         <div>
-          <div>
+          <div className="flex gap-[3px]">
+            <Image
+              src="/images/CampaingPopupImages/svg/dollar-two.svg"
+              alt="dollar"
+              width={15}
+              height={38}
+            />
             <p className="font-semibold text-[#00D540] text-[28px]">420</p>
           </div>
           <p className="font-medium text-[14px]">ჯამური შემოსავალი</p>
@@ -32,7 +39,13 @@ const CampaignDetailStats = () => {
 
       <div className="bg-[#00000005] px-[16px] py-[22px] border border-[#0000001F] rounded-[8px] w-full max-w-[212px] min-h-[100px]">
         <div>
-          <div>
+          <div className="flex gap-[3px]">
+            <Image
+              src="/images/CampaingPopupImages/svg/dollar-purple.svg"
+              alt="dollar"
+              width={15}
+              height={38}
+            />
             <p className="font-semibold text-[#3012B3CC] text-[28px]">28.00</p>
           </div>
           <p className="font-medium text-[14px]">საშუალოდ 1K ნახვაზე</p>
