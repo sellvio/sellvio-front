@@ -4,6 +4,7 @@ import CampaignDetailHeader from './CampaignDetailHeader';
 import CampaignDetailStats from './CampaignDetailStats';
 import CampaingPopupSocialMediaSlider from './CampaingPopupSocialMediaSlider';
 import Review from './Review';
+import TiktokReview from './TiktokReview';
 
 const CampaingDetailInfoPopup = () => {
   const [isActive, setIsActive] = useState<number>(1);
@@ -19,7 +20,7 @@ const CampaingDetailInfoPopup = () => {
         />
         <div className="mt-[17px]">
           {isActive === 1 && <Review />}
-          {isActive === 2 && <div>TikTok Content</div>}
+          {isActive === 2 && <TiktokReview />}
           {isActive === 3 && <div>Instagram Content</div>}
           {isActive === 4 && <div>Facebook Content</div>}
         </div>
