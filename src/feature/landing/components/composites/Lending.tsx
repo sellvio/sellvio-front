@@ -2,6 +2,7 @@ import Footer from '@/feature/common/footer/composite/Footer';
 import BusinessCreatorCards from '../primitives/BusinessCreatorCards';
 import CompanyCards from '../primitives/CompanyCards';
 import HeroSection from '../primitives/HeroSection';
+import CampaingDetailInfoPopup from '../primitives/CampaingDetailInfoPopup';
 
 const Lending = () => {
   return (
@@ -10,6 +11,7 @@ const Lending = () => {
         <HeroSection />
         <BusinessCreatorCards />
         <CompanyCards />
+        <CampaingDetailInfoPopup />
       </div>
       <Footer />
     </div>
