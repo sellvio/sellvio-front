@@ -1,6 +1,7 @@
 import React from 'react';
 import CampaignDetailHeader from './CampaignDetailHeader';
 import CampaignDetailStats from './CampaignDetailStats';
+import CampaingPopupSocialMediaSlider from './CampaingPopupSocialMediaSlider';
 
 const CampaingDetailInfoPopup = () => {
   return (
@@ -8,6 +9,7 @@ const CampaingDetailInfoPopup = () => {
       <div className="bg-[#ffffff] px-[26px] py-[34px] rounded-[8px] w-full max-w-[954px] min-h-[715px]">
         <CampaignDetailHeader />
         <CampaignDetailStats />
+        <CampaingPopupSocialMediaSlider />
       </div>
     </div>
   );
