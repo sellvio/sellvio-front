@@ -2,8 +2,12 @@ import Image from 'next/image';
 import { CompanyCardProps } from '../../type';
 import CardHeader from './CardHeader';
 import CardStats from './CardStats';
+import { useState } from 'react';
+import JoinCompanyPopup from './JoinCompanyPopup';
 
 const CompanyCard = ({ task }: CompanyCardProps) => {
+  const [JoinCompany, setJoinCompany] = useState<boolean>(false);
+  const [visible, setVisible] = useState<boolean>(false);
   return (
     <div className="flex flex-col justify-between px-[25px] py-[23px] border-[2px] border-[var(--auth-border)] rounded-[8px] w-full max-w-[445px] min-h-[417px]">
       <div>
@@ -57,8 +61,15 @@ const CompanyCard = ({ task }: CompanyCardProps) => {
           </div>
         </div>
       </div>
-
-      <button className="bg-gradient-to-r from-[#3012B3] to-[#7B62E8] mt-[17px] rounded-[8px] w-full min-h-[39px] font-medium text-[12px] text-white">
+      <JoinCompanyPopup
+        popupVisible={visible}
+        setPopupVisible={setVisible}
+        setChangeProfile={setJoinCompany}
+      />
+      <button
+        onClick={() => setVisible((prev) => !prev)}
+        className="bg-gradient-to-r from-[#3012B3] to-[#7B62E8] mt-[17px] rounded-[8px] w-full min-h-[39px] font-medium text-[12px] text-white"
+      >
         გაწევრიანება
       </button>
     </div>
