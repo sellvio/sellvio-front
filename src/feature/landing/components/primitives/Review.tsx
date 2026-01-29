@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 const Review = () => {
   return (
-    <div className="flex flex-col mt-[17px] w-full">
+    <div className="flex flex-col w-full">
       <p className="font-semibold text-[20px]">ვიდეოს მაჩვენებლები</p>
       <div className="flex flex-col gap-[10px] gap-[17px] mt-[17px] px-[32px] py-[28px] border border-[#0000001F] rounded-[8px] w-full max-w-1/2">
         <div className="w-full">

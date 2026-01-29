@@ -17,7 +17,12 @@ const CampaingDetailInfoPopup = () => {
           setIsActive={setIsActive}
           isActive={isActive}
         />
-        <Review />
+        <div className="mt-[17px]">
+          {isActive === 1 && <Review />}
+          {isActive === 2 && <div>TikTok Content</div>}
+          {isActive === 3 && <div>Instagram Content</div>}
+          {isActive === 4 && <div>Facebook Content</div>}
+        </div>
       </div>
     </div>
   );
