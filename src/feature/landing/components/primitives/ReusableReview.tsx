@@ -1,6 +1,7 @@
 import StatsReview from './StatsReview';
+import VideoReview from './VideoReview';
 
-const TiktokReview = () => {
+const ReusableReview = () => {
   return (
     <div className="w-full">
       <p className="font-semibold text-[20px]">TikTok მაჩვენებლები</p>
@@ -31,17 +32,10 @@ const TiktokReview = () => {
             </div>
           </div>
         </div>
-        <div className="px-[32px] py-[28px] border border-[#0000001F] rounded-[8px] w-full max-w-1/2 min-h-[223px]">
-          <div className="flex justify-between items-center w-full">
-            <p className="font-semibold">ვიდეოს მაჩვენებლები</p>
-            <div className="flex justify-center items-center bg-[#0866FF0A] px-[10px] py-[6px] border border-[#0000001F] rounded-[15px] w-full max-w-[115px] cursor-pointer">
-              <p className="font-semibold text-[10px]">ყველას მონიშვნა</p>
-            </div>
-          </div>
-        </div>
+        <VideoReview />
       </div>
     </div>
   );
 };
 
-export default TiktokReview;
+export default ReusableReview;
