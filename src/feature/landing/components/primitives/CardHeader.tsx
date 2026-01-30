@@ -1,7 +1,7 @@
 import Image from 'next/image';
-import { Campaign } from '../../type';
+import { CompanyCardProps } from '../../type';
 
-const CardHeader = ({ task }: { task: Campaign }) => {
+const CardHeader = ({ task, setPopupOpen }: CompanyCardProps) => {
   return (
     <div className="flex justify-between w-full">
       <div className="flex items-center gap-[7px]">
@@ -18,13 +18,17 @@ const CardHeader = ({ task }: { task: Campaign }) => {
           />
         )}
       </div>
-
-      <Image
-        src="/images/landingPageIcons/svg/chevron-right.svg"
-        alt="arrow"
-        width={21}
-        height={21}
-      />
+      <button
+        onClick={() => setPopupOpen((prev) => !prev)}
+        className="cursor-pointer"
+      >
+        <Image
+          src="/images/landingPageIcons/svg/chevron-right.svg"
+          alt="arrow"
+          width={21}
+          height={21}
+        />
+      </button>
     </div>
   );
 };

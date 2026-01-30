@@ -5,13 +5,13 @@ import CardStats from './CardStats';
 import { useState } from 'react';
 import JoinCompanyPopup from './JoinCompanyPopup';
 
-const CompanyCard = ({ task }: CompanyCardProps) => {
+const CompanyCard = ({ task, setPopupOpen }: CompanyCardProps) => {
   const [JoinCompany, setJoinCompany] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(false);
   return (
     <div className="flex flex-col justify-between px-[25px] py-[23px] border-[2px] border-[var(--auth-border)] rounded-[8px] w-full max-w-[445px] min-h-[417px]">
       <div>
-        <CardHeader task={task} />
+        <CardHeader task={task} setPopupOpen={setPopupOpen} />
 
         <div className="mt-[19px]">
           <div className="flex flex-wrap gap-[9px] mt-[8px] mb-[6px]">

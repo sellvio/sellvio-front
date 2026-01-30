@@ -1,8 +1,8 @@
 import Image from 'next/image';
-import { CompanyCardsProps } from '../../type';
+import { Campaign } from '../../type';
 import ProgressBar from './ProgressBar';
 
-const CardStats = ({ task }: CompanyCardsProps) => {
+const CardStats = ({ task }: { task: Campaign }) => {
   return (
     <div className="flex flex-col justify-between bg-[var(--budget-stats-bg)] mt-[13px] p-[15px] rounded-[10px] w-full max-w-[391px] min-h-[113px]">
       <div className="flex justify-between w-full max-w-[289px]">

@@ -1,3 +1,5 @@
+import React from 'react';
+
 export type ChatType = 'public' | 'private';
 export type CampaignStatus = 'active' | 'draft';
 export type PaymentType = 'cost_per_view' | 'cost_per_click';
@@ -51,10 +53,15 @@ export type Campaign = {
 
 export type CompanyCardProps = {
   task: Campaign;
+  setPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type CompanyCardsProps = {
-  task: Campaign;
+  setPopupOpen: CompanyCardProps['setPopupOpen'];
+};
+
+export type CampaingDetailInfoPopupProps = {
+  setPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type ProgressBarProps = {

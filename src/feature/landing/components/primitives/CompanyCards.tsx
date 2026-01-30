@@ -3,10 +3,10 @@
 import CompanyCard from '../primitives/CompanyCard';
 import { useQuery } from '@tanstack/react-query';
 import { fetchCompanyCards } from '@/lib/api/BusinessCards';
-import { Campaign } from '../../type';
+import { Campaign, CompanyCardsProps } from '../../type';
 import CompanyCardSkeleton from './CompanyCardSkeleton';
 
-const CompanyCards = () => {
+const CompanyCards = ({ setPopupOpen }: CompanyCardsProps) => {
   const { data, isLoading, isError } = useQuery<Campaign[]>({
     queryKey: ['cards'],
     queryFn: fetchCompanyCards,
@@ -30,7 +30,11 @@ const CompanyCards = () => {
       ) : (
         <div className="flex flex-wrap justify-center gap-[26px]">
           {campaigns.slice(0, 3).map((task) => (
-            <CompanyCard key={task.id} task={task} />
+            <CompanyCard
+              key={task.id}
+              task={task}
+              setPopupOpen={setPopupOpen}
+            />
           ))}
         </div>
       )}
