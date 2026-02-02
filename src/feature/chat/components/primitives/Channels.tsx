@@ -34,7 +34,7 @@ const Channels = ({
   }, [fetchMembers]);
 
   useEffect(() => {
-    if (!socket) return;
+    if (!socket) return () => {};
 
     const handleOnline = (data: {
       onlineUsers: any[];
@@ -44,7 +44,10 @@ const Channels = ({
     };
 
     socket.on('server:online', handleOnline);
-    return () => socket.off('server:online', handleOnline);
+
+    return () => {
+      socket.off('server:online', handleOnline);
+    };
   }, [socket]);
 
   const { isLoading, isError, data } = useQuery({
