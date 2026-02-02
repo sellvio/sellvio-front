@@ -1,13 +1,5 @@
 import { Message } from '../../types';
-
-type MessageListProps = {
-  messages: Message[];
-  isLoadingChannel: boolean;
-  selectedChannelId: number | null;
-  hasMore: boolean;
-  isLoadingMore: boolean;
-  loadMoreTriggerRef: React.RefObject<HTMLDivElement>;
-};
+import { MessageListProps } from '../type';
 
 const MessageStatusIcon = ({ status }: { status?: string }) => {
   switch (status) {

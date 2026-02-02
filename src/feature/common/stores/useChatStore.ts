@@ -1,23 +1,5 @@
+import { ChatStore, Member } from '@/feature/chat/components/type';
 import { create } from 'zustand';
-
-export interface Member {
-  id: number;
-  name: string;
-  role: 'admin' | 'user';
-}
-
-interface ChatStore {
-  members: Member[];
-  isAdmin: boolean;
-  chatInfoOpen: boolean;
-  selectedChannelId: number | null;
-  isLoadingChannel: boolean;
-
-  setSelectedChannelId: (id: number) => void;
-  setChannelLoaded: () => void;
-  fetchMembers: () => Promise<void>;
-  toggleChatInfo: () => void;
-}
 
 const parseJwt = (token: string) => {
   try {

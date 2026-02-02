@@ -1,12 +1,5 @@
 import Image from 'next/image';
-
-interface MessageInputProps {
-  text: string;
-  setText: (text: string) => void;
-  onSend: () => void;
-  disabled: boolean;
-  selectedChannelId: number | null;
-}
+import { MessageInputProps } from '../type';
 
 const MessageInput = ({
   text,

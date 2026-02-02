@@ -1,13 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-
-interface UseInfiniteScrollProps {
-  hasMore: boolean;
-  isLoadingMessages: boolean;
-  isLoadingChannel: boolean;
-  selectedChannelId: number | null;
-  loadMoreMessages: (channelId: number) => void;
-  scrollRef: React.RefObject<HTMLDivElement>;
-}
+import { UseInfiniteScrollProps } from '../type';
 
 export const UseInfiniteScroll = ({
   hasMore,

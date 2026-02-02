@@ -1,35 +1,10 @@
 import { create } from 'zustand';
-import { io, Socket } from 'socket.io-client';
-
-export type MessageStatus = 'sending' | 'sent' | 'delivered' | 'failed';
-
-export interface Message {
-  id: number;
-  channelId: number;
-  senderId: number;
-  content: string;
-  createdAt: string;
-  pinned: boolean;
-  status?: MessageStatus;
-  tempId?: string;
-}
-
-interface SocketState {
-  socket: Socket | null;
-  isConnected: boolean;
-  messages: Message[];
-  isLoadingMessages: boolean;
-  hasMore: boolean;
-  currentPage: number;
-
-  connect: (token: string) => void;
-  disconnect: () => void;
-  joinServer: (serverId: number) => void;
-  joinChannel: (serverId: number, channelId: number) => void;
-  sendMessage: (channelId: number, content: string) => void;
-  loadMoreMessages: (channelId: number) => void;
-  clearMessages: () => void;
-}
+import { io } from 'socket.io-client';
+import {
+  Message,
+  MessageStatus,
+  SocketState,
+} from '@/feature/chat/components/type';
 
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 const MESSAGES_PER_PAGE = 20;

@@ -1,12 +1,5 @@
 import Image from 'next/image';
-
-interface ChatHeaderProps {
-  channelTitle: string;
-  channelImage: string;
-  visibleChannels: Array<{ id: string; image: string; title: string }>;
-  activeTab: string | null;
-  onTabClick: (tabId: string) => void;
-}
+import { ChatHeaderProps } from '../type';
 
 const ChatHeader = ({
   channelTitle,
