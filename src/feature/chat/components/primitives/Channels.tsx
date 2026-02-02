@@ -17,8 +17,9 @@ const Channels = ({
   toggleChatFull,
   chatFull,
 }: ChannelsProps) => {
-  const { socket, connect, isConnected } = useSocketStore();
-  const { isAdmin, fetchMembers, setSelectedChannelId } = useChatStore() as any;
+  const { socket, connect, isConnected, clearMessages } = useSocketStore();
+  const { isAdmin, fetchMembers, setSelectedChannelId, selectedChannelId } =
+    useChatStore() as any;
   const serverId = 31;
 
   useEffect(() => {
@@ -52,9 +53,13 @@ const Channels = ({
   const channels: ChatChannel[] = data?.data?.chat_channels || [];
 
   const handleChannelSelect = (channelId: number) => {
+    if (selectedChannelId === channelId) return;
+
+    clearMessages();
     if (setSelectedChannelId) setSelectedChannelId(channelId);
+
     if (socket && isConnected) {
-      socket.emit('channel:open', { serverId, channelId });
+      socket.emit('channel:open', { serverId, channelId, limit: 20 });
     }
   };
 
@@ -119,7 +124,11 @@ const Channels = ({
             <div
               key={ch.id}
               onClick={() => handleChannelSelect(ch.id)}
-              className="group flex justify-between items-center gap-2 hover:bg-[#FFFFFF36] px-2 py-2 rounded-tl-[6px] rounded-bl-[6px] text-[#cfcfcf] text-[14px] transition-all duration-300 cursor-pointer"
+              className={`group flex justify-between items-center gap-2 px-2 py-2 rounded-tl-[6px] rounded-bl-[6px] text-[14px] transition-all duration-300 cursor-pointer ${
+                selectedChannelId === ch.id
+                  ? 'bg-[#FFFFFF36] text-white'
+                  : 'text-[#cfcfcf] hover:bg-[#FFFFFF36]'
+              }`}
             >
               <div className="flex items-center gap-2">
                 <Image
@@ -136,6 +145,7 @@ const Channels = ({
                 <Link
                   href={`updateChat/${ch.id}`}
                   className="opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  onClick={(e) => e.stopPropagation()}
                 >
                   <Image
                     src="/images/chatIcons/svg/setting.svg"
