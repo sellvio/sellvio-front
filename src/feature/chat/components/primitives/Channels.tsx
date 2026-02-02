@@ -18,7 +18,7 @@ const Channels = ({
   chatFull,
 }: ChannelsProps) => {
   const { socket, connect, isConnected } = useSocketStore();
-  const { isAdmin, fetchMembers } = useChatStore();
+  const { isAdmin, fetchMembers, setSelectedChannelId } = useChatStore() as any;
   const serverId = 31;
 
   useEffect(() => {
@@ -32,16 +32,13 @@ const Channels = ({
 
   useEffect(() => {
     if (!socket) return;
-
     const handleOnline = (data: {
       onlineUsers: any[];
       offlineUsers: any[];
     }) => {
       console.log('სერვერზე ონლაინ არიან:', data.onlineUsers);
     };
-
     socket.on('server:online', handleOnline);
-
     return () => {
       socket.off('server:online', handleOnline);
     };
@@ -55,9 +52,9 @@ const Channels = ({
   const channels: ChatChannel[] = data?.data?.chat_channels || [];
 
   const handleChannelSelect = (channelId: number) => {
+    if (setSelectedChannelId) setSelectedChannelId(channelId);
     if (socket && isConnected) {
       socket.emit('channel:open', { serverId, channelId });
-      console.log(`გაიხსნა არხი: ${channelId}`);
     }
   };
 
@@ -87,7 +84,7 @@ const Channels = ({
           </button>
           <p>{data?.data?.name && truncate(data.data.name, 20)}</p>
           {isAdmin && (
-            <button onClick={() => setChatInfoOpen((prev) => !prev)}>
+            <button onClick={() => setChatInfoOpen((prev: boolean) => !prev)}>
               <Image
                 src="/images/chatIcons/svg/setting.svg"
                 alt="settings"
@@ -135,7 +132,6 @@ const Channels = ({
                   {ch.name}
                 </span>
               </div>
-
               {isAdmin && (
                 <Link
                   href={`updateChat/${ch.id}`}

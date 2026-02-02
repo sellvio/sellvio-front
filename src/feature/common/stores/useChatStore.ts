@@ -15,6 +15,9 @@ export const useChatStore = create<ChatStore>((set) => ({
   isAdmin: false,
   chatInfoOpen: false,
 
+  selectedChannelId: null,
+  setSelectedChannelId: (id) => set({ selectedChannelId: id }),
+
   fetchMembers: async () => {
     try {
       const response = await ChatMember();
