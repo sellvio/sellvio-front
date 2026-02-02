@@ -1,10 +1,3 @@
-export type ChannelsProps = {
-  setChatInfoOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
-  toggleChatFull: () => void;
-  chatFull: boolean;
-};
-
 export type ChanelInfoSidebarProps = {
   toggleChatFull: () => void;
   chatFull: boolean;
@@ -41,10 +34,7 @@ export type ChanellUpdateSidebarProps = {
   chatFull: boolean;
   toggleChatFull: () => void;
 };
-export type ChatChannel = {
-  id: number;
-  name: string;
-};
+
 export type CreateChanelPopupProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -53,6 +43,110 @@ export type DeleteChatPopupProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export type GeneralChatProps = {
-  chatFull?: boolean;
-};
+export type MessageStatus = 'sending' | 'sent' | 'delivered' | 'failed';
+
+export interface Message {
+  id: number;
+  channelId: number;
+  senderId: number;
+  content: string;
+  createdAt: string;
+  pinned: boolean;
+  status?: MessageStatus;
+  tempId?: string;
+}
+
+export interface Member {
+  id: number;
+  name: string;
+  role: 'admin' | 'user';
+}
+
+export interface ChatChannel {
+  id: number;
+  name: string;
+  description?: string;
+  createdAt?: string;
+}
+
+export interface GeneralChatProps {
+  chatFull: boolean;
+}
+
+export interface ChannelsProps {
+  setChatInfoOpen: (value: boolean | ((prev: boolean) => boolean)) => void;
+  setIsOpen?: (value: boolean) => void;
+  toggleChatFull: () => void;
+  chatFull: boolean;
+}
+
+export interface ChatStore {
+  members: Member[];
+  isAdmin: boolean;
+  chatInfoOpen: boolean;
+  selectedChannelId: number | null;
+  isLoadingChannel: boolean;
+
+  setSelectedChannelId: (id: number) => void;
+  setChannelLoaded: () => void;
+  fetchMembers: () => Promise<void>;
+  toggleChatInfo: () => void;
+}
+
+export interface SocketState {
+  socket: any | null;
+  isConnected: boolean;
+  messages: Message[];
+  isLoadingMessages: boolean;
+  hasMore: boolean;
+  currentPage: number;
+
+  connect: (token: string) => void;
+  disconnect: () => void;
+  joinServer: (serverId: number) => void;
+  joinChannel: (serverId: number, channelId: number) => void;
+  sendMessage: (channelId: number, content: string) => void;
+  loadMoreMessages: (channelId: number) => void;
+  clearMessages: () => void;
+}
+
+export interface ChatMemberResponse {
+  data: Array<{
+    user: {
+      id: number;
+      email: string;
+    };
+    role: 'admin' | 'user';
+  }>;
+}
+
+export interface ChatChannelResponse {
+  data: {
+    name: string;
+    chat_channels: ChatChannel[];
+  };
+}
+
+export interface ServerOnlineData {
+  onlineUsers: any[];
+  offlineUsers: any[];
+}
+
+export interface MessageHistoryData {
+  messages: Message[];
+}
+
+export interface MessageSentData {
+  tempId?: string;
+  message: Message;
+}
+
+export interface MessageDeliveredData {
+  tempId: string;
+  messageId: number;
+}
+
+export interface MessageErrorData {
+  tempId?: string;
+  error: string;
+}

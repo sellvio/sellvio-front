@@ -1,14 +1,37 @@
 import { create } from 'zustand';
-import { ChatStore, Member } from '../type';
-import { ChatMember } from '@/feature/chat/api/chatApi';
 
-function parseJwt(token: string) {
+export interface Member {
+  id: number;
+  name: string;
+  role: 'admin' | 'user';
+}
+
+interface ChatStore {
+  members: Member[];
+  isAdmin: boolean;
+  chatInfoOpen: boolean;
+  selectedChannelId: number | null;
+  isLoadingChannel: boolean;
+
+  setSelectedChannelId: (id: number) => void;
+  setChannelLoaded: () => void;
+  fetchMembers: () => Promise<void>;
+  toggleChatInfo: () => void;
+}
+
+const parseJwt = (token: string) => {
   try {
     return JSON.parse(atob(token.split('.')[1]));
   } catch {
     return null;
   }
-}
+};
+
+const getCurrentUserId = (): number | undefined => {
+  const token = localStorage.getItem('access_token');
+  const payload = token ? parseJwt(token) : null;
+  return payload?.sub;
+};
 
 export const useChatStore = create<ChatStore>((set) => ({
   members: [],
@@ -24,9 +47,10 @@ export const useChatStore = create<ChatStore>((set) => ({
 
   fetchMembers: async () => {
     try {
+      const { ChatMember } = await import('@/feature/chat/api/chatApi');
       const response = await ChatMember();
 
-      const membersArray: Member[] = response.data.map(
+      const members: Member[] = response.data.map(
         (item: {
           user: { id: number; email: string };
           role: 'admin' | 'user';
@@ -37,17 +61,11 @@ export const useChatStore = create<ChatStore>((set) => ({
         })
       );
 
-      set({ members: membersArray });
+      const currentUserId = getCurrentUserId();
+      const currentUser = members.find((member) => member.id === currentUserId);
+      const isAdmin = currentUser?.role === 'admin' || false;
 
-      const token = localStorage.getItem('access_token');
-      const payload = token ? parseJwt(token) : null;
-      const currentUserId = payload?.sub as number | undefined;
-
-      const currentUser = membersArray.find(
-        (member) => member.id === currentUserId
-      );
-
-      set({ isAdmin: currentUser?.role === 'admin' || false });
+      set({ members, isAdmin });
     } catch (error) {
       console.error('Failed to fetch members:', error);
     }

@@ -3,7 +3,7 @@ import { io, Socket } from 'socket.io-client';
 
 export type MessageStatus = 'sending' | 'sent' | 'delivered' | 'failed';
 
-interface Message {
+export interface Message {
   id: number;
   channelId: number;
   senderId: number;
@@ -34,6 +34,12 @@ interface SocketState {
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 const MESSAGES_PER_PAGE = 20;
 
+const sortMessagesByDate = (messages: Message[]): Message[] => {
+  return [...messages].sort(
+    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+  );
+};
+
 export const useSocketStore = create<SocketState>((set, get) => ({
   socket: null,
   isConnected: false,
@@ -52,39 +58,40 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     });
 
     socketInstance.on('connect', () => {
-      console.log('Socket Connected:', socketInstance.id);
+      console.log('✅ Socket Connected:', socketInstance.id);
       set({ isConnected: true });
     });
 
     socketInstance.on('disconnect', () => {
-      console.log('Socket Disconnected');
+      console.log('❌ Socket Disconnected');
       set({ isConnected: false });
     });
 
     socketInstance.on('message:history', (data: { messages: Message[] }) => {
+      const sortedMessages = sortMessagesByDate(data.messages);
       set({
-        messages: data.messages.reverse(),
+        messages: sortedMessages,
         isLoadingMessages: false,
         hasMore: data.messages.length === MESSAGES_PER_PAGE,
       });
     });
 
     socketInstance.on('message:more', (data: { messages: Message[] }) => {
-      set((state) => ({
-        messages: [...data.messages.reverse(), ...state.messages],
-        isLoadingMessages: false,
-        hasMore: data.messages.length === MESSAGES_PER_PAGE,
-        currentPage: state.currentPage + 1,
-      }));
+      set((state) => {
+        const newMessages = [...data.messages, ...state.messages];
+        const sortedMessages = sortMessagesByDate(newMessages);
+
+        return {
+          messages: sortedMessages,
+          isLoadingMessages: false,
+          hasMore: data.messages.length === MESSAGES_PER_PAGE,
+          currentPage: state.currentPage + 1,
+        };
+      });
     });
 
     socketInstance.on('message', (msg: Message) => {
-      console.log('📨 Received message from server:', msg);
-
       set((state) => {
-        const tempMessages = state.messages.filter((m) => m.tempId);
-        console.log('🔍 Current temp messages:', tempMessages);
-
         const tempMsgIndex = state.messages.findIndex(
           (m) =>
             m.tempId &&
@@ -93,50 +100,42 @@ export const useSocketStore = create<SocketState>((set, get) => ({
             m.status === 'sending'
         );
 
-        console.log('🔍 Found temp message at index:', tempMsgIndex);
+        let updatedMessages: Message[];
 
         if (tempMsgIndex !== -1) {
-          const updated = [...state.messages];
-          updated[tempMsgIndex] = {
-            ...msg,
-            status: 'delivered',
-            tempId: state.messages[tempMsgIndex].tempId,
-          };
-          console.log(
-            '✅ Updated temp message to delivered:',
-            updated[tempMsgIndex]
+          updatedMessages = state.messages.map((m, idx) =>
+            idx === tempMsgIndex
+              ? { ...msg, status: 'delivered' as MessageStatus }
+              : m
           );
-          return { messages: updated };
+        } else {
+          updatedMessages = [
+            ...state.messages,
+            { ...msg, status: 'delivered' as MessageStatus },
+          ];
         }
 
-        console.log('➕ Adding new message from other user');
-        return {
-          messages: [...state.messages, { ...msg, status: 'delivered' }],
-        };
+        return { messages: sortMessagesByDate(updatedMessages) };
       });
     });
 
     socketInstance.on(
       'message:sent',
       (data: { tempId?: string; message: Message }) => {
-        console.log('✉️ Message sent confirmation:', data);
-
         set((state) => {
-          if (data.tempId) {
-            const index = state.messages.findIndex(
-              (m) => m.tempId === data.tempId
-            );
-            if (index !== -1) {
-              const updated = [...state.messages];
-              updated[index] = {
-                ...data.message,
-                status: 'sent',
-                tempId: data.tempId,
-              };
-              return { messages: updated };
-            }
-          }
-          return state;
+          if (!data.tempId) return state;
+
+          const updatedMessages = state.messages.map((m) =>
+            m.tempId === data.tempId
+              ? {
+                  ...data.message,
+                  status: 'sent' as MessageStatus,
+                  tempId: data.tempId,
+                }
+              : m
+          );
+
+          return { messages: sortMessagesByDate(updatedMessages) };
         });
       }
     );
@@ -144,27 +143,31 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     socketInstance.on(
       'message:delivered',
       (data: { tempId: string; messageId: number }) => {
-        console.log('✅ Message delivered confirmation:', data);
-
-        set((state) => ({
-          messages: state.messages.map((m) =>
+        set((state) => {
+          const updatedMessages = state.messages.map((m) =>
             m.tempId === data.tempId
-              ? { ...m, id: data.messageId, status: 'delivered' }
+              ? {
+                  ...m,
+                  id: data.messageId,
+                  status: 'delivered' as MessageStatus,
+                }
               : m
-          ),
-        }));
+          );
+
+          return { messages: sortMessagesByDate(updatedMessages) };
+        });
       }
     );
 
     socketInstance.on(
       'message:error',
       (data: { tempId?: string; error: string }) => {
-        console.log('❌ Message error:', data);
+        console.error('❌ Message error:', data.error);
 
         set((state) => ({
           messages: state.messages.map((m) =>
             data.tempId && m.tempId === data.tempId
-              ? { ...m, status: 'failed' }
+              ? { ...m, status: 'failed' as MessageStatus }
               : m
           ),
         }));
@@ -175,72 +178,72 @@ export const useSocketStore = create<SocketState>((set, get) => ({
   },
 
   joinServer: (serverId: number) => {
-    const s = get().socket;
-    if (s) {
-      s.emit('server:open', { serverId });
-    }
+    const socket = get().socket;
+    socket?.emit('server:open', { serverId });
   },
 
   joinChannel: (serverId: number, channelId: number) => {
-    const s = get().socket;
-    if (s) {
-      set({
-        messages: [],
-        isLoadingMessages: true,
-        hasMore: true,
-        currentPage: 1,
-      });
-      s.emit('channel:open', { serverId, channelId, limit: MESSAGES_PER_PAGE });
-    }
+    const socket = get().socket;
+    if (!socket) return;
+
+    set({
+      messages: [],
+      isLoadingMessages: true,
+      hasMore: true,
+      currentPage: 1,
+    });
+
+    socket.emit('channel:open', {
+      serverId,
+      channelId,
+      limit: MESSAGES_PER_PAGE,
+    });
   },
 
   sendMessage: (channelId: number, content: string) => {
-    const s = get().socket;
-    if (s) {
-      const tempId = `temp_${Date.now()}_${Math.random()}`;
-      const tempMessage: Message = {
-        id: Date.now(), // დროებითი ID
-        channelId,
-        senderId: -1,
-        content,
-        createdAt: new Date().toISOString(),
-        pinned: false,
-        status: 'sending',
-        tempId,
-      };
+    const socket = get().socket;
+    if (!socket) return;
 
-      console.log('📤 Sending message with tempId:', tempId);
+    const tempId = `temp_${Date.now()}_${Math.random()}`;
+    const tempMessage: Message = {
+      id: Date.now(),
+      channelId,
+      senderId: -1,
+      content,
+      createdAt: new Date().toISOString(),
+      pinned: false,
+      status: 'sending',
+      tempId,
+    };
 
+    set((state) => ({
+      messages: sortMessagesByDate([...state.messages, tempMessage]),
+    }));
+
+    socket.emit('message:send', { channelId, content, tempId });
+
+    setTimeout(() => {
       set((state) => ({
-        messages: [...state.messages, tempMessage],
+        messages: state.messages.map((m) =>
+          m.tempId === tempId && m.status === 'sending'
+            ? { ...m, status: 'sent' as MessageStatus }
+            : m
+        ),
       }));
-
-      s.emit('message:send', { channelId, content, tempId });
-
-      setTimeout(() => {
-        set((state) => ({
-          messages: state.messages.map((m) =>
-            m.tempId === tempId && m.status === 'sending'
-              ? { ...m, status: 'sent' }
-              : m
-          ),
-        }));
-      }, 5000);
-    }
+    }, 5000);
   },
 
   loadMoreMessages: (channelId: number) => {
-    const s = get().socket;
-    const { isLoadingMessages, hasMore, currentPage } = get();
+    const { socket, isLoadingMessages, hasMore, currentPage } = get();
 
-    if (s && !isLoadingMessages && hasMore) {
-      set({ isLoadingMessages: true });
-      s.emit('channel:loadMore', {
-        channelId,
-        page: currentPage + 1,
-        limit: MESSAGES_PER_PAGE,
-      });
-    }
+    if (!socket || isLoadingMessages || !hasMore) return;
+
+    set({ isLoadingMessages: true });
+    socket.emit('channel:loadMore', {
+      channelId,
+      page: currentPage + 1,
+      limit: MESSAGES_PER_PAGE,
+    });
   },
 
   clearMessages: () => {
@@ -253,7 +256,9 @@ export const useSocketStore = create<SocketState>((set, get) => ({
   },
 
   disconnect: () => {
-    get().socket?.disconnect();
+    const socket = get().socket;
+    socket?.disconnect();
+
     set({
       socket: null,
       isConnected: false,

@@ -6,10 +6,13 @@ import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ChatFromCampaing } from '../../api/chatApi';
 import { ChannelsProps, ChatChannel } from '../../types';
-import { useChatStore } from '@/feature/common/stores/useChatStore';
-import { useSocketStore } from '@/feature/common/stores/useSocketStore';
+
 import ChannelSkeleton from './ChannelSkeleton';
 import ChannelHeaderSkeleton from './ChannelHeaderSkeleton';
+import { useChatStore } from '@/feature/common/stores/useChatStore';
+import { useSocketStore } from '@/feature/common/stores/useSocketStore';
+
+const SERVER_ID = 31;
 
 const Channels = ({
   setChatInfoOpen,
@@ -19,8 +22,7 @@ const Channels = ({
 }: ChannelsProps) => {
   const { socket, connect, isConnected, clearMessages } = useSocketStore();
   const { isAdmin, fetchMembers, setSelectedChannelId, selectedChannelId } =
-    useChatStore() as any;
-  const serverId = 31;
+    useChatStore();
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
@@ -33,21 +35,21 @@ const Channels = ({
 
   useEffect(() => {
     if (!socket) return;
+
     const handleOnline = (data: {
       onlineUsers: any[];
       offlineUsers: any[];
     }) => {
       console.log('სერვერზე ონლაინ არიან:', data.onlineUsers);
     };
+
     socket.on('server:online', handleOnline);
-    return () => {
-      socket.off('server:online', handleOnline);
-    };
+    return () => socket.off('server:online', handleOnline);
   }, [socket]);
 
   const { isLoading, isError, data } = useQuery({
-    queryKey: ['channelName', serverId],
-    queryFn: () => ChatFromCampaing(serverId),
+    queryKey: ['channelName', SERVER_ID],
+    queryFn: () => ChatFromCampaing(SERVER_ID),
   });
 
   const channels: ChatChannel[] = data?.data?.chat_channels || [];
@@ -56,17 +58,23 @@ const Channels = ({
     if (selectedChannelId === channelId) return;
 
     clearMessages();
-    if (setSelectedChannelId) setSelectedChannelId(channelId);
+    setSelectedChannelId(channelId);
 
     if (socket && isConnected) {
-      socket.emit('channel:open', { serverId, channelId, limit: 20 });
+      socket.emit('channel:open', {
+        serverId: SERVER_ID,
+        channelId,
+        limit: 20,
+      });
     }
   };
 
   const truncate = (text: string, maxLength: number) =>
     text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
 
-  if (isError) return <div>Error loading channels</div>;
+  if (isError) {
+    return <div className="text-red-400">Error loading channels</div>;
+  }
 
   return (
     <div className="flex flex-col justify-between bg-[#001541D6] border-[#E0E0E0] border-r w-full max-w-[277px] h-screen">
