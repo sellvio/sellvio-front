@@ -119,11 +119,7 @@ const GeneralChat = ({ chatFull }: GeneralChatProps) => {
           />
         </div>
 
-        {activeTab && (
-          <div className="right-0 z-10 bg-[#001541] border-white/10 border-l w-80 h-full">
-            {tabContent[activeTab]}
-          </div>
-        )}
+        {activeTab && <>{tabContent[activeTab]}</>}
       </div>
 
       <MessageInput
