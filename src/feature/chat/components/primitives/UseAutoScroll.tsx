@@ -5,18 +5,15 @@ export const UseAutoScroll = (messages: any[], isLoadingChannel: boolean) => {
   const isAutoScrolling = useRef<boolean>(true);
 
   useEffect(() => {
-    if (scrollRef.current && isAutoScrolling.current && !isLoadingChannel) {
+    if (!isLoadingChannel && isAutoScrolling.current && scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages, isLoadingChannel]);
 
   const handleScroll = () => {
     if (!scrollRef.current) return;
-
     const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
-    const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
-
-    isAutoScrolling.current = isNearBottom;
+    isAutoScrolling.current = scrollHeight - scrollTop - clientHeight < 100;
   };
 
   const scrollToBottom = () => {

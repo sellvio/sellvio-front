@@ -7,10 +7,17 @@ import {
 } from '@/feature/chat/components/type';
 
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-const MESSAGES_PER_PAGE = 20;
+const MESSAGES_PER_PAGE = 50;
 
 const sortMessagesByDate = (messages: Message[]): Message[] => {
-  return [...messages].sort(
+  const map = new Map<string | number, Message>();
+
+  for (const m of messages) {
+    const key = m.tempId ?? m.id;
+    map.set(key, m);
+  }
+
+  return Array.from(map.values()).sort(
     (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
   );
 };
@@ -33,34 +40,28 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     });
 
     socketInstance.on('connect', () => {
-      console.log('✅ Socket Connected:', socketInstance.id);
       set({ isConnected: true });
     });
 
     socketInstance.on('disconnect', () => {
-      console.log('❌ Socket Disconnected');
       set({ isConnected: false });
     });
 
-    socketInstance.on('message:history', (data: { messages: Message[] }) => {
-      const sortedMessages = sortMessagesByDate(data.messages);
-      set({
-        messages: sortedMessages,
-        isLoadingMessages: false,
-        hasMore: data.messages.length === MESSAGES_PER_PAGE,
-      });
-    });
+    socketInstance.on('message:history', (data) => {
+      if (!data?.messages) return;
 
-    socketInstance.on('message:more', (data: { messages: Message[] }) => {
       set((state) => {
-        const newMessages = [...data.messages, ...state.messages];
-        const sortedMessages = sortMessagesByDate(newMessages);
+        const isFirstLoad = state.messages.length === 0;
+
+        const newMessages = isFirstLoad
+          ? data.messages
+          : [...data.messages, ...state.messages];
 
         return {
-          messages: sortedMessages,
+          messages: sortMessagesByDate(newMessages),
           isLoadingMessages: false,
-          hasMore: data.messages.length === MESSAGES_PER_PAGE,
-          currentPage: state.currentPage + 1,
+          hasMore: data.hasMore,
+          currentPage: isFirstLoad ? 1 : state.currentPage + 1,
         };
       });
     });
@@ -209,14 +210,16 @@ export const useSocketStore = create<SocketState>((set, get) => ({
   },
 
   loadMoreMessages: (channelId: number) => {
-    const { socket, isLoadingMessages, hasMore, currentPage } = get();
-
+    const { socket, isLoadingMessages, hasMore, messages } = get();
     if (!socket || isLoadingMessages || !hasMore) return;
 
     set({ isLoadingMessages: true });
-    socket.emit('channel:loadMore', {
+
+    const oldestMessageId = messages[0]?.id;
+
+    socket.emit('message:history', {
       channelId,
-      page: currentPage + 1,
+      beforeId: oldestMessageId,
       limit: MESSAGES_PER_PAGE,
     });
   },

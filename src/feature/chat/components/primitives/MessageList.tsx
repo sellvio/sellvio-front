@@ -123,7 +123,10 @@ const MessageList = ({
       </div>
 
       {messages.map((msg) => (
-        <MessageItem key={msg.tempId || msg.id} message={msg} />
+        <MessageItem
+          key={msg.tempId ?? `msg-${msg.id}-${msg.createdAt}`}
+          message={msg}
+        />
       ))}
     </>
   );

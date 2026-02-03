@@ -46,6 +46,7 @@ const GeneralChat = ({ chatFull }: GeneralChatProps) => {
     selectedChannelId,
     loadMoreMessages,
     scrollRef,
+    messages,
   });
 
   useEffect(() => {
