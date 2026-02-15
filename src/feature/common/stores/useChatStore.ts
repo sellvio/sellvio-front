@@ -21,6 +21,7 @@ export const useChatStore = create<ChatStore>((set) => ({
   chatInfoOpen: false,
   selectedChannelId: null,
   isLoadingChannel: false,
+  currentUser: null,
 
   setSelectedChannelId: (id) =>
     set({ selectedChannelId: id, isLoadingChannel: true }),
@@ -44,10 +45,10 @@ export const useChatStore = create<ChatStore>((set) => ({
       );
 
       const currentUserId = getCurrentUserId();
-      const currentUser = members.find((member) => member.id === currentUserId);
+      const currentUser = members.find((m) => m.id === currentUserId) ?? null;
       const isAdmin = currentUser?.role === 'admin' || false;
 
-      set({ members, isAdmin });
+      set({ members, isAdmin, currentUser });
     } catch (error) {
       console.error('Failed to fetch members:', error);
     }

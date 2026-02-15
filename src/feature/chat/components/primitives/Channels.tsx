@@ -21,8 +21,13 @@ const Channels = ({
   chatFull,
 }: ChannelsProps) => {
   const { socket, connect, isConnected, clearMessages } = useSocketStore();
-  const { isAdmin, fetchMembers, setSelectedChannelId, selectedChannelId } =
-    useChatStore();
+  const {
+    isAdmin,
+    fetchMembers,
+    setSelectedChannelId,
+    selectedChannelId,
+    currentUser,
+  } = useChatStore();
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
@@ -175,7 +180,7 @@ const Channels = ({
         <div className="bg-[aqua] rounded-full w-[31px] h-[31px]" />
         <div className="flex flex-col">
           <p className="font-semibold text-[15px] text-white">
-            ვაჩე გაბრინდაშვილი
+            {currentUser?.name ?? 'მომხმარებელი'}
           </p>
           <p className="font-semibold text-[12px] text-white">ონლაინ</p>
         </div>

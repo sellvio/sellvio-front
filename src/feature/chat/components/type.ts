@@ -42,7 +42,7 @@ export type ChatStore = {
   chatInfoOpen: boolean;
   selectedChannelId: number | null;
   isLoadingChannel: boolean;
-
+  currentUser: Member | null;
   setSelectedChannelId: (id: number) => void;
   setChannelLoaded: () => void;
   fetchMembers: () => Promise<void>;
