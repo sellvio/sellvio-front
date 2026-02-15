@@ -19,12 +19,14 @@ const UpdateChat = ({ updateChatId }: UpdateChatProps) => {
   return (
     <div
       className={`flex flex-col m-auto w-full ${
-        chatFull ? 'p-[10px]' : 'max-w-[1440px]'
+        chatFull ? '' : 'max-w-[1440px]'
       } min-h-screen`}
     >
       {!chatFull && <ChatHeader />}
 
-      <div className="flex rounded-[10px] overflow-hidden">
+      <div
+        className={`flex overflow-hidden ${chatFull ? '' : 'rounded-[10px]'}`}
+      >
         <ChanellUpdateSidebar
           chatFull={chatFull}
           toggleChatFull={toggleChatFull}
