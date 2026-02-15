@@ -54,6 +54,10 @@ export interface Message {
   pinned: boolean;
   status?: MessageStatus;
   tempId?: string;
+
+  senderFirstName?: string | null;
+  senderLastName?: string | null;
+  senderImageUrl?: string | null;
 }
 
 export interface Member {

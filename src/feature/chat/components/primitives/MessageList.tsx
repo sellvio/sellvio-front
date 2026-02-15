@@ -66,24 +66,30 @@ const MessageStatusIcon = ({ status }: { status?: string }) => {
   }
 };
 
-const MessageItem = ({ message }: { message: Message }) => (
-  <div className="mb-4 text-white">
-    <div className="flex items-baseline gap-2">
-      <span className="opacity-70 font-bold text-xs">
-        User {message.senderId}
-      </span>
-      <span className="opacity-40 text-[10px]">
-        {new Date(message.createdAt).toLocaleTimeString()}
-      </span>
-    </div>
-    <div className="flex items-end gap-2 mt-1">
-      <div className="inline-block bg-[#FFFFFF36] p-2 rounded-lg text-[15px]">
-        {message.content}
+const MessageItem = ({ message }: { message: Message }) => {
+  const senderName = message.senderFirstName
+    ? message.senderLastName
+      ? `${message.senderFirstName} ${message.senderLastName}`
+      : message.senderFirstName
+    : `User ${message.senderId}`;
+
+  return (
+    <div className="mb-4 text-white">
+      <div className="flex items-baseline gap-2">
+        <span className="opacity-70 font-bold text-xs">{senderName}</span>
+        <span className="opacity-40 text-[10px]">
+          {new Date(message.createdAt).toLocaleTimeString()}
+        </span>
       </div>
-      <MessageStatusIcon status={message.status} />
+      <div className="flex items-end gap-2 mt-1">
+        <div className="inline-block bg-[#FFFFFF36] p-2 rounded-lg text-[15px]">
+          {message.content}
+        </div>
+        <MessageStatusIcon status={message.status} />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const MessageList = ({
   messages,
