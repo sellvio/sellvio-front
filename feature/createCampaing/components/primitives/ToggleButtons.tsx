@@ -1,5 +1,5 @@
-import Image from "next/image";
-import { ButtonSliderProps } from "../../types";
+import Image from 'next/image';
+import { ButtonSliderProps } from '../../types';
 
 const ToggleButtons = ({
   active,
@@ -8,7 +8,7 @@ const ToggleButtons = ({
   secondLabel,
   firstImage,
   secondImage,
-  className = "",
+  className = '',
 }: ButtonSliderProps) => {
   return (
     <div
@@ -20,9 +20,9 @@ const ToggleButtons = ({
         className={`flex justify-center items-center gap-2 rounded-[12px] py-[12px] 
                     text-[var(--adding-tags-color)] w-1/2 font-[700] cursor-pointer 
                     transition-all duration-200 ${
-                      active === "analytic" && "bg-[var(--white-color)] "
+                      active === 'analytic' && 'bg-[var(--white-color)] '
                     }`}
-        onClick={() => setActive("analytic")}
+        onClick={() => setActive('analytic')}
       >
         {firstImage && (
           <Image
@@ -40,9 +40,9 @@ const ToggleButtons = ({
         className={`flex justify-center items-center gap-2 rounded-[12px] 
                     text-[var(--adding-tags-color)] w-1/2 font-[700] cursor-pointer 
                     transition-all duration-200 ${
-                      active === "campaing" && "bg-[var(--white-color)]"
+                      active === 'campaing' && 'bg-[var(--white-color)]'
                     }`}
-        onClick={() => setActive("campaing")}
+        onClick={() => setActive('campaing')}
       >
         {secondImage && (
           <Image

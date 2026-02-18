@@ -1,0 +1,41 @@
+'use client';
+import React, { useState } from 'react';
+import CampaignDetailHeader from './CampaignDetailHeader';
+import CampaignDetailStats from './CampaignDetailStats';
+import CampaingPopupSocialMediaSlider from './CampaingPopupSocialMediaSlider';
+import Review from './Review';
+import ReusableReview from './ReusableReview';
+import { CampaingDetailInfoPopupProps } from '../../type';
+
+const CampaingDetailInfoPopup = ({
+  setPopupOpen,
+}: CampaingDetailInfoPopupProps) => {
+  const [isActive, setIsActive] = useState<number>(1);
+
+  return (
+    <div
+      className="z-50 fixed inset-0 flex justify-center items-center bg-black/50 cursor-pointer"
+      onClick={() => setPopupOpen((prev) => !prev)}
+    >
+      <div
+        className="bg-[#ffffff] px-[26px] py-[34px] rounded-[8px] w-full max-w-[954px] min-h-[745px] cursor-default"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <CampaignDetailHeader />
+        <CampaignDetailStats />
+        <CampaingPopupSocialMediaSlider
+          setIsActive={setIsActive}
+          isActive={isActive}
+        />
+        <div className="mt-[17px]">
+          {isActive === 1 && <Review />}
+          {isActive === 2 && <ReusableReview />}
+          {isActive === 3 && <ReusableReview />}
+          {isActive === 4 && <ReusableReview />}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CampaingDetailInfoPopup;

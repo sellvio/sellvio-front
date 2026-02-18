@@ -1,13 +1,15 @@
 import Image from 'next/image';
-import { CompanyCardsProps } from '../../type';
+import { CompanyCardProps } from '../../type';
 
-const CardHeader = ({ task }: CompanyCardsProps) => {
+const CardHeader = ({ task, setPopupOpen }: CompanyCardProps) => {
   return (
     <div className="flex justify-between w-full">
       <div className="flex items-center gap-[7px]">
-        <div className="bg-[var(--lending-card-bg)] border border-[var(--lending-card-border)] rounded-[8px] w-[28px] h-[28px]"></div>
-        <p className="font-bold text-[22px]">{task.title}</p>
-        {task.verified && (
+        <div className="bg-[var(--lending-card-bg)] border rounded-[8px] w-[28px] h-[28px]" />
+        <p className="font-bold text-[22px]">
+          {task.name.length > 20 ? task.name.slice(0, 20) + '…' : task.name}
+        </p>
+        {task.chat_type === 'public' && (
           <Image
             src="/images/landingPageIcons/svg/verified.svg"
             alt="verified"
@@ -16,15 +18,17 @@ const CardHeader = ({ task }: CompanyCardsProps) => {
           />
         )}
       </div>
-      <div className="flex items-center gap-[4px]">
+      <button
+        onClick={() => setPopupOpen((prev) => !prev)}
+        className="cursor-pointer"
+      >
         <Image
-          src="/images/landingPageIcons/svg/star.svg"
-          alt="rating"
-          width={18}
-          height={18}
+          src="/images/landingPageIcons/svg/chevron-right.svg"
+          alt="arrow"
+          width={21}
+          height={21}
         />
-        <p className="font-bold text-[14px]">{task.rating}</p>
-      </div>
+      </button>
     </div>
   );
 };

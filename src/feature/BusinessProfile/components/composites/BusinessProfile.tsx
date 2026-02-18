@@ -34,14 +34,12 @@ const BusinessProfile = () => {
   const handleLogoChange = (file: File) => {
     console.log('Logo selected:', file.name);
     setLogoFile(file);
-    // დაუყოვნებლივ ავტვირთოთ
     uploadMutation.mutate({ logo: file });
   };
 
   const handleCoverChange = (file: File) => {
     console.log('Cover selected:', file.name);
     setCoverFile(file);
-    // დაუყოვნებლივ ავტვირთოთ
     uploadMutation.mutate({ coverImage: file });
   };
 
