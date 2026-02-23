@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import { chatHeaderData } from '../data/chatHeaderData';
 import Link from 'next/link';
+import { chatHeaderData } from '../../data/chatData';
 
 const ChatHeader = () => {
   return (

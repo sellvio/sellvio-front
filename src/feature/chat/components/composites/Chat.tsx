@@ -7,7 +7,7 @@ import GeneralChat from '../primitives/GeneralChat';
 import ChanelInfoSidebar from '../primitives/ChanelInfoSidebar';
 import CreateChanelPopup from '../primitives/CreateChanelPopup';
 import { useChatLayout } from '@/feature/common/stores/useChatLayout';
-import ChatHeader from '../../../../../feature/components/composites/ChatHeader';
+import ChatHeader from './ChatHeader';
 
 const Chat = () => {
   const [chatInfoOpen, setChatInfoOpen] = useState<boolean>(false);
