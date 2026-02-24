@@ -11,13 +11,16 @@ interface ChatStore {
   members: Member[];
   isAdmin: boolean;
   currentUser: Member | null;
+  selectedChannelId: number | null;
   setServerId: (id: number) => void;
+  setSelectedChannelId: (id: number | null) => void;
   fetchMembers: () => Promise<void>;
 }
 
 const parseJwt = (token: string) => {
   try {
-    return JSON.parse(atob(token.split('.')[1]));
+    const base64Url = token.split('.')[1];
+    return JSON.parse(window.atob(base64Url));
   } catch {
     return null;
   }
@@ -28,8 +31,10 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   members: [],
   isAdmin: false,
   currentUser: null,
+  selectedChannelId: null,
 
   setServerId: (id: number) => set({ serverId: id }),
+  setSelectedChannelId: (id) => set({ selectedChannelId: id }),
 
   fetchMembers: async () => {
     const { serverId } = get();
