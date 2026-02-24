@@ -41,6 +41,7 @@ export type CreateChanelPopupProps = {
 export type DeleteChatPopupProps = {
   handleDeleteChannel: () => Promise<void> | void;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isPending?: boolean;
 };
 
 export type MessageStatus = 'sending' | 'sent' | 'delivered' | 'failed';

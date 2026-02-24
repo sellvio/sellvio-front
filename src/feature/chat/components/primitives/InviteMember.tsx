@@ -5,14 +5,18 @@ import { useMemo, useState } from 'react';
 import { ChatMember } from '../../api/chatApi';
 import { User } from '../../types';
 import InviteMemberView from './InviteMemberView';
+import { useChatStore } from '@/feature/common/stores/useChatStore';
 
 const InviteMember = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
+  const serverId = useChatStore((state) => state.serverId);
+
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['member'],
-    queryFn: ChatMember,
+    queryKey: ['member', serverId],
+    queryFn: () => ChatMember(serverId!),
+    enabled: !!serverId,
   });
 
   const users: User[] = data?.data ?? [];
