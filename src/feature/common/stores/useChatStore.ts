@@ -1,5 +1,19 @@
-import { ChatStore, Member } from '@/feature/chat/components/type';
 import { create } from 'zustand';
+
+interface Member {
+  id: number;
+  name: string;
+  role: 'admin' | 'user';
+}
+
+interface ChatStore {
+  serverId: number | null;
+  members: Member[];
+  isAdmin: boolean;
+  currentUser: Member | null;
+  setServerId: (id: number) => void;
+  fetchMembers: () => Promise<void>;
+}
 
 const parseJwt = (token: string) => {
   try {
@@ -9,56 +23,41 @@ const parseJwt = (token: string) => {
   }
 };
 
-const getCurrentUserId = (): number | undefined => {
-  const token =
-    typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
-  const payload = token ? parseJwt(token) : null;
-  return payload?.sub;
-};
-
-export const useChatStore = create<ChatStore>((set) => ({
+export const useChatStore = create<ChatStore>((set, get) => ({
+  serverId: null,
   members: [],
   isAdmin: false,
-  chatInfoOpen: false,
-  selectedChannelId: null,
-  isLoadingChannel: false,
   currentUser: null,
-  // 1. დავამატოთ სერვერის ID-ს საწყისი მნიშვნელობა
-  serverId: null,
 
-  // 2. ფუნქცია სერვერის ID-ს დასასეტად
   setServerId: (id: number) => set({ serverId: id }),
 
-  setSelectedChannelId: (id) =>
-    set({ selectedChannelId: id, isLoadingChannel: true }),
-
-  setChannelLoaded: () => set({ isLoadingChannel: false }),
-
   fetchMembers: async () => {
+    const { serverId } = get();
+    if (!serverId) return;
+
     try {
       const { ChatMember } = await import('@/feature/chat/api/chatApi');
-      const response = await ChatMember();
+      const response = await ChatMember(serverId);
 
-      const members: Member[] = response.data.map(
-        (item: {
-          user: { id: number; email: string };
-          role: 'admin' | 'user';
-        }) => ({
-          id: item.user.id,
-          name: item.user.email,
-          role: item.role,
-        })
-      );
+      const token = localStorage.getItem('access_token');
+      const currentUserId = token ? parseJwt(token)?.sub : null;
 
-      const currentUserId = getCurrentUserId();
-      const currentUser = members.find((m) => m.id === currentUserId) ?? null;
-      const isAdmin = currentUser?.role === 'admin' || false;
+      const members = response.data.map((item: any) => ({
+        id: item.user.id,
+        name: item.user.email,
+        role: item.role,
+      }));
 
-      set({ members, isAdmin, currentUser });
+      const currentUser =
+        members.find((m: Member) => m.id === currentUserId) || null;
+
+      set({
+        members,
+        currentUser,
+        isAdmin: currentUser?.role === 'admin',
+      });
     } catch (error) {
       console.error('Failed to fetch members:', error);
     }
   },
-
-  toggleChatInfo: () => set((state) => ({ chatInfoOpen: !state.chatInfoOpen })),
 }));

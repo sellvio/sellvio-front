@@ -1,108 +1,83 @@
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-export const ChatFromCampaing = async (id: number) => {
-  const token = localStorage.getItem('access_token');
-  const res = await fetch(`${baseUrl}/campaigns/${id}/chat-server`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+const getHeaders = () => {
+  const token =
+    typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+  return {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`,
+  };
+};
+
+export const ChatFromCampaing = async (campaignId: number) => {
+  const res = await fetch(`${baseUrl}/campaigns/${campaignId}/chat-server`, {
+    headers: getHeaders(),
     cache: 'no-store',
   });
   if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
   return res.json();
 };
 
-export const ChatMember = async () => {
-  const token = localStorage.getItem('access_token');
-  const res = await fetch(`${baseUrl}/chat-servers/7/channels/get/members`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    cache: 'no-store',
-  });
+export const ChatMember = async (serverId: number) => {
+  const res = await fetch(
+    `${baseUrl}/chat-servers/${serverId}/channels/get/members`,
+    {
+      headers: getHeaders(),
+      cache: 'no-store',
+    }
+  );
   if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
   return res.json();
 };
 
-export async function addChanel(data) {
-  const token = localStorage.getItem('access_token');
-  const res = await fetch(`${baseUrl}/chat-servers/7/channels`, {
+export async function addChanel(serverId: number, data: any) {
+  const res = await fetch(`${baseUrl}/chat-servers/${serverId}/channels`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
+    headers: getHeaders(),
     body: JSON.stringify(data),
   });
-
-  if (!res.ok) {
-    const errorData = await res.json();
-    console.error('Profile fetch error:', errorData);
-    throw new Error('Failed to fetch profile');
-  }
-
   return res.json();
 }
 
-export async function addMember(data, channelId) {
-  const token = localStorage.getItem('access_token');
+export async function addMember(
+  serverId: number,
+  channelId: number,
+  data: any
+) {
   const res = await fetch(
-    `${baseUrl}/chat-servers/7/channels/${channelId}/members/bulk`,
+    `${baseUrl}/chat-servers/${serverId}/channels/${channelId}/members/bulk`,
     {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getHeaders(),
       body: JSON.stringify(data),
     }
   );
-
-  if (!res.ok) {
-    const errorData = await res.json();
-    console.error('Profile fetch error:', errorData);
-    throw new Error('Failed to fetch profile');
-  }
-
   return res.json();
 }
 
-export async function updateChamel(data, channelId) {
-  const token = localStorage.getItem('access_token');
-
-  const res = await fetch(`${baseUrl}/chat-servers/7/channels/${channelId}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(data),
-  });
-
-  if (!res.ok) {
-    const errorData = await res.json();
-    console.error('Channel patch error:', errorData);
-    throw new Error('Failed to patch channel');
-  }
-
+export async function updateChannel(
+  serverId: number,
+  channelId: number,
+  data: any
+) {
+  const res = await fetch(
+    `${baseUrl}/chat-servers/${serverId}/channels/${channelId}`,
+    {
+      method: 'PATCH',
+      headers: getHeaders(),
+      body: JSON.stringify(data),
+    }
+  );
   return res.json();
 }
 
-export async function deleteChannel(channelId) {
-  const token = localStorage.getItem('access_token');
-
-  const res = await fetch(`${baseUrl}/chat-servers/7/channels/${channelId}`, {
-    method: 'DELETE',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!res.ok) {
-    const errorData = await res.json();
-    console.error('Channel delete error:', errorData);
-    throw new Error('Failed to delete channel');
-  }
-
-  return true;
+export async function deleteChannel(serverId: number, channelId: number) {
+  const res = await fetch(
+    `${baseUrl}/chat-servers/${serverId}/channels/${channelId}`,
+    {
+      method: 'DELETE',
+      headers: getHeaders(),
+    }
+  );
+  return res.ok;
 }

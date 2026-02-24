@@ -1,12 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ChanelInfo from '../primitives/ChanelInfo';
 import Channels from '../primitives/Channels';
 import GeneralChat from '../primitives/GeneralChat';
 import ChanelInfoSidebar from '../primitives/ChanelInfoSidebar';
 import CreateChanelPopup from '../primitives/CreateChanelPopup';
 import { useChatLayout } from '@/feature/common/stores/useChatLayout';
+import { useChatStore } from '@/feature/common/stores/useChatStore';
+import { ChatFromCampaing } from '../../api/chatApi';
 import ChatHeader from './ChatHeader';
 
 const Chat = () => {
@@ -14,6 +16,22 @@ const Chat = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const { chatFull, toggleChatFull } = useChatLayout();
+
+  const setServerId = useChatStore((state) => state.setServerId);
+
+  useEffect(() => {
+    const fetchChatServer = async () => {
+      try {
+        const response = await ChatFromCampaing(31);
+
+        if (response.success && response.data.id) {
+          setServerId(response.data.id);
+        }
+      } catch (error) {}
+    };
+
+    fetchChatServer();
+  }, [setServerId]);
 
   return (
     <div
