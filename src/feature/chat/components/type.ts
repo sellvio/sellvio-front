@@ -47,6 +47,8 @@ export type ChatStore = {
   setChannelLoaded: () => void;
   fetchMembers: () => Promise<void>;
   toggleChatInfo: () => void;
+  serverId: number | null;
+  setServerId: (id: number) => void;
 };
 
 export type MessageListProps = {

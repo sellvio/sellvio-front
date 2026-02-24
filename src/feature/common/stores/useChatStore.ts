@@ -10,7 +10,8 @@ const parseJwt = (token: string) => {
 };
 
 const getCurrentUserId = (): number | undefined => {
-  const token = localStorage.getItem('access_token');
+  const token =
+    typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
   const payload = token ? parseJwt(token) : null;
   return payload?.sub;
 };
@@ -22,6 +23,11 @@ export const useChatStore = create<ChatStore>((set) => ({
   selectedChannelId: null,
   isLoadingChannel: false,
   currentUser: null,
+  // 1. დავამატოთ სერვერის ID-ს საწყისი მნიშვნელობა
+  serverId: null,
+
+  // 2. ფუნქცია სერვერის ID-ს დასასეტად
+  setServerId: (id: number) => set({ serverId: id }),
 
   setSelectedChannelId: (id) =>
     set({ selectedChannelId: id, isLoadingChannel: true }),

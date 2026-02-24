@@ -122,7 +122,7 @@ const Channels = ({
         <div className="flex justify-between items-center px-2 py-2 font-semibold text-[14px] text-white">
           <p>ჩათის არხები</p>
           {isAdmin && setIsOpen && (
-            <button onClick={() => setIsOpen(true)}>
+            <button onClick={() => setIsOpen(true)} className="cursor-pointer">
               <Image
                 src="/images/chatIcons/svg/pluse.svg"
                 alt="add"
