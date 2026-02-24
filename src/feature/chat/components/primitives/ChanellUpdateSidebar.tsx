@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import DeleteChatPopup from './DeleteChatPopup';
 import { ChanellUpdateSidebarProps } from '../../types';
-import { useChatStore } from '@/feature/common/stores/useChatStore'; // შემოვიტანოთ Store
+import { useChatStore } from '@/feature/common/stores/useChatStore';
 
 const ChanellUpdateSidebar = ({
   chatChanel,
@@ -20,19 +20,16 @@ const ChanellUpdateSidebar = ({
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  // ამოვიღოთ serverId
   const serverId = useChatStore((state) => state.serverId);
 
   const [isOpen, setIsOpen] = useState(false);
 
-  // ვიყენებთ mutation-ს წაშლისთვის
   const { mutateAsync: deleteMutate, isPending } = useMutation({
     mutationFn: () => {
       if (!serverId) throw new Error('Server ID is missing');
-      return deleteChannel(serverId, channelId); // გადავცემთ serverId-ს
+      return deleteChannel(serverId, channelId);
     },
     onSuccess: () => {
-      // დავარეფრეშოთ ჩანელების სია 'channelName' ქეით (როგორც Channels-ში გვიწერია)
       queryClient.invalidateQueries({
         queryKey: ['channelName'],
       });
