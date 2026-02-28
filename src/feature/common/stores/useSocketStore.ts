@@ -138,8 +138,6 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     socketInstance.on(
       'message:error',
       (data: { tempId?: string; error: string }) => {
-        console.error('❌ Message error:', data.error);
-
         set((state) => ({
           messages: state.messages.map((m) =>
             data.tempId && m.tempId === data.tempId

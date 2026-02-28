@@ -1,12 +1,12 @@
 import { create } from 'zustand';
 
-interface Member {
+type Member = {
   id: number;
   name: string;
   role: 'admin' | 'user';
-}
+};
 
-interface ChatStore {
+type ChatStore = {
   serverId: number | null;
   members: Member[];
   isAdmin: boolean;
@@ -15,7 +15,7 @@ interface ChatStore {
   setServerId: (id: number) => void;
   setSelectedChannelId: (id: number | null) => void;
   fetchMembers: () => Promise<void>;
-}
+};
 
 const parseJwt = (token: string) => {
   try {

@@ -13,6 +13,7 @@ import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import { UseAutoScroll } from './UseAutoScroll';
 import { UseInfiniteScroll } from './UseInfiniteScroll';
+import FeedbackChat from './FeedbackChat';
 
 const GeneralChat = ({ chatFull }: GeneralChatProps) => {
   const [activeTab, setActiveTab] = useState<string | null>(null);
@@ -122,14 +123,15 @@ const GeneralChat = ({ chatFull }: GeneralChatProps) => {
 
         {activeTab && <>{tabContent[activeTab]}</>}
       </div>
-
+      {/* 
       <MessageInput
         text={text}
         setText={setText}
         onSend={handleSendMessage}
         disabled={!selectedChannelId || isLoadingChannel}
         selectedChannelId={selectedChannelId}
-      />
+      /> */}
+      <FeedbackChat />
     </div>
   );
 };
