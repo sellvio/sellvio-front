@@ -11,7 +11,7 @@ import ChannelHeaderSkeleton from './ChannelHeaderSkeleton';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
 import { useSocketStore } from '@/feature/common/stores/useSocketStore';
 
-const CAMPAIGN_ID = 31;
+const CAMPAIGN_ID = 44;
 
 const Channels = ({
   setChatInfoOpen,
