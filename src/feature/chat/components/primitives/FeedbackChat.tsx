@@ -5,19 +5,20 @@ import { useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { UploadVideoApi } from '../../api/chatApi';
 import { useSocketStore } from '@/feature/common/stores/useSocketStore';
+import { useChatStore } from '@/feature/common/stores/useChatStore';
 
 const SERVER_ID = 20;
 const CHANNEL_ID = 94;
 
 const FeedbackChat = () => {
   const fileRef = useRef<HTMLInputElement>(null);
-
   const [preview, setPreview] = useState<string | null>(null);
   const [title, setTitle] = useState('');
   const [isDragging, setIsDragging] = useState(false);
   const [uploadedVideoUrl, setUploadedVideoUrl] = useState<string | null>(null);
 
   const submitFeedback = useSocketStore((s) => s.submitFeedback);
+  const selectedChannelId = useChatStore((s) => s.selectedChannelId);
 
   const { mutate, isPending } = useMutation({
     mutationFn: (file: File) =>
@@ -26,39 +27,15 @@ const FeedbackChat = () => {
         serverId: String(SERVER_ID),
         channelId: String(CHANNEL_ID),
       }),
-
-    onSuccess: (response) => {
-      if (response?.data?.videoUrl) {
-        setUploadedVideoUrl(response.data.videoUrl);
-      }
-    },
-
-    onError: (err) => {
-      console.error('Video upload error:', err);
+    onSuccess: (res) => {
+      if (res?.data?.videoUrl) setUploadedVideoUrl(res.data.videoUrl);
     },
   });
 
   const handleFile = (file: File) => {
-    if (preview) return;
-    if (!file.type.startsWith('video/')) return;
-
+    if (preview || !file.type.startsWith('video/')) return;
     setPreview(URL.createObjectURL(file));
     mutate(file);
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    handleFile(file);
-  };
-
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(false);
-    if (preview) return;
-    const file = e.dataTransfer.files?.[0];
-    if (!file) return;
-    handleFile(file);
   };
 
   const handleRemove = () => {
@@ -70,11 +47,8 @@ const FeedbackChat = () => {
 
   const handleSubmit = (e: React.MouseEvent) => {
     e.stopPropagation();
-
-    if (!uploadedVideoUrl || !title.trim()) return;
-
-    submitFeedback(CHANNEL_ID, title.trim(), uploadedVideoUrl);
-
+    if (!uploadedVideoUrl || !title.trim() || !selectedChannelId) return;
+    submitFeedback(selectedChannelId, title.trim(), uploadedVideoUrl);
     handleRemove();
   };
 
@@ -87,10 +61,12 @@ const FeedbackChat = () => {
           if (!preview) setIsDragging(true);
         }}
         onDragLeave={() => setIsDragging(false)}
-        onDrop={handleDrop}
-        className={`relative flex bg-[#FFFFFF36] ${
-          preview ? 'p-[20px] items-start' : 'items-center px-[20px]'
-        } border-2 ${
+        onDrop={(e) => {
+          e.preventDefault();
+          setIsDragging(false);
+          if (!preview) handleFile(e.dataTransfer.files?.[0]);
+        }}
+        className={`relative flex bg-[#FFFFFF36] ${preview ? 'p-[20px] items-start' : 'items-center px-[20px]'} border-2 ${
           isDragging ? 'border-white' : 'border-gray-400 hover:border-white'
         } border-dashed rounded-lg transition cursor-pointer`}
       >
@@ -129,36 +105,37 @@ const FeedbackChat = () => {
           accept="video/*"
           hidden
           disabled={!!preview}
-          onChange={handleChange}
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) handleFile(f);
+          }}
         />
 
         <div className="flex flex-col justify-between w-full h-full">
-          <div className="flex flex-col w-full">
-            {preview && (
-              <label
-                htmlFor="feedback-title"
-                className="flex items-center gap-[10px] pl-[16px] cursor-pointer"
-              >
-                <Image
-                  src="/images/chatIcons/svg/upload.svg"
-                  width={22}
-                  height={22}
-                  alt="edit"
-                />
-                <p className="font-bold text-[#FFFFFFAD]">ფაილის სათაური</p>
-              </label>
-            )}
+          {preview && (
+            <label
+              htmlFor="feedback-title"
+              className="flex items-center gap-[10px] pl-[16px] cursor-pointer"
+            >
+              <Image
+                src="/images/chatIcons/svg/upload.svg"
+                width={22}
+                height={22}
+                alt="edit"
+              />
+              <p className="font-bold text-[#FFFFFFAD]">ფაილის სათაური</p>
+            </label>
+          )}
 
-            <input
-              id="feedback-title"
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              onClick={(e) => e.stopPropagation()}
-              placeholder={preview ? 'მიუთითე სათაური' : 'ატვირთე ვიდეო'}
-              className="bg-transparent pl-[16px] rounded-lg focus:outline-none w-full h-[56px] text-white placeholder:text-white/50"
-            />
-          </div>
+          <input
+            id="feedback-title"
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
+            placeholder={preview ? 'მიუთითე სათაური' : 'ატვირთე ვიდეო'}
+            className="bg-transparent pl-[16px] rounded-lg focus:outline-none w-full h-[56px] text-white placeholder:text-white/50"
+          />
 
           {preview && (
             <div className="flex justify-end w-full">

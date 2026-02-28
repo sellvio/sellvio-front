@@ -23,6 +23,7 @@ const GeneralChat = ({ chatFull }: GeneralChatProps) => {
     isAdmin,
     fetchMembers,
     selectedChannelId,
+    selectedChannelTypeId,
     isLoadingChannel,
     setChannelLoaded,
   } = useChatStore();
@@ -55,27 +56,19 @@ const GeneralChat = ({ chatFull }: GeneralChatProps) => {
   }, [fetchMembers]);
 
   useEffect(() => {
-    if (!isLoadingMessages && isLoadingChannel) {
-      setChannelLoaded();
-    }
+    if (!isLoadingMessages && isLoadingChannel) setChannelLoaded();
   }, [isLoadingMessages, isLoadingChannel, setChannelLoaded]);
 
   const handleSendMessage = () => {
     if (!text.trim() || !selectedChannelId) return;
-
     sendMessage(selectedChannelId, text.trim());
     setText('');
     scrollToBottom();
   };
 
-  const handleTabClick = (tabId: string) => {
-    setActiveTab(activeTab === tabId ? null : tabId);
-  };
-
   const generalChannel = channelsData[0]?.channels.find(
     (ch) => ch.id === 'general-chat'
   );
-
   const visibleChannels = newChannelsData.filter(
     (item) => !item.isAdmin || isAdmin
   );
@@ -91,18 +84,18 @@ const GeneralChat = ({ chatFull }: GeneralChatProps) => {
     ),
   };
 
+  const isFeedbackChannel = selectedChannelTypeId === 3;
+
   return (
     <div
-      className={`flex flex-col bg-[#001541D6] w-full ${
-        chatFull ? '' : 'max-w-[1440px]'
-      } h-screen`}
+      className={`flex flex-col bg-[#001541D6] w-full ${chatFull ? '' : 'max-w-[1440px]'} h-screen`}
     >
       <ChatHeader
         channelTitle={generalChannel?.title || 'Chat'}
         channelImage={generalChannel?.image || ''}
         visibleChannels={visibleChannels}
         activeTab={activeTab}
-        onTabClick={handleTabClick}
+        onTabClick={(id) => setActiveTab(activeTab === id ? null : id)}
       />
 
       <div className="relative flex flex-1 overflow-hidden">
@@ -120,18 +113,20 @@ const GeneralChat = ({ chatFull }: GeneralChatProps) => {
             loadMoreTriggerRef={loadMoreTriggerRef}
           />
         </div>
-
         {activeTab && <>{tabContent[activeTab]}</>}
       </div>
-      {/* 
-      <MessageInput
-        text={text}
-        setText={setText}
-        onSend={handleSendMessage}
-        disabled={!selectedChannelId || isLoadingChannel}
-        selectedChannelId={selectedChannelId}
-      /> */}
-      <FeedbackChat />
+
+      {isFeedbackChannel ? (
+        <FeedbackChat />
+      ) : (
+        <MessageInput
+          text={text}
+          setText={setText}
+          onSend={handleSendMessage}
+          disabled={!selectedChannelId || isLoadingChannel}
+          selectedChannelId={selectedChannelId}
+        />
+      )}
     </div>
   );
 };

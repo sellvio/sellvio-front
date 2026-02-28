@@ -66,6 +66,32 @@ const MessageStatusIcon = ({ status }: { status?: string }) => {
   }
 };
 
+const VideoStatusBadge = ({ status }: { status?: string }) => {
+  const config: Record<string, { label: string; className: string }> = {
+    under_review: {
+      label: 'განხილვაშია',
+      className: 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30',
+    },
+    approved: {
+      label: 'დამტკიცებულია',
+      className: 'bg-green-500/20 text-green-300 border border-green-500/30',
+    },
+    rejected: {
+      label: 'უარყოფილია',
+      className: 'bg-red-500/20 text-red-300 border border-red-500/30',
+    },
+  };
+  const s = config[status ?? ''];
+  if (!s) return null;
+  return (
+    <span
+      className={`inline-block px-2 py-0.5 rounded-full text-[11px] font-medium ${s.className}`}
+    >
+      {s.label}
+    </span>
+  );
+};
+
 const MessageItem = ({ message }: { message: Message }) => {
   const senderName = message.senderFirstName
     ? message.senderLastName
@@ -75,18 +101,36 @@ const MessageItem = ({ message }: { message: Message }) => {
 
   return (
     <div className="mb-4 text-white">
-      <div className="flex items-baseline gap-2">
+      <div className="flex items-baseline gap-2 mb-1">
         <span className="opacity-70 font-bold text-xs">{senderName}</span>
         <span className="opacity-40 text-[10px]">
           {new Date(message.createdAt).toLocaleTimeString()}
         </span>
       </div>
-      <div className="flex items-end gap-2 mt-1">
-        <div className="inline-block bg-[#FFFFFF36] p-2 rounded-lg text-[15px]">
-          {message.content}
+
+      {message.messageType === 'feedback_video' ? (
+        <div className="bg-[#FFFFFF14] border border-white/10 rounded-xl w-full max-w-[300px] overflow-hidden">
+          <video
+            src={message.videoUrl ?? undefined}
+            poster={message.videoCoverUrl ?? undefined}
+            controls
+            className="bg-black w-full object-cover aspect-video"
+          />
+          <div className="flex justify-between items-center gap-2 px-3 py-2">
+            <p className="font-medium text-white text-sm truncate">
+              {message.videoTitle || message.content}
+            </p>
+            <VideoStatusBadge status={message.videoStatus} />
+          </div>
         </div>
-        <MessageStatusIcon status={message.status} />
-      </div>
+      ) : (
+        <div className="flex items-end gap-2">
+          <div className="inline-block bg-[#FFFFFF36] p-2 rounded-lg text-[15px]">
+            {message.content}
+          </div>
+          <MessageStatusIcon status={message.status} />
+        </div>
+      )}
     </div>
   );
 };
@@ -127,7 +171,6 @@ const MessageList = ({
           </div>
         )}
       </div>
-
       {messages.map((msg) => (
         <MessageItem
           key={msg.tempId ?? `msg-${msg.id}-${msg.createdAt}`}

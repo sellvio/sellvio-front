@@ -46,41 +46,31 @@ const Channels = ({
     }
   }, [data, setServerId]);
 
+  // server:open — socket მზად რომ იყოს
   useEffect(() => {
-    if (serverId) {
-      fetchMembers();
+    if (socket && isConnected && serverId) {
+      socket.emit('server:open', { serverId });
     }
-  }, [serverId, fetchMembers]);
+  }, [socket, isConnected, serverId]);
 
   useEffect(() => {
-    if (!socket) return;
-    const handleOnline = (data: any) =>
-      console.log('Online:', data.onlineUsers);
-    socket.on('server:online', handleOnline);
-    return () => {
-      socket.off('server:online', handleOnline);
-    };
-  }, [socket]);
+    if (serverId) fetchMembers();
+  }, [serverId, fetchMembers]);
 
   const channels: ChatChannel[] = data?.data?.chat_channels || [];
 
-  const handleChannelSelect = (channelId: number) => {
-    if (selectedChannelId === channelId) return;
-
+  const handleChannelSelect = (ch: ChatChannel) => {
+    if (selectedChannelId === ch.id) return;
     clearMessages();
-    setSelectedChannelId(channelId);
-
+    setSelectedChannelId(ch.id, ch.channel_type_id ?? null);
     if (socket && isConnected && serverId) {
-      socket.emit('channel:open', {
-        serverId: serverId,
-        channelId,
-        limit: 20,
-      });
+      socket.emit('server:open', { serverId });
+      socket.emit('channel:open', { serverId, channelId: ch.id, limit: 20 });
     }
   };
 
-  const truncate = (text: string, maxLength: number) =>
-    text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+  const truncate = (text: string, max: number) =>
+    text.length > max ? text.slice(0, max) + '...' : text;
 
   if (isError)
     return <div className="text-red-400">Error loading channels</div>;
@@ -141,7 +131,7 @@ const Channels = ({
           channels.map((ch) => (
             <div
               key={ch.id}
-              onClick={() => handleChannelSelect(ch.id)}
+              onClick={() => handleChannelSelect(ch)}
               className={`group flex justify-between items-center gap-2 px-2 py-2 rounded-tl-[6px] rounded-bl-[6px] transition-all cursor-pointer ${
                 selectedChannelId === ch.id
                   ? 'bg-[#FFFFFF36] text-white'
