@@ -1,99 +1,40 @@
 import { create } from 'zustand';
-import { io, Socket } from 'socket.io-client';
-
-const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-
-interface FeedbackThread {
-  id: number;
-  campaignVideoId: number;
-  messages: any[];
-}
+import { Socket } from 'socket.io-client';
 
 interface FeedbackSocketState {
   socket: Socket | null;
   isConnected: boolean;
-  feedbackThreads: FeedbackThread[];
-  isLoading: boolean;
+  serverId: string;
+  channelId: string;
 
-  connect: (token: string) => void;
-  submitFeedback: (payload: any) => void;
-  replyToFeedback: (payload: any) => void;
-  reviewFeedback: (payload: any) => void;
-  disconnect: () => void;
+  setSocket: (socket: Socket) => void;
+  setConnected: (value: boolean) => void;
+
+  submitFeedback: (payload: { title: string; videoUrl: string }) => void;
 }
 
 export const useFeedbackSocketStore = create<FeedbackSocketState>(
   (set, get) => ({
     socket: null,
-    feedbackThreads: [],
     isConnected: false,
-    isLoading: false,
+    serverId: '20',
+    channelId: '94',
 
-    connect: (token: string) => {
-      if (get().socket?.connected) return;
+    setSocket: (socket) => set({ socket }),
+    setConnected: (value) => set({ isConnected: value }),
 
-      const socket = io(`${baseUrl}/chat`, {
-        auth: { token },
-        transports: ['websocket'],
-        reconnection: true,
-      });
+    submitFeedback: ({ title, videoUrl }) => {
+      const { socket, isConnected, serverId, channelId } = get();
 
-      socket.on('connect', () => {
-        set({ isConnected: true });
-      });
+      if (!socket || !isConnected) {
+        console.warn('Socket not connected');
+        return;
+      }
 
-      socket.on('disconnect', () => {
-        set({ isConnected: false });
-      });
-
-      socket.on('feedback:thread', (threads: FeedbackThread[]) => {
-        set({
-          feedbackThreads: threads,
-          isLoading: false,
-        });
-      });
-
-      socket.on('feedback:submit:success', (thread: FeedbackThread) => {
-        set((state) => ({
-          feedbackThreads: [...state.feedbackThreads, thread],
-        }));
-      });
-
-      socket.on('feedback:error', (error) => {
-        console.error('Feedback error:', error);
-      });
-
-      set({ socket });
-    },
-
-    submitFeedback: (payload) => {
-      const socket = get().socket;
-      if (!socket) return;
-
-      set({ isLoading: true });
-      socket.emit('feedback:submit', payload);
-    },
-
-    replyToFeedback: (payload) => {
-      const socket = get().socket;
-      socket?.emit('feedback:reply', payload);
-    },
-
-    reviewFeedback: (payload) => {
-      const socket = get().socket;
-      socket?.emit('feedback:review', payload);
-    },
-
-    disconnect: () => {
-      const socket = get().socket;
-      socket?.removeAllListeners();
-      socket?.disconnect();
-
-      set({
-        socket: null,
-        isConnected: false,
-        feedbackThreads: [],
-        isLoading: false,
+      socket.emit('feedback:submit', {
+        channelId: Number(channelId),
+        title,
+        videoUrl,
       });
     },
   })

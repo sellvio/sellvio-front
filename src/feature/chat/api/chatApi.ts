@@ -9,6 +9,12 @@ const getHeaders = () => {
   };
 };
 
+const getAuthHeader = () => {
+  const token =
+    typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+  return { Authorization: `Bearer ${token}` };
+};
+
 export const ChatFromCampaing = async (campaignId: number) => {
   const res = await fetch(`${baseUrl}/campaigns/${campaignId}/chat-server`, {
     headers: getHeaders(),
@@ -30,15 +36,33 @@ export const ChatMember = async (serverId: number) => {
   return res.json();
 };
 
-export const UploadVideoApi = async () => {
+export const UploadVideoApi = async ({
+  file,
+  serverId,
+  channelId,
+}: {
+  file: File;
+  serverId: string;
+  channelId: string;
+}) => {
+  const formData = new FormData();
+  formData.append('video', file);
+
   const res = await fetch(
-    `${baseUrl}/chat-servers/20/channels/94/feedback-video`,
+    `${baseUrl}/chat-servers/${serverId}/channels/${channelId}/feedback-video`,
     {
       method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify(data),
+      headers: {
+        ...getAuthHeader(),
+      },
+      body: formData,
     }
   );
+
+  if (!res.ok) {
+    throw new Error('Upload failed');
+  }
+
   return res.json();
 };
 

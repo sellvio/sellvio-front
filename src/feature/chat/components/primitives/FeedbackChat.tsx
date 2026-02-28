@@ -4,19 +4,44 @@ import Image from 'next/image';
 import { useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { UploadVideoApi } from '../../api/chatApi';
+import { useSocketStore } from '@/feature/common/stores/useSocketStore';
+
+const SERVER_ID = 20;
+const CHANNEL_ID = 94;
 
 const FeedbackChat = () => {
   const fileRef = useRef<HTMLInputElement>(null);
-  const [preview, setPreview] = useState<string | null>(null);
-  const [description, setDescription] = useState('');
-  const [isDragging, setIsDragging] = useState(false);
 
-  const { mutate, data } = useMutation({
-    mutationFn: UploadVideoApi,
+  const [preview, setPreview] = useState<string | null>(null);
+  const [title, setTitle] = useState('');
+  const [isDragging, setIsDragging] = useState(false);
+  const [uploadedVideoUrl, setUploadedVideoUrl] = useState<string | null>(null);
+
+  const submitFeedback = useSocketStore((s) => s.submitFeedback);
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: (file: File) =>
+      UploadVideoApi({
+        file,
+        serverId: String(SERVER_ID),
+        channelId: String(CHANNEL_ID),
+      }),
+
+    onSuccess: (response) => {
+      if (response?.data?.videoUrl) {
+        setUploadedVideoUrl(response.data.videoUrl);
+      }
+    },
+
+    onError: (err) => {
+      console.error('Video upload error:', err);
+    },
   });
 
   const handleFile = (file: File) => {
     if (preview) return;
+    if (!file.type.startsWith('video/')) return;
+
     setPreview(URL.createObjectURL(file));
     mutate(file);
   };
@@ -30,21 +55,27 @@ const FeedbackChat = () => {
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(false);
-
     if (preview) return;
-
     const file = e.dataTransfer.files?.[0];
-    if (!file || !file.type.startsWith('video/')) return;
-
+    if (!file) return;
     handleFile(file);
   };
 
   const handleRemove = () => {
     setPreview(null);
-    setDescription('');
-    if (fileRef.current) {
-      fileRef.current.value = '';
-    }
+    setTitle('');
+    setUploadedVideoUrl(null);
+    if (fileRef.current) fileRef.current.value = '';
+  };
+
+  const handleSubmit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    if (!uploadedVideoUrl || !title.trim()) return;
+
+    submitFeedback(CHANNEL_ID, title.trim(), uploadedVideoUrl);
+
+    handleRemove();
   };
 
   return (
@@ -73,13 +104,12 @@ const FeedbackChat = () => {
         )}
 
         {preview && (
-          <div className="relative rounded-[8px] w-[112px] h-[126px] overflow-hidden">
+          <div className="relative flex-shrink-0 rounded-[8px] w-[112px] h-[126px] overflow-hidden">
             <video
               src={preview}
               controls
               className="rounded-lg w-[112px] h-[126px] object-cover"
             />
-
             <button
               type="button"
               onClick={(e) => {
@@ -106,7 +136,7 @@ const FeedbackChat = () => {
           <div className="flex flex-col w-full">
             {preview && (
               <label
-                htmlFor="description"
+                htmlFor="feedback-title"
                 className="flex items-center gap-[10px] pl-[16px] cursor-pointer"
               >
                 <Image
@@ -118,29 +148,32 @@ const FeedbackChat = () => {
                 <p className="font-bold text-[#FFFFFFAD]">ფაილის სათაური</p>
               </label>
             )}
+
             <input
-              id="description"
+              id="feedback-title"
               type="text"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder={preview ? 'მიუთითე აღწერა' : 'ატვირთე ვიდეო'}
-              className="pl-[16px] rounded-lg focus:outline-none w-full h-[56px] text-white placeholder:text-white/50"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              onClick={(e) => e.stopPropagation()}
+              placeholder={preview ? 'მიუთითე სათაური' : 'ატვირთე ვიდეო'}
+              className="bg-transparent pl-[16px] rounded-lg focus:outline-none w-full h-[56px] text-white placeholder:text-white/50"
             />
           </div>
 
           {preview && (
             <div className="flex justify-end w-full">
-              <button className="bg-[#0866FF] rounded-[8px] w-[105px] h-[38px] text-[13px] text-white cursor-pointer">
-                გაგზავნა
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={!uploadedVideoUrl || isPending || !title.trim()}
+                className="bg-[#0866FF] disabled:opacity-50 rounded-[8px] w-[105px] h-[38px] text-[13px] text-white cursor-pointer disabled:cursor-not-allowed"
+              >
+                {isPending ? 'იტვირთება...' : 'გაგზავნა'}
               </button>
             </div>
           )}
         </div>
       </div>
-
-      {data?.success && (
-        <p className="text-white text-xs break-all">{data.data.videoUrl}</p>
-      )}
     </div>
   );
 };

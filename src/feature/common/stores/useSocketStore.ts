@@ -148,6 +148,11 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       }
     );
 
+    // ✅ feedback:submitted — სერვერიდან პასუხი
+    socketInstance.on('feedback:submitted', (data) => {
+      console.log('Feedback submitted successfully:', data);
+    });
+
     set({ socket: socketInstance });
   },
 
@@ -205,6 +210,22 @@ export const useSocketStore = create<SocketState>((set, get) => ({
         ),
       }));
     }, 5000);
+  },
+
+  // ✅ ახალი მეთოდი — feedback ვიდეოს გაგზავნა
+  submitFeedback: (channelId: number, title: string, videoUrl: string) => {
+    const { socket, isConnected } = get();
+
+    if (!socket || !isConnected) {
+      console.warn('Socket not connected');
+      return;
+    }
+
+    socket.emit('feedback:submit', {
+      channelId,
+      title,
+      videoUrl,
+    });
   },
 
   loadMoreMessages: (channelId: number) => {
