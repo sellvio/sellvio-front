@@ -30,6 +30,18 @@ export const ChatMember = async (serverId: number) => {
   return res.json();
 };
 
+export const UploadVideoApi = async () => {
+  const res = await fetch(
+    `${baseUrl}/chat-servers/20/channels/94/feedback-video`,
+    {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify(data),
+    }
+  );
+  return res.json();
+};
+
 export async function addChanel(serverId: number, data: any) {
   const res = await fetch(`${baseUrl}/chat-servers/${serverId}/channels`, {
     method: 'POST',
