@@ -75,8 +75,6 @@ export interface SocketState {
   submitFeedback: (channelId: number, title: string, videoUrl: string) => void;
 }
 
-// ─── Component Props ─────────────────────────────────────────────────────────
-
 export interface GeneralChatProps {
   chatFull: boolean;
 }
