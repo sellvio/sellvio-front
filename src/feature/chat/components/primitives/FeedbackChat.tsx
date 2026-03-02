@@ -1,60 +1,37 @@
 'use client';
 
 import Image from 'next/image';
-import { useRef, useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import { UploadVideoApi } from '../../api/chatApi';
+import { Loader2 } from 'lucide-react';
+import { useVideoUpload } from '@/feature/chat/hooks/useVideoUpload';
 import { useSocketStore } from '@/feature/common/stores/useSocketStore';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
 
 const FeedbackChat = () => {
-  const fileRef = useRef<HTMLInputElement>(null);
-  const [preview, setPreview] = useState<string | null>(null);
-  const [title, setTitle] = useState('');
-  const [isDragging, setIsDragging] = useState(false);
-  const [uploadedVideoUrl, setUploadedVideoUrl] = useState<string | null>(null);
-
   const submitFeedback = useSocketStore((s) => s.submitFeedback);
   const selectedChannelId = useChatStore((s) => s.selectedChannelId);
   const serverId = useChatStore((s) => s.serverId);
   const isAdmin = useChatStore((s) => s.isAdmin);
 
-  // ყველა hook გამოძახებულია — ახლა შეგვიძლია early return
-  const { mutate, isPending } = useMutation({
-    mutationFn: (file: File) => {
-      if (!serverId || !selectedChannelId) throw new Error('Missing IDs');
-      return UploadVideoApi({
-        file,
-        serverId: String(serverId),
-        channelId: String(selectedChannelId),
-      });
-    },
-    onSuccess: (res) => {
-      if (res?.data?.videoUrl) setUploadedVideoUrl(res.data.videoUrl);
-    },
-  });
+  const {
+    fileRef,
+    preview,
+    title,
+    setTitle,
+    isDragging,
+    setIsDragging,
+    uploadedVideoUrl,
+    isPending,
+    handleFile,
+    handleReset,
+  } = useVideoUpload({ serverId, channelId: selectedChannelId });
 
-  // ყველა hook-ის შემდეგ early return
   if (isAdmin) return null;
-
-  const handleFile = (file: File) => {
-    if (preview || !file.type.startsWith('video/')) return;
-    setPreview(URL.createObjectURL(file));
-    mutate(file);
-  };
-
-  const handleRemove = () => {
-    setPreview(null);
-    setTitle('');
-    setUploadedVideoUrl(null);
-    if (fileRef.current) fileRef.current.value = '';
-  };
 
   const handleSubmit = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!uploadedVideoUrl || !title.trim() || !selectedChannelId) return;
     submitFeedback(selectedChannelId, title.trim(), uploadedVideoUrl);
-    handleRemove();
+    handleReset();
   };
 
   return (
@@ -69,7 +46,7 @@ const FeedbackChat = () => {
         onDrop={(e) => {
           e.preventDefault();
           setIsDragging(false);
-          if (!preview) handleFile(e.dataTransfer.files?.[0]);
+          handleFile(e.dataTransfer.files?.[0]);
         }}
         className={`relative flex bg-[#FFFFFF36] ${preview ? 'p-[20px] items-start' : 'items-center px-[20px]'} border-2 ${
           isDragging ? 'border-white' : 'border-gray-400 hover:border-white'
@@ -86,6 +63,12 @@ const FeedbackChat = () => {
 
         {preview && (
           <div className="relative flex-shrink-0 rounded-[8px] w-[112px] h-[126px] overflow-hidden">
+            {/* skeleton სანამ ატვირთება */}
+            {isPending && (
+              <div className="z-10 absolute inset-0 flex justify-center items-center bg-black/60 rounded-[8px]">
+                <Loader2 className="w-8 h-8 text-white animate-spin" />
+              </div>
+            )}
             <video
               src={preview}
               controls
@@ -95,7 +78,7 @@ const FeedbackChat = () => {
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                handleRemove();
+                handleReset();
               }}
               className="top-1 right-1 absolute flex justify-center items-center bg-[#001541D6] rounded-full w-[22px] h-[22px] text-white text-xs cursor-pointer"
             >
@@ -110,10 +93,7 @@ const FeedbackChat = () => {
           accept="video/*"
           hidden
           disabled={!!preview}
-          onChange={(e) => {
-            const f = e.target.files?.[0];
-            if (f) handleFile(f);
-          }}
+          onChange={(e) => handleFile(e.target.files?.[0])}
         />
 
         <div className="flex flex-col justify-between w-full h-full">
@@ -148,9 +128,15 @@ const FeedbackChat = () => {
                 type="button"
                 onClick={handleSubmit}
                 disabled={!uploadedVideoUrl || isPending || !title.trim()}
-                className="bg-[#0866FF] disabled:opacity-50 rounded-[8px] w-[105px] h-[38px] text-[13px] text-white cursor-pointer disabled:cursor-not-allowed"
+                className="flex justify-center items-center gap-2 bg-[#0866FF] disabled:opacity-50 rounded-[8px] w-[105px] h-[38px] text-[13px] text-white cursor-pointer disabled:cursor-not-allowed"
               >
-                {isPending ? 'იტვირთება...' : 'გაგზავნა'}
+                {isPending ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" /> იტვირთება...
+                  </>
+                ) : (
+                  'გაგზავნა'
+                )}
               </button>
             </div>
           )}

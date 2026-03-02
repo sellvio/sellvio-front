@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { MessageInputProps } from '../type';
+import { MessageInputProps } from '@/feature/chat/types';
 
 const MessageInput = ({
   text,
@@ -9,9 +9,7 @@ const MessageInput = ({
   selectedChannelId,
 }: MessageInputProps) => {
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && text.trim()) {
-      onSend();
-    }
+    if (e.key === 'Enter' && text.trim()) onSend();
   };
 
   return (

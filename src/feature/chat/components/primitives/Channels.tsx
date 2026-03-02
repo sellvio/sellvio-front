@@ -5,13 +5,16 @@ import Link from 'next/link';
 import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ChatFromCampaing } from '../../api/chatApi';
-import { ChannelsProps, ChatChannel } from '../../types';
+import { ChannelsProps, ChatChannel } from '@/feature/chat/types';
 import ChannelSkeleton from './ChannelSkeleton';
 import ChannelHeaderSkeleton from './ChannelHeaderSkeleton';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
 import { useSocketStore } from '@/feature/common/stores/useSocketStore';
 
 const CAMPAIGN_ID = 44;
+
+const truncate = (text: string, max: number) =>
+  text.length > max ? `${text.slice(0, max)}...` : text;
 
 const Channels = ({
   setChatInfoOpen,
@@ -42,22 +45,19 @@ const Channels = ({
   });
 
   useEffect(() => {
-    if (data?.data?.id) {
-      setServerId(data.data.id);
-    }
+    if (data?.data?.id) setServerId(data.data.id);
   }, [data, setServerId]);
 
   useEffect(() => {
-    if (socket && isConnected && serverId) {
+    if (socket && isConnected && serverId)
       socket.emit('server:open', { serverId });
-    }
   }, [socket, isConnected, serverId]);
 
   useEffect(() => {
     if (serverId) fetchMembers();
   }, [serverId, fetchMembers]);
 
-  const channels: ChatChannel[] = data?.data?.chat_channels || [];
+  const channels: ChatChannel[] = data?.data?.chat_channels ?? [];
 
   const handleChannelSelect = (ch: ChatChannel) => {
     if (selectedChannelId === ch.id) return;
@@ -68,9 +68,6 @@ const Channels = ({
       joinChannel(serverId, ch.id, ch.channel_type_id ?? undefined);
     }
   };
-
-  const truncate = (text: string, max: number) =>
-    text.length > max ? text.slice(0, max) + '...' : text;
 
   if (isError)
     return <div className="text-red-400">Error loading channels</div>;
@@ -95,7 +92,7 @@ const Channels = ({
           </button>
           <p>{data?.data?.name && truncate(data.data.name, 20)}</p>
           {isAdmin && (
-            <button onClick={() => setChatInfoOpen((prev: boolean) => !prev)}>
+            <button onClick={() => setChatInfoOpen((prev) => !prev)}>
               <Image
                 src="/images/chatIcons/svg/setting.svg"
                 alt="settings"
