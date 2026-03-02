@@ -1,3 +1,5 @@
+'use client';
+
 import { create } from 'zustand';
 import { io } from 'socket.io-client';
 import { Message, MessageStatus, SocketState } from '@/feature/chat/types';
@@ -12,6 +14,25 @@ const sortByDate = (messages: Message[]): Message[] => {
     (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
   );
 };
+
+const videoToMessage = (video: any, channelId: number): Message => ({
+  id: video.id,
+  channelId,
+  senderId: video.creatorId,
+  content: video.title ?? '',
+  createdAt: video.createdAt,
+  pinned: false,
+  status: 'delivered' as MessageStatus,
+  senderFirstName: video.creatorFirstName,
+  senderLastName: video.creatorLastName,
+  senderImageUrl: video.creatorImageUrl,
+  messageType: 'feedback_video',
+  campaignVideoId: video.id,
+  videoUrl: video.videoUrl,
+  videoTitle: video.title,
+  videoCoverUrl: video.coverUrl,
+  videoStatus: video.status,
+});
 
 export const useSocketStore = create<SocketState>((set, get) => ({
   socket: null,
@@ -48,6 +69,17 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       });
     });
 
+    socket.on('feedback:videos', (data) => {
+      if (!data?.videos?.length) return;
+      const videoMessages: Message[] = data.videos.map((v: any) =>
+        videoToMessage(v, data.channelId)
+      );
+      set((state) => ({
+        messages: sortByDate([...state.messages, ...videoMessages]),
+        isLoadingMessages: false,
+      }));
+    });
+
     socket.on('message', (msg: Message) => {
       set((state) => {
         const idx = state.messages.findIndex(
@@ -68,6 +100,24 @@ export const useSocketStore = create<SocketState>((set, get) => ({
               ];
         return { messages: sortByDate(updated) };
       });
+    });
+
+    socket.on('feedback:submitted', (data) => {
+      if (!data?.video) return;
+      const msg = videoToMessage(data.video, data.channelId);
+      set((state) => ({ messages: sortByDate([...state.messages, msg]) }));
+    });
+
+    // feedback:reviewed — status განახლება
+    socket.on('feedback:reviewed', (data) => {
+      if (!data?.campaignVideoId) return;
+      set((state) => ({
+        messages: state.messages.map((m) =>
+          m.campaignVideoId === data.campaignVideoId
+            ? { ...m, videoStatus: data.status }
+            : m
+        ),
+      }));
     });
 
     socket.on('message:sent', (data: { tempId?: string; message: Message }) => {
@@ -116,35 +166,12 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       }));
     });
 
-    socket.on('feedback:submitted', (data) => {
-      if (!data?.video) return;
-      const msg: Message = {
-        id: data.video.id,
-        channelId: data.channelId,
-        senderId: data.video.creatorId,
-        content: data.video.title ?? '',
-        createdAt: data.video.createdAt,
-        pinned: false,
-        status: 'delivered',
-        senderFirstName: data.video.creatorFirstName,
-        senderLastName: data.video.creatorLastName,
-        senderImageUrl: data.video.creatorImageUrl,
-        messageType: 'feedback_video',
-        campaignVideoId: data.video.id,
-        videoUrl: data.video.videoUrl,
-        videoTitle: data.video.title,
-        videoCoverUrl: data.video.coverUrl,
-        videoStatus: data.video.status,
-      };
-      set((state) => ({ messages: sortByDate([...state.messages, msg]) }));
-    });
-
     set({ socket });
   },
 
   joinServer: (serverId) => get().socket?.emit('server:open', { serverId }),
 
-  joinChannel: (serverId, channelId) => {
+  joinChannel: (serverId, channelId, channelTypeId?: number) => {
     const socket = get().socket;
     if (!socket) return;
     set({
@@ -158,6 +185,10 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       channelId,
       limit: MESSAGES_PER_PAGE,
     });
+
+    if (channelTypeId === 3) {
+      socket.emit('feedback:videos', { channelId });
+    }
   },
 
   sendMessage: (channelId, content) => {

@@ -7,9 +7,6 @@ import { UploadVideoApi } from '../../api/chatApi';
 import { useSocketStore } from '@/feature/common/stores/useSocketStore';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
 
-const SERVER_ID = 20;
-const CHANNEL_ID = 94;
-
 const FeedbackChat = () => {
   const fileRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -19,18 +16,26 @@ const FeedbackChat = () => {
 
   const submitFeedback = useSocketStore((s) => s.submitFeedback);
   const selectedChannelId = useChatStore((s) => s.selectedChannelId);
+  const serverId = useChatStore((s) => s.serverId);
+  const isAdmin = useChatStore((s) => s.isAdmin);
 
+  // ყველა hook გამოძახებულია — ახლა შეგვიძლია early return
   const { mutate, isPending } = useMutation({
-    mutationFn: (file: File) =>
-      UploadVideoApi({
+    mutationFn: (file: File) => {
+      if (!serverId || !selectedChannelId) throw new Error('Missing IDs');
+      return UploadVideoApi({
         file,
-        serverId: String(SERVER_ID),
-        channelId: String(CHANNEL_ID),
-      }),
+        serverId: String(serverId),
+        channelId: String(selectedChannelId),
+      });
+    },
     onSuccess: (res) => {
       if (res?.data?.videoUrl) setUploadedVideoUrl(res.data.videoUrl);
     },
   });
+
+  // ყველა hook-ის შემდეგ early return
+  if (isAdmin) return null;
 
   const handleFile = (file: File) => {
     if (preview || !file.type.startsWith('video/')) return;

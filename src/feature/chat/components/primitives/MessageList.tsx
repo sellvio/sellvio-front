@@ -1,5 +1,7 @@
 import { Message } from '../../types';
 import { MessageListProps } from '../type';
+import { useSocketStore } from '@/feature/common/stores/useSocketStore';
+import { useChatStore } from '@/feature/common/stores/useChatStore';
 
 const MessageStatusIcon = ({ status }: { status?: string }) => {
   switch (status) {
@@ -92,6 +94,59 @@ const VideoStatusBadge = ({ status }: { status?: string }) => {
   );
 };
 
+const FeedbackVideoMessage = ({ message }: { message: Message }) => {
+  const { isAdmin, currentUser, selectedChannelId } = useChatStore();
+  const { socket } = useSocketStore();
+
+  const handleReview = (status: 'approved' | 'rejected') => {
+    if (!socket || !selectedChannelId || !message.campaignVideoId) return;
+    socket.emit('feedback:review', {
+      channelId: selectedChannelId,
+      campaignVideoId: message.campaignVideoId,
+      status,
+    });
+  };
+
+  const isUnderReview = message.videoStatus === 'under_review';
+
+  return (
+    <div className="bg-[#FFFFFF14] border border-white/10 rounded-xl w-full max-w-[300px] overflow-hidden">
+      <video
+        src={message.videoUrl ?? undefined}
+        poster={message.videoCoverUrl ?? undefined}
+        controls
+        className="bg-black w-full object-cover aspect-video"
+      />
+      <div className="flex flex-col gap-2 px-3 py-2">
+        <div className="flex justify-between items-center gap-2">
+          <p className="font-medium text-white text-sm truncate">
+            {message.videoTitle || message.content}
+          </p>
+          <VideoStatusBadge status={message.videoStatus} />
+        </div>
+
+        {/* ადმინს უჩანს ღილაკები მხოლოდ under_review სტატუსზე */}
+        {isAdmin && isUnderReview && (
+          <div className="flex gap-2 mt-1">
+            <button
+              onClick={() => handleReview('approved')}
+              className="flex-1 bg-green-600/80 hover:bg-green-600 py-1.5 rounded-[6px] font-medium text-white text-xs transition-colors cursor-pointer"
+            >
+              დადასტურება
+            </button>
+            <button
+              onClick={() => handleReview('rejected')}
+              className="flex-1 bg-red-600/80 hover:bg-red-600 py-1.5 rounded-[6px] font-medium text-white text-xs transition-colors cursor-pointer"
+            >
+              უარყოფა
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const MessageItem = ({ message }: { message: Message }) => {
   const senderName = message.senderFirstName
     ? message.senderLastName
@@ -109,20 +164,7 @@ const MessageItem = ({ message }: { message: Message }) => {
       </div>
 
       {message.messageType === 'feedback_video' ? (
-        <div className="bg-[#FFFFFF14] border border-white/10 rounded-xl w-full max-w-[300px] overflow-hidden">
-          <video
-            src={message.videoUrl ?? undefined}
-            poster={message.videoCoverUrl ?? undefined}
-            controls
-            className="bg-black w-full object-cover aspect-video"
-          />
-          <div className="flex justify-between items-center gap-2 px-3 py-2">
-            <p className="font-medium text-white text-sm truncate">
-              {message.videoTitle || message.content}
-            </p>
-            <VideoStatusBadge status={message.videoStatus} />
-          </div>
-        </div>
+        <FeedbackVideoMessage message={message} />
       ) : (
         <div className="flex items-end gap-2">
           <div className="inline-block bg-[#FFFFFF36] p-2 rounded-lg text-[15px]">

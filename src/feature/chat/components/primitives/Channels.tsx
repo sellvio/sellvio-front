@@ -19,7 +19,8 @@ const Channels = ({
   toggleChatFull,
   chatFull,
 }: ChannelsProps) => {
-  const { socket, connect, isConnected, clearMessages } = useSocketStore();
+  const { socket, connect, isConnected, clearMessages, joinChannel } =
+    useSocketStore();
   const {
     isAdmin,
     fetchMembers,
@@ -46,7 +47,6 @@ const Channels = ({
     }
   }, [data, setServerId]);
 
-  // server:open — socket მზად რომ იყოს
   useEffect(() => {
     if (socket && isConnected && serverId) {
       socket.emit('server:open', { serverId });
@@ -65,7 +65,7 @@ const Channels = ({
     setSelectedChannelId(ch.id, ch.channel_type_id ?? null);
     if (socket && isConnected && serverId) {
       socket.emit('server:open', { serverId });
-      socket.emit('channel:open', { serverId, channelId: ch.id, limit: 20 });
+      joinChannel(serverId, ch.id, ch.channel_type_id ?? undefined);
     }
   };
 
