@@ -69,16 +69,13 @@ const Channels = ({
     }
   };
 
-  if (isError)
-    return <div className="text-red-400">Error loading channels</div>;
-
   return (
     <div className="flex flex-col justify-between bg-[#001541D6] border-[#E0E0E0] border-r w-full max-w-[277px] h-screen">
       {isLoading ? (
         <ChannelHeaderSkeleton />
       ) : (
-        <div className="flex justify-between items-center px-3 py-2 border-[#E0E0E0] border-b min-h-[49px] font-semibold text-[16px] text-white">
-          <button onClick={toggleChatFull}>
+        <div className="flex justify-between items-center px-3 py-2 border-[#E0E0E0] border-b min-h-[49px] font-semibold text-[16px] text-white cursor-pointer">
+          <button onClick={toggleChatFull} className="cursor-pointer">
             <Image
               src={
                 chatFull
@@ -124,6 +121,10 @@ const Channels = ({
 
         {isLoading ? (
           <ChannelSkeleton />
+        ) : isError ? (
+          <div className="px-2 py-3 text-white/70 text-sm">
+            ასეთი ჩენელი არ არსებობს
+          </div>
         ) : (
           channels.map((ch) => (
             <div
