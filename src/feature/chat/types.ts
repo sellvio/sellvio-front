@@ -92,7 +92,7 @@ export interface MessageListProps {
   selectedChannelId: number | null;
   hasMore: boolean;
   isLoadingMore: boolean;
-  loadMoreTriggerRef: RefObject<HTMLDivElement>;
+  loadMoreTriggerRef: RefObject<HTMLDivElement | null>;
 }
 
 export interface MessageInputProps {
@@ -117,7 +117,7 @@ export interface UseInfiniteScrollProps {
   isLoadingChannel: boolean;
   selectedChannelId: number | null;
   loadMoreMessages: (channelId: number) => void;
-  scrollRef: RefObject<HTMLDivElement>;
+  scrollRef: RefObject<HTMLDivElement | null>;
   messages: Message[];
 }
 

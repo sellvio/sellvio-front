@@ -4,7 +4,6 @@ import { useState, useEffect, JSX, memo } from 'react';
 import { channelsData, newChannelsData } from '../../data/chatData';
 import Member from './Member';
 import PinedMessage from './PinedMessage';
-import Clarification from './Clarification';
 import { GeneralChatProps } from '@/feature/chat/types';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
 import { useSocketStore } from '@/feature/common/stores/useSocketStore';
@@ -18,7 +17,6 @@ import { useInfiniteScroll } from '@/feature/chat/hooks/useInfiniteScroll';
 const TAB_CONTENT: Record<string, JSX.Element> = {
   profile: <Member />,
   'frame-128760': <PinedMessage />,
-  'component-2': <Clarification />,
   notification: (
     <div className="flex justify-center items-center h-full text-white">
       <h2 className="mb-2 font-semibold text-xl">Notifications</h2>
