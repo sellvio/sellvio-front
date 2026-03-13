@@ -51,18 +51,25 @@ export interface Message {
   senderFirstName?: string | null;
   senderLastName?: string | null;
   senderImageUrl?: string | null;
-
   messageType?: 'text' | 'feedback_video';
   videoUrl?: string | null;
   videoTitle?: string | null;
   videoCoverUrl?: string | null;
   videoStatus?: VideoStatus;
   campaignVideoId?: number | null;
-
   images?: string[];
   reactions?: MessageReaction[];
   replyToId?: number | null;
   replyTo?: ReplyTo | null;
+}
+
+export interface PendingReactionOperation {
+  operationId: string;
+  channelId: number;
+  messageId: number;
+  emojiId: number;
+  userId: number;
+  action: 'add' | 'remove';
 }
 
 export interface ChatStore {
@@ -86,6 +93,7 @@ export interface SocketState {
   isLoadingMessages: boolean;
   hasMore: boolean;
   currentPage: number;
+  pendingReactionOperations: PendingReactionOperation[];
   connect: (token: string) => void;
   disconnect: () => void;
   joinServer: (serverId: number) => void;

@@ -16,6 +16,9 @@ export const MessageReactions = memo(({ message }: Props) => {
   const currentUser = useChatStore((state) => state.currentUser);
   const addReaction = useSocketStore((state) => state.addReaction);
   const removeReaction = useSocketStore((state) => state.removeReaction);
+  const pendingReactionOperations = useSocketStore(
+    (state) => state.pendingReactionOperations
+  );
 
   const reactions = message.reactions ?? [];
 
@@ -31,8 +34,31 @@ export const MessageReactions = memo(({ message }: Props) => {
     );
   }, [currentUser, reactions]);
 
+  const hasAnyReactionFromCurrentUser = reactedEmojiIds.size > 0;
+
+  const pendingEmojiActions = useMemo(() => {
+    if (!currentUser) return new Map<number, 'add' | 'remove'>();
+
+    const relatedOperations = pendingReactionOperations.filter(
+      (operation) =>
+        operation.messageId === message.id &&
+        operation.userId === currentUser.id
+    );
+
+    const result = new Map<number, 'add' | 'remove'>();
+
+    for (const operation of relatedOperations) {
+      result.set(operation.emojiId, operation.action);
+    }
+
+    return result;
+  }, [currentUser, message.id, pendingReactionOperations]);
+
   const handleToggleReaction = (emojiId: number) => {
     if (!currentUser) return;
+
+    const pendingAction = pendingEmojiActions.get(emojiId);
+    if (pendingAction) return;
 
     const alreadyReacted = reactedEmojiIds.has(emojiId);
 
@@ -51,6 +77,8 @@ export const MessageReactions = memo(({ message }: Props) => {
           ? reaction.users.some((user) => user.id === currentUser.id)
           : false;
 
+        const pendingAction = pendingEmojiActions.get(reaction.emojiId);
+
         const localOption = REACTION_OPTIONS.find(
           (option) => option.id === reaction.emojiId
         );
@@ -60,13 +88,14 @@ export const MessageReactions = memo(({ message }: Props) => {
             key={reaction.emojiId}
             type="button"
             onClick={() => handleToggleReaction(reaction.emojiId)}
-            className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full border text-xs transition cursor-pointer ${
+            disabled={Boolean(pendingAction)}
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs transition cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed ${
               isActive
                 ? 'bg-[#0866FF33] border-[#0866FF] text-white'
                 : 'bg-white/10 border-white/10 text-white/80 hover:bg-white/15'
             }`}
           >
-            <span>{localOption?.emoji ?? reaction.emoji ?? '🙂'}</span>
+            <span>{localOption?.emoji ?? '🙂'}</span>
             <span>{reaction.users.length}</span>
           </button>
         );
@@ -76,27 +105,38 @@ export const MessageReactions = memo(({ message }: Props) => {
         <button
           type="button"
           onClick={() => setIsPickerOpen((prev) => !prev)}
-          className="hover:bg-white/10 px-2 py-1 border border-white/10 rounded-full text-white/80 text-xs transition cursor-pointer"
+          className={`px-2.5 py-1 border rounded-full text-xs transition cursor-pointer ${
+            hasAnyReactionFromCurrentUser
+              ? 'bg-[#0866FF26] border-[#0866FF] text-white'
+              : 'border-white/10 text-white/80 hover:bg-white/10'
+          }`}
         >
           +
         </button>
 
         {isPickerOpen && (
           <div className="bottom-full left-0 z-20 absolute flex items-center gap-1 bg-[#0B1739] shadow-lg mb-2 p-2 border border-white/10 rounded-xl">
-            {REACTION_OPTIONS.map((option) => (
-              <button
-                key={option.id}
-                type="button"
-                title={option.label}
-                onClick={() => {
-                  handleToggleReaction(option.id);
-                  setIsPickerOpen(false);
-                }}
-                className="hover:bg-white/10 p-2 rounded-lg text-lg transition cursor-pointer"
-              >
-                {option.emoji}
-              </button>
-            ))}
+            {REACTION_OPTIONS.map((option) => {
+              const isSelected = reactedEmojiIds.has(option.id);
+              const pendingAction = pendingEmojiActions.get(option.id);
+
+              return (
+                <button
+                  key={option.id}
+                  type="button"
+                  title={option.label}
+                  disabled={Boolean(pendingAction)}
+                  onClick={() => handleToggleReaction(option.id)}
+                  className={`p-2 rounded-lg text-lg transition cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed ${
+                    isSelected
+                      ? 'bg-[#0866FF33] ring-1 ring-[#0866FF]'
+                      : 'hover:bg-white/10'
+                  }`}
+                >
+                  {option.emoji}
+                </button>
+              );
+            })}
           </div>
         )}
       </div>

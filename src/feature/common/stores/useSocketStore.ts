@@ -6,10 +6,13 @@ import {
   Message,
   MessageReaction,
   MessageStatus,
+  PendingReactionOperation,
   ReactionUser,
   SocketState,
   VideoStatus,
 } from '@/feature/chat/types';
+import { useChatStore } from '@/feature/common/stores/useChatStore';
+import { REACTION_OPTIONS } from '../data/reactionOptions';
 
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 const MESSAGES_PER_PAGE = 50;
@@ -50,6 +53,15 @@ const sortByDate = (messages: Message[]): Message[] => {
   );
 };
 
+const normalizeMessage = (message: Message): Message => ({
+  ...message,
+  images: message.images ?? [],
+  reactions: message.reactions ?? [],
+  replyToId: message.replyToId ?? null,
+  replyTo: message.replyTo ?? null,
+  pinned: Boolean(message.pinned),
+});
+
 const videoToMessage = (video: any, channelId: number): Message => ({
   id: video.id,
   channelId,
@@ -73,51 +85,64 @@ const videoToMessage = (video: any, channelId: number): Message => ({
   replyTo: null,
 });
 
-const normalizeMessage = (message: Message): Message => ({
-  ...message,
-  images: message.images ?? [],
-  reactions: message.reactions ?? [],
-  replyToId: message.replyToId ?? null,
-  replyTo: message.replyTo ?? null,
-  pinned: Boolean(message.pinned),
-});
+const getReactionMeta = (emojiId: number) => {
+  const fallback = REACTION_OPTIONS.find((item) => item.id === emojiId);
 
-const addReactionToMessage = (
+  return {
+    emoji: fallback?.label ?? `emoji-${emojiId}`,
+    emojiUrl: '',
+  };
+};
+
+const addReactionLocally = (
   message: Message,
-  payload: ReactionAddPayload
+  payload: {
+    messageId: number;
+    emojiId: number;
+    userId: number;
+    firstName?: string | null;
+    emoji?: string;
+    emojiUrl?: string;
+  }
 ): Message => {
   if (message.id !== payload.messageId) return message;
 
-  const reactions = message.reactions ?? [];
-  const existingReactionIndex = reactions.findIndex(
+  const currentReactions = message.reactions ?? [];
+  const reactionIndex = currentReactions.findIndex(
     (reaction) => reaction.emojiId === payload.emojiId
   );
 
-  if (existingReactionIndex === -1) {
+  if (reactionIndex === -1) {
     const nextReaction: MessageReaction = {
       emojiId: payload.emojiId,
-      emoji: payload.emoji,
-      emojiUrl: payload.emojiUrl,
-      users: [{ id: payload.userId, firstName: null }],
+      emoji: payload.emoji ?? getReactionMeta(payload.emojiId).emoji,
+      emojiUrl: payload.emojiUrl ?? getReactionMeta(payload.emojiId).emojiUrl,
+      users: [
+        {
+          id: payload.userId,
+          firstName: payload.firstName ?? null,
+        },
+      ],
     };
 
     return {
       ...message,
-      reactions: [...reactions, nextReaction],
+      reactions: [...currentReactions, nextReaction],
     };
   }
 
-  const nextReactions = reactions.map((reaction, index) => {
-    if (index !== existingReactionIndex) return reaction;
+  const nextReactions = currentReactions.map((reaction, index) => {
+    if (index !== reactionIndex) return reaction;
 
     const alreadyExists = reaction.users.some(
       (user) => user.id === payload.userId
     );
+
     if (alreadyExists) return reaction;
 
     const nextUser: ReactionUser = {
       id: payload.userId,
-      firstName: null,
+      firstName: payload.firstName ?? null,
     };
 
     return {
@@ -132,15 +157,19 @@ const addReactionToMessage = (
   };
 };
 
-const removeReactionFromMessage = (
+const removeReactionLocally = (
   message: Message,
-  payload: ReactionRemovePayload
+  payload: {
+    messageId: number;
+    emojiId: number;
+    userId: number;
+  }
 ): Message => {
   if (message.id !== payload.messageId) return message;
 
-  const reactions = message.reactions ?? [];
+  const currentReactions = message.reactions ?? [];
 
-  const nextReactions = reactions
+  const nextReactions = currentReactions
     .map((reaction) => {
       if (reaction.emojiId !== payload.emojiId) return reaction;
 
@@ -157,6 +186,30 @@ const removeReactionFromMessage = (
   };
 };
 
+const removeMatchingPendingOperation = (
+  operations: PendingReactionOperation[],
+  payload: {
+    channelId: number;
+    messageId: number;
+    emojiId: number;
+    userId: number;
+    action: 'add' | 'remove';
+  }
+) => {
+  const index = operations.findIndex(
+    (operation) =>
+      operation.channelId === payload.channelId &&
+      operation.messageId === payload.messageId &&
+      operation.emojiId === payload.emojiId &&
+      operation.userId === payload.userId &&
+      operation.action === payload.action
+  );
+
+  if (index === -1) return operations;
+
+  return operations.filter((_, currentIndex) => currentIndex !== index);
+};
+
 export const useSocketStore = create<SocketState>((set, get) => ({
   socket: null,
   isConnected: false,
@@ -164,6 +217,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
   isLoadingMessages: false,
   hasMore: true,
   currentPage: 1,
+  pendingReactionOperations: [],
 
   connect: (token: string) => {
     if (typeof window === 'undefined' || get().socket?.connected) return;
@@ -212,46 +266,49 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     });
 
     socket.on('message', (incomingMessage: Message) => {
-      const msg = normalizeMessage(incomingMessage);
+      const message = normalizeMessage(incomingMessage);
 
       set((state) => {
-        const tempIndex = state.messages.findIndex(
-          (message) =>
-            message.tempId &&
-            message.content === msg.content &&
-            message.channelId === msg.channelId &&
-            message.status === 'sending'
+        const sendingIndex = state.messages.findIndex(
+          (item) =>
+            item.tempId &&
+            item.content === message.content &&
+            item.channelId === message.channelId &&
+            item.status === 'sending'
         );
 
-        const updatedMessages =
-          tempIndex !== -1
-            ? state.messages.map((message, index) =>
-                index === tempIndex
+        const nextMessages =
+          sendingIndex !== -1
+            ? state.messages.map((item, index) =>
+                index === sendingIndex
                   ? {
-                      ...msg,
+                      ...message,
                       status: 'delivered' as MessageStatus,
                     }
-                  : message
+                  : item
               )
             : [
                 ...state.messages,
                 {
-                  ...msg,
+                  ...message,
                   status: 'delivered' as MessageStatus,
                 },
               ];
 
-        return { messages: sortByDate(updatedMessages) };
+        return {
+          messages: sortByDate(nextMessages),
+        };
       });
     });
 
     socket.on('feedback:submitted', (data) => {
       if (!data?.video) return;
 
-      const msg = videoToMessage(data.video, data.channelId);
-
       set((state) => ({
-        messages: sortByDate([...state.messages, msg]),
+        messages: sortByDate([
+          ...state.messages,
+          videoToMessage(data.video, data.channelId),
+        ]),
       }));
     });
 
@@ -270,7 +327,24 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     socket.on('message:reaction', (payload: ReactionAddPayload) => {
       set((state) => ({
         messages: state.messages.map((message) =>
-          addReactionToMessage(message, payload)
+          addReactionLocally(message, {
+            messageId: payload.messageId,
+            emojiId: payload.emojiId,
+            userId: payload.userId,
+            firstName: null,
+            emoji: payload.emoji,
+            emojiUrl: payload.emojiUrl,
+          })
+        ),
+        pendingReactionOperations: removeMatchingPendingOperation(
+          state.pendingReactionOperations,
+          {
+            channelId: payload.channelId,
+            messageId: payload.messageId,
+            emojiId: payload.emojiId,
+            userId: payload.userId,
+            action: 'add',
+          }
         ),
       }));
     });
@@ -278,21 +352,32 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     socket.on('message:reaction:removed', (payload: ReactionRemovePayload) => {
       set((state) => ({
         messages: state.messages.map((message) =>
-          removeReactionFromMessage(message, payload)
+          removeReactionLocally(message, {
+            messageId: payload.messageId,
+            emojiId: payload.emojiId,
+            userId: payload.userId,
+          })
+        ),
+        pendingReactionOperations: removeMatchingPendingOperation(
+          state.pendingReactionOperations,
+          {
+            channelId: payload.channelId,
+            messageId: payload.messageId,
+            emojiId: payload.emojiId,
+            userId: payload.userId,
+            action: 'remove',
+          }
         ),
       }));
     });
 
-    socket.on(
-      'message:deleted',
-      (payload: { channelId: number; messageId: number }) => {
-        set((state) => ({
-          messages: state.messages.filter(
-            (message) => message.id !== payload.messageId
-          ),
-        }));
-      }
-    );
+    socket.on('message:deleted', (payload: { messageId: number }) => {
+      set((state) => ({
+        messages: state.messages.filter(
+          (message) => message.id !== payload.messageId
+        ),
+      }));
+    });
 
     socket.on('message:pinned', (payload: Message) => {
       const normalized = normalizeMessage(payload);
@@ -306,14 +391,8 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       }));
     });
 
-    socket.on('message:error', () => {
-      set((state) => ({
-        messages: state.messages.map((message) =>
-          message.status === 'sending'
-            ? { ...message, status: 'failed' as MessageStatus }
-            : message
-        ),
-      }));
+    socket.on('error', () => {
+      set({ isLoadingMessages: false });
     });
 
     set({ socket });
@@ -323,7 +402,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     get().socket?.emit('server:open', { serverId });
   },
 
-  joinChannel: (serverId, channelId, channelTypeId?: number) => {
+  joinChannel: (serverId, channelId, channelTypeId) => {
     const socket = get().socket;
     if (!socket) return;
 
@@ -332,6 +411,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       isLoadingMessages: true,
       hasMore: true,
       currentPage: 1,
+      pendingReactionOperations: [],
     });
 
     socket.emit('channel:open', {
@@ -396,7 +476,33 @@ export const useSocketStore = create<SocketState>((set, get) => ({
 
   addReaction: (channelId, messageId, emojiId) => {
     const socket = get().socket;
-    if (!socket) return;
+    const currentUser = useChatStore.getState().currentUser;
+
+    if (!socket || !currentUser) return;
+
+    const operationId = `reaction_add_${Date.now()}_${Math.random()}`;
+
+    set((state) => ({
+      messages: state.messages.map((message) =>
+        addReactionLocally(message, {
+          messageId,
+          emojiId,
+          userId: currentUser.id,
+          firstName: currentUser.name ?? null,
+        })
+      ),
+      pendingReactionOperations: [
+        ...state.pendingReactionOperations,
+        {
+          operationId,
+          channelId,
+          messageId,
+          emojiId,
+          userId: currentUser.id,
+          action: 'add',
+        },
+      ],
+    }));
 
     socket.emit('reaction:add', {
       channelId,
@@ -407,7 +513,32 @@ export const useSocketStore = create<SocketState>((set, get) => ({
 
   removeReaction: (channelId, messageId, emojiId) => {
     const socket = get().socket;
-    if (!socket) return;
+    const currentUser = useChatStore.getState().currentUser;
+
+    if (!socket || !currentUser) return;
+
+    const operationId = `reaction_remove_${Date.now()}_${Math.random()}`;
+
+    set((state) => ({
+      messages: state.messages.map((message) =>
+        removeReactionLocally(message, {
+          messageId,
+          emojiId,
+          userId: currentUser.id,
+        })
+      ),
+      pendingReactionOperations: [
+        ...state.pendingReactionOperations,
+        {
+          operationId,
+          channelId,
+          messageId,
+          emojiId,
+          userId: currentUser.id,
+          action: 'remove',
+        },
+      ],
+    }));
 
     socket.emit('reaction:remove', {
       channelId,
@@ -418,6 +549,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
 
   loadMoreMessages: (channelId) => {
     const { socket, isLoadingMessages, hasMore, messages } = get();
+
     if (!socket || isLoadingMessages || !hasMore) return;
 
     set({ isLoadingMessages: true });
@@ -435,6 +567,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       isLoadingMessages: false,
       hasMore: true,
       currentPage: 1,
+      pendingReactionOperations: [],
     }),
 
   disconnect: () => {
@@ -447,6 +580,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       isLoadingMessages: false,
       hasMore: true,
       currentPage: 1,
+      pendingReactionOperations: [],
     });
   },
 }));

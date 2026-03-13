@@ -38,10 +38,11 @@ const MessageList = memo(
             </div>
           )}
         </div>
-        {messages.map((msg) => (
+
+        {messages.map((message) => (
           <MessageItem
-            key={msg.tempId ?? `msg-${msg.id}-${msg.createdAt}`}
-            message={msg}
+            key={message.tempId ?? `msg-${message.id}-${message.createdAt}`}
+            message={message}
           />
         ))}
       </>
