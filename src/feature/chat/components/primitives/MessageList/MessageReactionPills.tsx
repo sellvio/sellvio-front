@@ -4,21 +4,13 @@ import { useMemo } from 'react';
 import { Message } from '@/feature/chat/types';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
 import { useSocketStore } from '@/feature/common/stores/useSocketStore';
-import { REACTION_OPTIONS } from '@/feature/common/data/reactionOptions';
+import { MessageReactionPill } from './MessageReactionPill';
 
 interface Props {
   message: Message;
-  isOpen: boolean;
-  onToggleOpen: () => void;
-  onClose: () => void;
 }
 
-export const MessageReactionPicker = ({
-  message,
-  isOpen,
-  onToggleOpen,
-  onClose,
-}: Props) => {
+export const MessageReactionPills = ({ message }: Props) => {
   const currentUser = useChatStore((state) => state.currentUser);
   const addReaction = useSocketStore((state) => state.addReaction);
   const removeReaction = useSocketStore((state) => state.removeReaction);
@@ -39,8 +31,6 @@ export const MessageReactionPicker = ({
         .map((reaction) => reaction.emojiId)
     );
   }, [currentUser, reactions]);
-
-  const hasAnyReactionFromCurrentUser = reactedEmojiIds.size > 0;
 
   const pendingEmojiActions = useMemo(() => {
     if (!currentUser) return new Map<number, 'add' | 'remove'>();
@@ -70,55 +60,34 @@ export const MessageReactionPicker = ({
 
     if (alreadyReacted) {
       removeReaction(message.channelId, message.id, emojiId);
-      onClose();
       return;
     }
 
     addReaction(message.channelId, message.id, emojiId);
-    onClose();
   };
 
+  if (!reactions.length) return null;
+
   return (
-    <div className="relative">
-      <button
-        type="button"
-        onClick={onToggleOpen}
-        className={`border shrink-0 w-[20px] h-[20px] flex items-center justify-center rounded-full text-xs transition cursor-pointer ${
-          hasAnyReactionFromCurrentUser
-            ? 'bg-[#0866FF26] border-[#0866FF] text-white'
-            : 'border-white/10 text-white/80 hover:bg-white/10'
-        }`}
-      >
-        +
-      </button>
+    <div className="flex flex-wrap items-center gap-2">
+      {reactions.map((reaction) => {
+        const isActive = currentUser
+          ? reaction.users.some((user) => user.id === currentUser.id)
+          : false;
 
-      {isOpen && (
-        <div className="bottom-full left-0 z-20 absolute flex items-center gap-1 bg-[#0B1739] shadow-lg mb-[2px] p-[5px] border border-white/10 rounded-xl">
-          {REACTION_OPTIONS.map((option) => {
-            const isSelected = reactedEmojiIds.has(option.id);
-            const pendingAction = pendingEmojiActions.get(option.id);
+        const pendingAction = pendingEmojiActions.get(reaction.emojiId);
 
-            return (
-              <button
-                key={option.id}
-                type="button"
-                title={option.label}
-                disabled={Boolean(pendingAction)}
-                onClick={() => handleToggleReaction(option.id)}
-                className={`p-[3px] rounded-lg text-lg transition cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed ${
-                  isSelected
-                    ? 'bg-[#0866FF33] ring-1 ring-[#0866FF]'
-                    : 'hover:bg-white/10'
-                }`}
-              >
-                <div className="flex justify-center items-center w-[25px] h-[25px]">
-                  {option.emoji}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      )}
+        return (
+          <MessageReactionPill
+            key={reaction.emojiId}
+            emojiId={reaction.emojiId}
+            count={reaction.users.length}
+            isActive={isActive}
+            isPending={Boolean(pendingAction)}
+            onClick={() => handleToggleReaction(reaction.emojiId)}
+          />
+        );
+      })}
     </div>
   );
 };
