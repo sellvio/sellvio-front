@@ -6,6 +6,9 @@ import { MessageReactions } from './MessageReactions';
 
 interface Props {
   message: Message;
+  isPickerOpen: boolean;
+  onTogglePicker: () => void;
+  onClosePicker: () => void;
 }
 
 const getSenderName = (msg: Message): string => {
@@ -18,39 +21,51 @@ const getSenderName = (msg: Message): string => {
   return `User ${msg.senderId}`;
 };
 
-export const MessageItem = memo(({ message }: Props) => {
-  return (
-    <div className="mb-4 text-white">
-      <div className="flex items-baseline gap-2 mb-1">
-        <span className="opacity-70 font-bold text-xs">
-          {getSenderName(message)}
-        </span>
+export const MessageItem = memo(
+  ({ message, isPickerOpen, onTogglePicker, onClosePicker }: Props) => {
+    return (
+      <div className="mb-4 text-white">
+        <div className="flex items-baseline gap-2 mb-1">
+          <span className="opacity-70 font-bold text-xs">
+            {getSenderName(message)}
+          </span>
 
-        <span className="opacity-40 text-[10px]">
-          {new Date(message.createdAt).toLocaleTimeString()}
-        </span>
-      </div>
-
-      {message.messageType === 'feedback_video' ? (
-        <div className="max-w-[529px]">
-          <FeedbackVideoMessage message={message} />
-          <MessageReactions message={message} />
+          <span className="opacity-40 text-[10px]">
+            {new Date(message.createdAt).toLocaleTimeString()}
+          </span>
         </div>
-      ) : (
-        <div className="flex flex-col items-start gap-2">
-          <div className="flex items-end gap-2">
-            <div className="inline-block bg-[#FFFFFF36] p-2 rounded-lg text-[15px]">
-              {message.content}
+
+        {message.messageType === 'feedback_video' ? (
+          <div className="max-w-[529px]">
+            <FeedbackVideoMessage message={message} />
+            <MessageReactions
+              message={message}
+              isPickerOpen={isPickerOpen}
+              onTogglePicker={onTogglePicker}
+              onClosePicker={onClosePicker}
+            />
+          </div>
+        ) : (
+          <div className="flex flex-col items-start gap-2">
+            <div className="flex items-end gap-2">
+              <div className="inline-block bg-[#FFFFFF36] p-2 rounded-lg text-[15px]">
+                {message.content}
+              </div>
+
+              <MessageStatusIcon status={message.status} />
             </div>
 
-            <MessageStatusIcon status={message.status} />
+            <MessageReactions
+              message={message}
+              isPickerOpen={isPickerOpen}
+              onTogglePicker={onTogglePicker}
+              onClosePicker={onClosePicker}
+            />
           </div>
-
-          <MessageReactions message={message} />
-        </div>
-      )}
-    </div>
-  );
-});
+        )}
+      </div>
+    );
+  }
+);
 
 MessageItem.displayName = 'MessageItem';

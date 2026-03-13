@@ -1,4 +1,6 @@
-import { memo } from 'react';
+'use client';
+
+import { memo, useState } from 'react';
 import { MessageListProps } from '@/feature/chat/types';
 import { MessageItem } from './MessageItem';
 import { Loader2 } from 'lucide-react';
@@ -12,6 +14,10 @@ const MessageList = memo(
     isLoadingMore,
     loadMoreTriggerRef,
   }: MessageListProps) => {
+    const [openReactionMessageId, setOpenReactionMessageId] = useState<
+      number | null
+    >(null);
+
     if (!selectedChannelId) {
       return (
         <div className="flex justify-center items-center h-full text-white/50">
@@ -39,12 +45,23 @@ const MessageList = memo(
           )}
         </div>
 
-        {messages.map((message) => (
-          <MessageItem
-            key={message.tempId ?? `msg-${message.id}-${message.createdAt}`}
-            message={message}
-          />
-        ))}
+        {messages.map((message) => {
+          const isPickerOpen = openReactionMessageId === message.id;
+
+          return (
+            <MessageItem
+              key={message.tempId ?? `msg-${message.id}-${message.createdAt}`}
+              message={message}
+              isPickerOpen={isPickerOpen}
+              onTogglePicker={() =>
+                setOpenReactionMessageId((prev) =>
+                  prev === message.id ? null : message.id
+                )
+              }
+              onClosePicker={() => setOpenReactionMessageId(null)}
+            />
+          );
+        })}
       </>
     );
   }
