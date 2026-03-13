@@ -20,6 +20,25 @@ export interface ChatChannel {
   channel_type_id?: number;
 }
 
+export interface ReactionUser {
+  id: number;
+  firstName: string | null;
+}
+
+export interface MessageReaction {
+  emojiId: number;
+  emoji: string;
+  emojiUrl: string;
+  users: ReactionUser[];
+}
+
+export interface ReplyTo {
+  id: number;
+  content: string;
+  senderId: number;
+  senderFirstName: string | null;
+}
+
 export interface Message {
   id: number;
   channelId: number;
@@ -32,12 +51,18 @@ export interface Message {
   senderFirstName?: string | null;
   senderLastName?: string | null;
   senderImageUrl?: string | null;
+
   messageType?: 'text' | 'feedback_video';
   videoUrl?: string | null;
   videoTitle?: string | null;
   videoCoverUrl?: string | null;
   videoStatus?: VideoStatus;
   campaignVideoId?: number | null;
+
+  images?: string[];
+  reactions?: MessageReaction[];
+  replyToId?: number | null;
+  replyTo?: ReplyTo | null;
 }
 
 export interface ChatStore {
@@ -73,6 +98,12 @@ export interface SocketState {
   loadMoreMessages: (channelId: number) => void;
   clearMessages: () => void;
   submitFeedback: (channelId: number, title: string, videoUrl: string) => void;
+  addReaction: (channelId: number, messageId: number, emojiId: number) => void;
+  removeReaction: (
+    channelId: number,
+    messageId: number,
+    emojiId: number
+  ) => void;
 }
 
 export interface GeneralChatProps {
