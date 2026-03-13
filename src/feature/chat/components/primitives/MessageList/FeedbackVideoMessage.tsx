@@ -1,9 +1,11 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
 import { Message } from '@/feature/chat/types';
 import { VideoStatusBadge } from './VideoStatusBadge';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
 import { useSocketStore } from '@/feature/common/stores/useSocketStore';
+import { FeedbackReviewActions } from '../FeedbackReviewActions';
 
 interface Props {
   message: Message;
@@ -14,14 +16,54 @@ export const FeedbackVideoMessage = ({ message }: Props) => {
   const selectedChannelId = useChatStore((s) => s.selectedChannelId);
   const socket = useSocketStore((s) => s.socket);
 
+  const [isReviewLoading, setIsReviewLoading] = useState(false);
+  const [loadingAction, setLoadingAction] = useState<
+    'approved' | 'rejected' | null
+  >(null);
+
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (message.videoStatus !== 'under_review') {
+      setIsReviewLoading(false);
+      setLoadingAction(null);
+
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+    }
+  }, [message.videoStatus]);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
   const handleReview = (status: 'approved' | 'rejected') => {
-    if (!socket || !selectedChannelId || !message.campaignVideoId) return;
+    if (
+      isReviewLoading ||
+      !socket ||
+      !selectedChannelId ||
+      !message.campaignVideoId
+    ) {
+      return;
+    }
+
+    setIsReviewLoading(true);
+    setLoadingAction(status);
 
     socket.emit('feedback:review', {
       channelId: selectedChannelId,
       campaignVideoId: message.campaignVideoId,
       status,
     });
+
+    timeoutRef.current = setTimeout(() => {
+      setIsReviewLoading(false);
+      setLoadingAction(null);
+    }, 10000);
   };
 
   return (
@@ -43,21 +85,12 @@ export const FeedbackVideoMessage = ({ message }: Props) => {
         </div>
 
         {isAdmin && message.videoStatus === 'under_review' && (
-          <div className="flex gap-2 mt-1">
-            <button
-              onClick={() => handleReview('rejected')}
-              className="flex-1 hover:bg-[#ff00004a] py-[10px] border border-[#0866FF] rounded-[6px] font-medium text-white text-xs transition-colors cursor-pointer"
-            >
-              უარყოფა
-            </button>
-
-            <button
-              onClick={() => handleReview('approved')}
-              className="flex-1 bg-[#0866FF] hover:bg-[#0867ffc1] py-[10px] rounded-[6px] font-medium text-white text-xs transition-colors cursor-pointer"
-            >
-              დადასტურება
-            </button>
-          </div>
+          <FeedbackReviewActions
+            isLoading={isReviewLoading}
+            loadingAction={loadingAction}
+            onReject={() => handleReview('rejected')}
+            onApprove={() => handleReview('approved')}
+          />
         )}
       </div>
     </div>
