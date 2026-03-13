@@ -56,7 +56,7 @@ export const MessageItem = ({
         </div>
       ) : (
         <div className="flex flex-col items-start gap-2">
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             <div className="flex items-end gap-2">
               <div className="inline-block bg-[#FFFFFF36] p-2 rounded-lg text-[15px]">
                 {message.content}

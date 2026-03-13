@@ -22,9 +22,9 @@ export const MessageReactionPill = ({
       type="button"
       onClick={onClick}
       disabled={isPending}
-      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs transition cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed ${
+      className={`w-[46px] h-[35px] rounded-[10px] cursor-pointer flex gap-[4px] items-center justify-center ${
         isActive
-          ? 'bg-[#0866FF33] border-[#0866FF] text-white'
+          ? 'bg-[#FFFFFF36] border-[#0866FF] text-white'
           : 'bg-white/10 border-white/10 text-white/80 hover:bg-white/15'
       }`}
     >
