@@ -43,16 +43,7 @@ export const MessageItem = ({
         <div className="max-w-[529px]">
           <div className="flex items-start gap-2">
             <FeedbackVideoMessage message={message} />
-
-            <MessageReactionPicker
-              message={message}
-              isOpen={isPickerOpen}
-              onToggleOpen={onTogglePicker}
-              onClose={onClosePicker}
-            />
           </div>
-
-          <MessageReactionPills message={message} />
         </div>
       ) : (
         <div className="flex flex-col items-start gap-2">

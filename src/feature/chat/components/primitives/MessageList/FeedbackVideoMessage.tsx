@@ -1,4 +1,5 @@
-import { memo } from 'react';
+'use client';
+
 import { Message } from '@/feature/chat/types';
 import { VideoStatusBadge } from './VideoStatusBadge';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
@@ -8,13 +9,14 @@ interface Props {
   message: Message;
 }
 
-export const FeedbackVideoMessage = memo(({ message }: Props) => {
+export const FeedbackVideoMessage = ({ message }: Props) => {
   const isAdmin = useChatStore((s) => s.isAdmin);
   const selectedChannelId = useChatStore((s) => s.selectedChannelId);
   const socket = useSocketStore((s) => s.socket);
 
   const handleReview = (status: 'approved' | 'rejected') => {
     if (!socket || !selectedChannelId || !message.campaignVideoId) return;
+
     socket.emit('feedback:review', {
       channelId: selectedChannelId,
       campaignVideoId: message.campaignVideoId,
@@ -30,11 +32,13 @@ export const FeedbackVideoMessage = memo(({ message }: Props) => {
         controls
         className="bg-black rounded-[8px] w-full max-w-[112px] h-[126px] object-cover aspect-video"
       />
+
       <div className="flex flex-col justify-between gap-2 px-3 py-2 w-full min-h-full">
         <div className="flex justify-between items-center gap-2 w-full">
           <p className="font-semibold text-[15px] text-white">
             {message.videoTitle || message.content}
           </p>
+
           <VideoStatusBadge status={message.videoStatus} />
         </div>
 
@@ -46,6 +50,7 @@ export const FeedbackVideoMessage = memo(({ message }: Props) => {
             >
               უარყოფა
             </button>
+
             <button
               onClick={() => handleReview('approved')}
               className="flex-1 bg-[#0866FF] hover:bg-[#0867ffc1] py-[10px] rounded-[6px] font-medium text-white text-xs transition-colors cursor-pointer"
@@ -57,6 +62,4 @@ export const FeedbackVideoMessage = memo(({ message }: Props) => {
       </div>
     </div>
   );
-});
-
-FeedbackVideoMessage.displayName = 'FeedbackVideoMessage';
+};
