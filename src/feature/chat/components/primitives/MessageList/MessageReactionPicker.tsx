@@ -1,7 +1,7 @@
 'use client';
 
-import { useMemo } from 'react';
-import { Loader2 } from 'lucide-react';
+import { useMemo, useState, useEffect } from 'react';
+import { Loader2, Check } from 'lucide-react';
 import { Message } from '@/feature/chat/types';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
 import { useSocketStore } from '@/feature/common/stores/useSocketStore';
@@ -21,6 +21,8 @@ export const MessageReactionPicker = ({
   onToggleOpen,
   onClose,
 }: Props) => {
+  const [isCopied, setIsCopied] = useState(false);
+
   const currentUser = useChatStore((state) => state.currentUser);
   const isAdmin = useChatStore((state) => state.isAdmin);
   const selectedChannelId = useChatStore((state) => state.selectedChannelId);
@@ -37,6 +39,13 @@ export const MessageReactionPicker = ({
 
   const reactions = message.reactions ?? [];
   const isPinLoading = pendingPinMessageIds.includes(message.id);
+
+  useEffect(() => {
+    if (isCopied) {
+      const timeout = setTimeout(() => setIsCopied(false), 2000);
+      return () => clearTimeout(timeout);
+    }
+  }, [isCopied]);
 
   const reactedEmojiIds = useMemo(() => {
     if (!currentUser) return new Set<number>();
@@ -70,10 +79,8 @@ export const MessageReactionPicker = ({
 
   const handleToggleReaction = (emojiId: number) => {
     if (!currentUser) return;
-
     const pendingAction = pendingEmojiActions.get(emojiId);
     if (pendingAction) return;
-
     const alreadyReacted = reactedEmojiIds.has(emojiId);
 
     if (alreadyReacted) {
@@ -81,16 +88,27 @@ export const MessageReactionPicker = ({
       onClose();
       return;
     }
-
     addReaction(message.channelId, message.id, emojiId);
     onClose();
   };
 
   const handlePinToggle = () => {
     if (!selectedChannelId || isPinLoading || !isAdmin) return;
-
     pinMessage(selectedChannelId, message.id, !message.pinned);
     onClose();
+  };
+
+  const handleCopy = async () => {
+    const textToCopy = message.content?.trim();
+    if (!textToCopy) return;
+
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      setIsCopied(true);
+      setTimeout(() => onClose(), 800);
+    } catch (error) {
+      console.error('Copy failed:', error);
+    }
   };
 
   return (
@@ -134,13 +152,21 @@ export const MessageReactionPicker = ({
             />
           </button>
 
-          <button type="button">
-            <Image
-              src={'/images/messageIcons/svg/copy.svg'}
-              alt="copy"
-              width={17}
-              height={17}
-            />
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="transition-all duration-200 cursor-pointer"
+          >
+            {isCopied ? (
+              <Check className="w-[17px] h-[17px] text-[#FFFFFF] animate-in zoom-in" />
+            ) : (
+              <Image
+                src={'/images/messageIcons/svg/copy.svg'}
+                alt="copy"
+                width={17}
+                height={17}
+              />
+            )}
           </button>
 
           <button
@@ -189,20 +215,26 @@ export const MessageReactionPicker = ({
           <div className="bg-[#FFFFFF36] w-full h-[1px]"></div>
 
           <div className="flex flex-col gap-[15px]">
-            <div className="flex justify-between w-full cursor-pointer">
+            <div className="flex justify-between hover:opacity-80 w-full transition-opacity cursor-pointer">
               <p className="font-semibold text-[13px]">პასუხი</p>
             </div>
 
-            <div className="flex justify-between w-full cursor-pointer">
-              <p className="font-semibold text-[13px]">დაკოპირება</p>
-            </div>
+            <button
+              type="button"
+              onClick={handleCopy}
+              className="group flex justify-between hover:opacity-80 w-full text-left transition-opacity cursor-pointer"
+            >
+              <p className="font-semibold text-[13px]">
+                {isCopied ? 'დაკოპირდა' : 'დაკოპირება'}
+              </p>
+            </button>
 
             {isAdmin && message.messageType !== 'feedback_video' && (
               <button
                 type="button"
                 disabled={isPinLoading}
                 onClick={handlePinToggle}
-                className="flex justify-between items-center disabled:opacity-60 w-full cursor-pointer disabled:cursor-not-allowed"
+                className="flex justify-between items-center hover:opacity-80 disabled:opacity-60 w-full transition-opacity cursor-pointer disabled:cursor-not-allowed"
               >
                 <p className="font-semibold text-[13px]">
                   {isPinLoading
@@ -211,7 +243,6 @@ export const MessageReactionPicker = ({
                       ? 'პინის მოხსნა'
                       : 'დაპინვა'}
                 </p>
-
                 {isPinLoading && <Loader2 className="w-4 h-4 animate-spin" />}
               </button>
             )}
@@ -219,8 +250,10 @@ export const MessageReactionPicker = ({
 
           <div className="bg-[#FFFFFF36] w-full h-[1px]"></div>
 
-          <div className="flex justify-between w-full cursor-pointer">
-            <p className="font-semibold text-[13px]">წაშლა</p>
+          <div className="group flex justify-between hover:opacity-80 w-full transition-opacity cursor-pointer">
+            <p className="font-semibold text-[13px] text-red-400 group-hover:text-red-300">
+              წაშლა
+            </p>
           </div>
         </div>
       )}
