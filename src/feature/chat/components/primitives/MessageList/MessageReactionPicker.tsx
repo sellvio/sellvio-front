@@ -161,8 +161,8 @@ export const MessageReactionPicker = ({
         <div className="flex justify-between items-center w-[75px] h-full">
           <button type="button">
             <Image
-              src={'/images/messageIcons/svg/Reply.svg'}
-              alt="reply"
+              src={'/images/messageIcons/svg/reply-message.svg'}
+              alt="reply-message"
               width={17}
               height={17}
             />
@@ -201,7 +201,7 @@ export const MessageReactionPicker = ({
       </div>
 
       {isOpen && (
-        <div className="top-[-33px] right-[35px] z-[100] absolute flex flex-col gap-[15px] bg-[#38466D] p-[17px] border border-[#FFFFFF36] rounded-[8px] w-full max-w-[221px] min-h-[252px]">
+        <div className="top-[-33px] right-[35px] z-[100] absolute flex flex-col gap-[15px] bg-[#38466D] p-[17px] border border-[#FFFFFF36] rounded-[8px] w-full max-w-[221px]">
           <div className="flex justify-between gap-[4px] w-full max-h-[44px]">
             {REACTION_OPTIONS.map((option) => {
               const isSelected = reactedEmojiIds.has(option.id);
@@ -233,6 +233,12 @@ export const MessageReactionPicker = ({
           <div className="flex flex-col gap-[15px]">
             <div className="flex justify-between hover:opacity-80 w-full transition-opacity cursor-pointer">
               <p className="font-semibold text-[13px]">პასუხი</p>
+              <Image
+                src={'/images/messageIcons/svg/reply.svg'}
+                alt="reply"
+                width={17}
+                height={17}
+              />
             </div>
 
             <button
@@ -243,6 +249,12 @@ export const MessageReactionPicker = ({
               <p className="font-semibold text-[13px]">
                 {isCopied ? 'დაკოპირდა' : 'დაკოპირება'}
               </p>
+              <Image
+                src={'/images/messageIcons/svg/copy-popup.svg'}
+                alt="copy-popup"
+                width={17}
+                height={17}
+              />
             </button>
 
             {isAdmin && message.messageType !== 'feedback_video' && (
@@ -259,27 +271,41 @@ export const MessageReactionPicker = ({
                       ? 'პინის მოხსნა'
                       : 'დაპინვა'}
                 </p>
+                <Image
+                  src={'/images/messageIcons/svg/pin.svg'}
+                  alt="pin"
+                  width={17}
+                  height={17}
+                />
                 {isPinLoading && <Loader2 className="w-4 h-4 animate-spin" />}
               </button>
             )}
           </div>
 
-          <div className="bg-[#FFFFFF36] w-full h-[1px]"></div>
-
           {canDelete && (
-            <button
-              type="button"
-              onClick={handleDelete}
-              disabled={isDeleteLoading}
-              className="group flex justify-between items-center hover:opacity-80 disabled:opacity-60 w-full transition-opacity cursor-pointer disabled:cursor-not-allowed"
-            >
-              <p className="font-semibold text-[13px] text-red-400 group-hover:text-red-300">
-                {isDeleteLoading ? 'იშლება...' : 'წაშლა'}
-              </p>
-              {isDeleteLoading && (
-                <Loader2 className="w-4 h-4 text-red-400 animate-spin" />
-              )}
-            </button>
+            <>
+              <div className="bg-[#FFFFFF36] w-full h-[1px]"></div>
+
+              <button
+                type="button"
+                onClick={handleDelete}
+                disabled={isDeleteLoading}
+                className="group flex justify-between items-center hover:opacity-80 disabled:opacity-60 w-full transition-opacity cursor-pointer disabled:cursor-not-allowed"
+              >
+                <p className="font-semibold text-[#ffffff] text-[13px]">
+                  {isDeleteLoading ? 'იშლება...' : 'წაშლა'}
+                </p>
+                <Image
+                  src={'/images/messageIcons/svg/delete.svg'}
+                  alt="delete"
+                  width={17}
+                  height={17}
+                />
+                {isDeleteLoading && (
+                  <Loader2 className="w-4 h-4 text-red-400 animate-spin" />
+                )}
+              </button>
+            </>
           )}
         </div>
       )}
