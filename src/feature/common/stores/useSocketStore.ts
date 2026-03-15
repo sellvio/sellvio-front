@@ -363,12 +363,38 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     socket.on('feedback:submitted', (data) => {
       if (!data?.video) return;
 
-      set((state) => ({
-        messages: sortByDate([
-          ...state.messages,
-          videoToMessage(data.video, data.channelId),
-        ]),
-      }));
+      const realMessage = videoToMessage(data.video, data.channelId);
+
+      set((state) => {
+        const currentUserId = useChatStore.getState().currentUser?.id;
+
+        const optimisticIndex = state.messages.findIndex(
+          (message) =>
+            message.messageType === 'feedback_video' &&
+            Boolean(message.tempId) &&
+            message.channelId === data.channelId &&
+            message.senderId === currentUserId &&
+            message.videoUrl === realMessage.videoUrl &&
+            (message.videoTitle || message.content) ===
+              (realMessage.videoTitle || realMessage.content)
+        );
+
+        const nextMessages =
+          optimisticIndex !== -1
+            ? state.messages.map((message, index) =>
+                index === optimisticIndex
+                  ? {
+                      ...realMessage,
+                      status: 'delivered' as MessageStatus,
+                    }
+                  : message
+              )
+            : [...state.messages, realMessage];
+
+        return {
+          messages: sortByDate(nextMessages),
+        };
+      });
     });
 
     socket.on('feedback:reviewed', (data) => {
@@ -543,13 +569,55 @@ export const useSocketStore = create<SocketState>((set, get) => ({
 
   submitFeedback: (channelId, title, videoUrl) => {
     const { socket, isConnected } = get();
-    if (!socket || !isConnected) return;
+    const currentUser = useChatStore.getState().currentUser;
+
+    if (!socket || !isConnected || !currentUser) return;
+
+    const tempId = `feedback_temp_${Date.now()}_${Math.random()}`;
+
+    const optimisticMessage: Message = {
+      id: Date.now(),
+      channelId,
+      senderId: currentUser.id,
+      content: title,
+      createdAt: new Date().toISOString(),
+      pinned: false,
+      status: 'sending',
+      tempId,
+      senderFirstName: currentUser.name,
+      senderLastName: null,
+      senderImageUrl: null,
+      messageType: 'feedback_video',
+      campaignVideoId: null,
+      videoUrl,
+      videoTitle: title,
+      videoCoverUrl: null,
+      videoStatus: 'under_review',
+      images: [],
+      reactions: [],
+      replyToId: null,
+      replyTo: null,
+    };
+
+    set((state) => ({
+      messages: sortByDate([...state.messages, optimisticMessage]),
+    }));
 
     socket.emit('feedback:submit', {
       channelId,
       title,
       videoUrl,
     });
+
+    setTimeout(() => {
+      set((state) => ({
+        messages: state.messages.map((message) =>
+          message.tempId === tempId && message.status === 'sending'
+            ? { ...message, status: 'sent' as MessageStatus }
+            : message
+        ),
+      }));
+    }, 4000);
   },
 
   addReaction: (channelId, messageId, emojiId) => {

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { Loader2 } from 'lucide-react';
 import { Message } from '@/feature/chat/types';
 import { VideoStatusBadge } from './VideoStatusBadge';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
@@ -66,14 +67,27 @@ export const FeedbackVideoMessage = ({ message }: Props) => {
     }, 10000);
   };
 
+  const isSubmitting =
+    message.messageType === 'feedback_video' &&
+    (message.status === 'sending' || message.status === 'sent') &&
+    !message.campaignVideoId;
+
   return (
     <div className="flex bg-[#FFFFFF36] px-[18px] py-[14px] rounded-[8px] w-full max-w-[529px] overflow-hidden">
-      <video
-        src={message.videoUrl ?? undefined}
-        poster={message.videoCoverUrl ?? undefined}
-        controls
-        className="bg-black rounded-[8px] w-full max-w-[112px] h-[126px] object-cover aspect-video"
-      />
+      <div className="relative w-full max-w-[112px] h-[126px]">
+        <video
+          src={message.videoUrl ?? undefined}
+          poster={message.videoCoverUrl ?? undefined}
+          controls={!isSubmitting}
+          className="bg-black rounded-[8px] w-full max-w-[112px] h-[126px] object-cover aspect-video"
+        />
+
+        {isSubmitting && (
+          <div className="absolute inset-0 flex justify-center items-center bg-black/50 rounded-[8px]">
+            <Loader2 className="w-7 h-7 text-white animate-spin" />
+          </div>
+        )}
+      </div>
 
       <div className="flex flex-col justify-between gap-2 px-3 py-2 w-full min-h-full">
         <div className="flex justify-between items-center gap-2 w-full">
@@ -81,10 +95,17 @@ export const FeedbackVideoMessage = ({ message }: Props) => {
             {message.videoTitle || message.content}
           </p>
 
-          <VideoStatusBadge status={message.videoStatus} />
+          <VideoStatusBadge
+            status={message.videoStatus}
+            isSubmitting={isSubmitting}
+          />
         </div>
 
-        {isAdmin && message.videoStatus === 'under_review' && (
+        {isSubmitting && (
+          <p className="text-white/70 text-xs">ვიდეო იგზავნება...</p>
+        )}
+
+        {isAdmin && message.videoStatus === 'under_review' && !isSubmitting && (
           <FeedbackReviewActions
             isLoading={isReviewLoading}
             loadingAction={loadingAction}

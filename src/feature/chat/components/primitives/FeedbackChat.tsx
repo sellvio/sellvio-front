@@ -27,8 +27,11 @@ const FeedbackChat = () => {
 
   const handleSubmit = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (isAdmin || !uploadedVideoUrl || !title.trim() || !selectedChannelId)
+
+    if (isAdmin || !uploadedVideoUrl || !title.trim() || !selectedChannelId) {
       return;
+    }
+
     submitFeedback(selectedChannelId, title.trim(), uploadedVideoUrl);
     handleReset();
   };
