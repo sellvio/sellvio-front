@@ -142,6 +142,7 @@ export interface MessageInputProps {
   onSend: () => void;
   disabled: boolean;
   selectedChannelId: number | null;
+  placeholder?: string;
 }
 
 export interface ChatHeaderProps {

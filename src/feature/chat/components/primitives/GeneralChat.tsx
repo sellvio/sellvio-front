@@ -76,7 +76,16 @@ const GeneralChat = memo(({ chatFull }: GeneralChatProps) => {
   const visibleChannels = newChannelsData.filter(
     (item) => !item.isAdmin || isAdmin
   );
+
   const isFeedbackChannel = selectedChannelTypeId === 3;
+  const isRulesChannel = selectedChannelTypeId === 2;
+  const isRulesDisabled = isRulesChannel && !isAdmin;
+
+  const inputPlaceholder = !selectedChannelId
+    ? 'აირჩიე არხი'
+    : isRulesDisabled
+      ? 'ამ არხში მხოლოდ ადმინს შეუძლია შეტყობინების გაგზავნა'
+      : 'შეიყვანე შეტყობინება';
 
   return (
     <div
@@ -89,6 +98,7 @@ const GeneralChat = memo(({ chatFull }: GeneralChatProps) => {
         activeTab={activeTab}
         onTabClick={(id) => setActiveTab(activeTab === id ? null : id)}
       />
+
       <div className="relative flex flex-1 overflow-hidden">
         <div
           ref={scrollRef}
@@ -104,8 +114,10 @@ const GeneralChat = memo(({ chatFull }: GeneralChatProps) => {
             loadMoreTriggerRef={loadMoreTriggerRef}
           />
         </div>
+
         {activeTab && TAB_CONTENT[activeTab]}
       </div>
+
       {isFeedbackChannel ? (
         <FeedbackChat />
       ) : (
@@ -113,8 +125,9 @@ const GeneralChat = memo(({ chatFull }: GeneralChatProps) => {
           text={text}
           setText={setText}
           onSend={handleSendMessage}
-          disabled={!selectedChannelId || isLoadingChannel}
+          disabled={!selectedChannelId || isLoadingChannel || isRulesDisabled}
           selectedChannelId={selectedChannelId}
+          placeholder={inputPlaceholder}
         />
       )}
     </div>
