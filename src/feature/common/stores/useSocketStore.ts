@@ -274,6 +274,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
   currentPage: 1,
   pendingReactionOperations: [],
   pendingPinMessageIds: [],
+  pendingDeleteMessageIds: [],
 
   connect: (token: string) => {
     if (typeof window === 'undefined' || get().socket?.connected) return;
@@ -514,6 +515,9 @@ export const useSocketStore = create<SocketState>((set, get) => ({
           messages: state.messages.filter(
             (message) => message.id !== payload.messageId
           ),
+          pendingDeleteMessageIds: state.pendingDeleteMessageIds.filter(
+            (id) => id !== payload.messageId
+          ),
         }));
       }
     );
@@ -554,6 +558,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       set({
         isLoadingMessages: false,
         pendingPinMessageIds: [],
+        pendingDeleteMessageIds: [],
       });
     });
 
@@ -575,6 +580,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       currentPage: 1,
       pendingReactionOperations: [],
       pendingPinMessageIds: [],
+      pendingDeleteMessageIds: [],
     });
 
     socket.emit('channel:open', {
@@ -793,6 +799,23 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     });
   },
 
+  deleteMessage: (channelId, messageId) => {
+    const socket = get().socket;
+    if (!socket) return;
+
+    set((state) => ({
+      messages: state.messages.filter((message) => message.id !== messageId),
+      pendingDeleteMessageIds: state.pendingDeleteMessageIds.includes(messageId)
+        ? state.pendingDeleteMessageIds
+        : [...state.pendingDeleteMessageIds, messageId],
+    }));
+
+    socket.emit('message:delete', {
+      channelId,
+      messageId,
+    });
+  },
+
   loadMoreMessages: (channelId) => {
     const { socket, isLoadingMessages, hasMore, messages } = get();
 
@@ -815,6 +838,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       currentPage: 1,
       pendingReactionOperations: [],
       pendingPinMessageIds: [],
+      pendingDeleteMessageIds: [],
     }),
 
   disconnect: () => {
@@ -829,6 +853,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       currentPage: 1,
       pendingReactionOperations: [],
       pendingPinMessageIds: [],
+      pendingDeleteMessageIds: [],
     });
   },
 }));

@@ -95,6 +95,7 @@ export interface SocketState {
   currentPage: number;
   pendingReactionOperations: PendingReactionOperation[];
   pendingPinMessageIds: number[];
+  pendingDeleteMessageIds: number[];
   connect: (token: string) => void;
   disconnect: () => void;
   joinServer: (serverId: number) => void;
@@ -115,6 +116,7 @@ export interface SocketState {
     emojiId: number
   ) => void;
   pinMessage: (channelId: number, messageId: number, pinned: boolean) => void;
+  deleteMessage: (channelId: number, messageId: number) => void;
 }
 export interface GeneralChatProps {
   chatFull: boolean;

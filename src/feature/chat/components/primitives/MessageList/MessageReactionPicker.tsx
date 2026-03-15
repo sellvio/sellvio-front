@@ -30,15 +30,25 @@ export const MessageReactionPicker = ({
   const addReaction = useSocketStore((state) => state.addReaction);
   const removeReaction = useSocketStore((state) => state.removeReaction);
   const pinMessage = useSocketStore((state) => state.pinMessage);
+  const deleteMessage = useSocketStore((state) => state.deleteMessage);
   const pendingReactionOperations = useSocketStore(
     (state) => state.pendingReactionOperations
   );
   const pendingPinMessageIds = useSocketStore(
     (state) => state.pendingPinMessageIds
   );
+  const pendingDeleteMessageIds = useSocketStore(
+    (state) => state.pendingDeleteMessageIds
+  );
 
   const reactions = message.reactions ?? [];
   const isPinLoading = pendingPinMessageIds.includes(message.id);
+  const isDeleteLoading = pendingDeleteMessageIds.includes(message.id);
+
+  const canDelete = useMemo(() => {
+    if (!currentUser) return false;
+    return message.senderId === currentUser.id || isAdmin;
+  }, [currentUser, message.senderId, isAdmin]);
 
   useEffect(() => {
     if (isCopied) {
@@ -109,6 +119,12 @@ export const MessageReactionPicker = ({
     } catch (error) {
       console.error('Copy failed:', error);
     }
+  };
+
+  const handleDelete = () => {
+    if (!selectedChannelId || !canDelete || isDeleteLoading) return;
+    deleteMessage(selectedChannelId, message.id);
+    onClose();
   };
 
   return (
@@ -250,11 +266,21 @@ export const MessageReactionPicker = ({
 
           <div className="bg-[#FFFFFF36] w-full h-[1px]"></div>
 
-          <div className="group flex justify-between hover:opacity-80 w-full transition-opacity cursor-pointer">
-            <p className="font-semibold text-[13px] text-red-400 group-hover:text-red-300">
-              წაშლა
-            </p>
-          </div>
+          {canDelete && (
+            <button
+              type="button"
+              onClick={handleDelete}
+              disabled={isDeleteLoading}
+              className="group flex justify-between items-center hover:opacity-80 disabled:opacity-60 w-full transition-opacity cursor-pointer disabled:cursor-not-allowed"
+            >
+              <p className="font-semibold text-[13px] text-red-400 group-hover:text-red-300">
+                {isDeleteLoading ? 'იშლება...' : 'წაშლა'}
+              </p>
+              {isDeleteLoading && (
+                <Loader2 className="w-4 h-4 text-red-400 animate-spin" />
+              )}
+            </button>
+          )}
         </div>
       )}
     </div>
