@@ -5,6 +5,7 @@ import { Message } from '@/feature/chat/types';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
 import { useSocketStore } from '@/feature/common/stores/useSocketStore';
 import { REACTION_OPTIONS } from '@/feature/common/data/reactionOptions';
+import Image from 'next/image';
 
 interface Props {
   message: Message;
@@ -80,20 +81,8 @@ export const MessageReactionPicker = ({
 
   return (
     <div className="relative">
-      <button
-        type="button"
-        onClick={onToggleOpen}
-        className={`border shrink-0 w-[20px] h-[20px] flex items-center justify-center rounded-full text-xs transition cursor-pointer ${
-          hasAnyReactionFromCurrentUser
-            ? 'bg-[#0866FF26] border-[#0866FF] text-white'
-            : 'border-white/10 text-white/80 hover:bg-white/10'
-        }`}
-      >
-        +
-      </button>
-
-      {isOpen && (
-        <div className="bottom-full left-0 z-20 absolute flex items-center gap-1 bg-[#0B1739] shadow-lg mb-[2px] p-[5px] border border-white/10 rounded-xl">
+      <div className="flex gap-[11px] bg-[#38466D] p-[6px] border border-[#FFFFFF36] rounded-[6px] w-full max-w-[232px] h-[42px]">
+        <div className="flex gap-[3px]">
           {REACTION_OPTIONS.map((option) => {
             const isSelected = reactedEmojiIds.has(option.id);
             const pendingAction = pendingEmojiActions.get(option.id);
@@ -105,18 +94,80 @@ export const MessageReactionPicker = ({
                 title={option.label}
                 disabled={Boolean(pendingAction)}
                 onClick={() => handleToggleReaction(option.id)}
-                className={`p-[3px] rounded-lg text-lg transition cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed ${
+                className={`p-[8px] rounded-[6px] w-[28px] h-[28px] cursor-pointer flex items-center justify-center bg-[#FFFFFF36] disabled:opacity-70 disabled:cursor-not-allowed ${
                   isSelected
                     ? 'bg-[#0866FF33] ring-1 ring-[#0866FF]'
                     : 'hover:bg-white/10'
                 }`}
               >
-                <div className="flex justify-center items-center w-[25px] h-[25px]">
+                <div className="flex justify-center items-center">
                   {option.emoji}
                 </div>
               </button>
             );
           })}
+        </div>
+
+        <div className="bg-[#FFFFFF36] w-[1px] h-full"></div>
+
+        <div className="flex justify-between items-center w-[75px] h-full">
+          <button>
+            <Image
+              src={'/images/messageIcons/svg/Reply.svg'}
+              alt="reply"
+              width={17}
+              height={17}
+            />
+          </button>
+
+          <button>
+            <Image
+              src={'/images/messageIcons/svg/copy.svg'}
+              alt="copy"
+              width={17}
+              height={17}
+            />
+          </button>
+
+          <button onClick={onToggleOpen} className="cursor-pointer">
+            <Image
+              src={'/images/messageIcons/svg/moreInfo.svg'}
+              alt="moreInfo"
+              width={17}
+              height={17}
+            />
+          </button>
+        </div>
+      </div>
+
+      {isOpen && (
+        <div className="top-[-33px] right-[35px] z-[100] absolute flex flex-col gap-[15px] bg-[#38466D] p-[17px] border border-[#FFFFFF36] rounded-[8px] w-full max-w-[221px] min-h-[252px]">
+          <div className="flex justify-between gap-[4px] w-full max-h-[44px]">
+            {REACTION_OPTIONS.map((option) => {
+              const isSelected = reactedEmojiIds.has(option.id);
+              const pendingAction = pendingEmojiActions.get(option.id);
+
+              return (
+                <button
+                  key={option.id}
+                  type="button"
+                  title={option.label}
+                  disabled={Boolean(pendingAction)}
+                  onClick={() => handleToggleReaction(option.id)}
+                  className={`p-[12px] rounded-[8px] w-[44px] h-[44px] cursor-pointer flex items-center justify-center bg-[#FFFFFF36] disabled:opacity-70 disabled:cursor-not-allowed ${
+                    isSelected
+                      ? 'bg-[#0866FF33] ring-1 ring-[#0866FF]'
+                      : 'hover:bg-white/10'
+                  }`}
+                >
+                  <div className="flex justify-center items-center">
+                    {option.emoji}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+          <div className="bg-[#FFFFFF36] w-full h-[1px]"></div>
         </div>
       )}
     </div>
