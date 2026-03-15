@@ -94,6 +94,7 @@ export interface SocketState {
   hasMore: boolean;
   currentPage: number;
   pendingReactionOperations: PendingReactionOperation[];
+  pendingPinMessageIds: number[];
   connect: (token: string) => void;
   disconnect: () => void;
   joinServer: (serverId: number) => void;
@@ -112,6 +113,7 @@ export interface SocketState {
     messageId: number,
     emojiId: number
   ) => void;
+  pinMessage: (channelId: number, messageId: number, pinned: boolean) => void;
 }
 
 export interface GeneralChatProps {

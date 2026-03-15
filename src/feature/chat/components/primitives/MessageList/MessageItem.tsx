@@ -1,8 +1,13 @@
+'use client';
+
+import { Loader2 } from 'lucide-react';
 import { Message } from '@/feature/chat/types';
 import { MessageStatusIcon } from './MessageStatusIcon';
 import { FeedbackVideoMessage } from './FeedbackVideoMessage';
 import { MessageReactionPicker } from './MessageReactionPicker';
 import { MessageReactionPills } from './MessageReactionPills';
+import { useChatStore } from '@/feature/common/stores/useChatStore';
+import { useSocketStore } from '@/feature/common/stores/useSocketStore';
 
 interface Props {
   message: Message;
@@ -27,6 +32,18 @@ export const MessageItem = ({
   onTogglePicker,
   onClosePicker,
 }: Props) => {
+  const isAdmin = useChatStore((s) => s.isAdmin);
+  const selectedChannelId = useChatStore((s) => s.selectedChannelId);
+  const pinMessage = useSocketStore((s) => s.pinMessage);
+  const pendingPinMessageIds = useSocketStore((s) => s.pendingPinMessageIds);
+
+  const isPinLoading = pendingPinMessageIds.includes(message.id);
+
+  const handlePinToggle = () => {
+    if (!selectedChannelId || isPinLoading) return;
+    pinMessage(selectedChannelId, message.id, !message.pinned);
+  };
+
   return (
     <div className="mb-4 text-white">
       <div className="flex items-baseline gap-2 mb-1">
@@ -37,6 +54,12 @@ export const MessageItem = ({
         <span className="opacity-40 text-[10px]">
           {new Date(message.createdAt).toLocaleTimeString()}
         </span>
+
+        {message.pinned && (
+          <span className="bg-[#0866FF26] px-2 py-[2px] rounded-full font-medium text-[#8BB8FF] text-[10px]">
+            Pinned
+          </span>
+        )}
       </div>
 
       {message.messageType === 'feedback_video' ? (
@@ -62,6 +85,30 @@ export const MessageItem = ({
               onToggleOpen={onTogglePicker}
               onClose={onClosePicker}
             />
+
+            {isAdmin && message.messageType !== 'feedback_video' && (
+              <button
+                type="button"
+                disabled={isPinLoading}
+                onClick={handlePinToggle}
+                className={`border px-2 h-[28px] rounded-lg text-xs transition flex items-center justify-center gap-1 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed ${
+                  message.pinned
+                    ? 'border-[#0866FF] bg-[#0866FF26] text-white'
+                    : 'border-white/10 text-white/80 hover:bg-white/10'
+                }`}
+              >
+                {isPinLoading ? (
+                  <>
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    Loading
+                  </>
+                ) : message.pinned ? (
+                  'Unpin'
+                ) : (
+                  'Pin'
+                )}
+              </button>
+            )}
           </div>
 
           <MessageReactionPills message={message} />

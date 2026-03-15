@@ -34,6 +34,61 @@ type ReactionRemovePayload = {
   userId: number;
 };
 
+const getPinnedStorageKey = (channelId: number) => `chat:pinned:${channelId}`;
+
+const getPinnedIdsSet = (channelId: number): Set<number> => {
+  if (typeof window === 'undefined') return new Set();
+
+  try {
+    const raw = localStorage.getItem(getPinnedStorageKey(channelId));
+    if (!raw) return new Set();
+
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return new Set();
+
+    return new Set(parsed.filter((id) => typeof id === 'number'));
+  } catch {
+    return new Set();
+  }
+};
+
+const setPinnedIdsSet = (channelId: number, ids: Set<number>) => {
+  if (typeof window === 'undefined') return;
+
+  try {
+    localStorage.setItem(
+      getPinnedStorageKey(channelId),
+      JSON.stringify(Array.from(ids))
+    );
+  } catch {
+    //
+  }
+};
+
+const addPinnedIdToStorage = (channelId: number, messageId: number) => {
+  const ids = getPinnedIdsSet(channelId);
+  ids.add(messageId);
+  setPinnedIdsSet(channelId, ids);
+};
+
+const removePinnedIdFromStorage = (channelId: number, messageId: number) => {
+  const ids = getPinnedIdsSet(channelId);
+  ids.delete(messageId);
+  setPinnedIdsSet(channelId, ids);
+};
+
+const applyStoredPinnedStateForChannel = (
+  channelId: number,
+  messages: Message[]
+): Message[] => {
+  const storedPinnedIds = getPinnedIdsSet(channelId);
+
+  return messages.map((message) => ({
+    ...message,
+    pinned: Boolean(message.pinned) || storedPinnedIds.has(message.id),
+  }));
+};
+
 const sortByDate = (messages: Message[]): Message[] => {
   const map = new Map<string | number, Message>();
 
@@ -218,6 +273,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
   hasMore: true,
   currentPage: 1,
   pendingReactionOperations: [],
+  pendingPinMessageIds: [],
 
   connect: (token: string) => {
     if (typeof window === 'undefined' || get().socket?.connected) return;
@@ -232,9 +288,12 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     socket.on('disconnect', () => set({ isConnected: false }));
 
     socket.on('message:history', (data) => {
-      if (!data?.messages) return;
+      if (!data?.messages || !data?.channelId) return;
 
-      const normalizedMessages: Message[] = data.messages.map(normalizeMessage);
+      const normalizedMessages: Message[] = applyStoredPinnedStateForChannel(
+        data.channelId,
+        data.messages.map(normalizeMessage)
+      );
 
       set((state) => {
         const isFirst = state.messages.length === 0;
@@ -382,17 +441,35 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     socket.on('message:pinned', (payload: Message) => {
       const normalized = normalizeMessage(payload);
 
+      if (normalized.pinned) {
+        addPinnedIdToStorage(normalized.channelId, normalized.id);
+      } else {
+        removePinnedIdFromStorage(normalized.channelId, normalized.id);
+      }
+
       set((state) => ({
-        messages: state.messages.map((message) =>
-          message.id === normalized.id
-            ? { ...message, pinned: normalized.pinned }
-            : message
+        messages: sortByDate(
+          state.messages.map((message) =>
+            message.id === normalized.id
+              ? {
+                  ...message,
+                  ...normalized,
+                  pinned: normalized.pinned,
+                }
+              : message
+          )
+        ),
+        pendingPinMessageIds: state.pendingPinMessageIds.filter(
+          (id) => id !== normalized.id
         ),
       }));
     });
 
     socket.on('error', () => {
-      set({ isLoadingMessages: false });
+      set({
+        isLoadingMessages: false,
+        pendingPinMessageIds: [],
+      });
     });
 
     set({ socket });
@@ -412,6 +489,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       hasMore: true,
       currentPage: 1,
       pendingReactionOperations: [],
+      pendingPinMessageIds: [],
     });
 
     socket.emit('channel:open', {
@@ -547,6 +625,34 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     });
   },
 
+  pinMessage: (channelId, messageId, pinned) => {
+    const socket = get().socket;
+    if (!socket) return;
+
+    if (pinned) {
+      addPinnedIdToStorage(channelId, messageId);
+    } else {
+      removePinnedIdFromStorage(channelId, messageId);
+    }
+
+    set((state) => ({
+      messages: sortByDate(
+        state.messages.map((message) =>
+          message.id === messageId ? { ...message, pinned } : message
+        )
+      ),
+      pendingPinMessageIds: state.pendingPinMessageIds.includes(messageId)
+        ? state.pendingPinMessageIds
+        : [...state.pendingPinMessageIds, messageId],
+    }));
+
+    socket.emit('message:pin', {
+      channelId,
+      messageId,
+      pinned,
+    });
+  },
+
   loadMoreMessages: (channelId) => {
     const { socket, isLoadingMessages, hasMore, messages } = get();
 
@@ -568,6 +674,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       hasMore: true,
       currentPage: 1,
       pendingReactionOperations: [],
+      pendingPinMessageIds: [],
     }),
 
   disconnect: () => {
@@ -581,6 +688,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       hasMore: true,
       currentPage: 1,
       pendingReactionOperations: [],
+      pendingPinMessageIds: [],
     });
   },
 }));
