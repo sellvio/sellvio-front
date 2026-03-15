@@ -278,6 +278,12 @@ export const useSocketStore = create<SocketState>((set, get) => ({
   connect: (token: string) => {
     if (typeof window === 'undefined' || get().socket?.connected) return;
 
+    const existingSocket = get().socket;
+    if (existingSocket) {
+      existingSocket.removeAllListeners();
+      existingSocket.disconnect();
+    }
+
     const socket = io(`${baseUrl}/chat`, {
       auth: { token },
       transports: ['websocket', 'polling'],
@@ -288,7 +294,16 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     socket.on('disconnect', () => set({ isConnected: false }));
 
     socket.on('message:history', (data) => {
-      if (!data?.messages || !data?.channelId) return;
+      const selectedChannelId = useChatStore.getState().selectedChannelId;
+
+      if (
+        !data?.messages ||
+        !data?.channelId ||
+        !selectedChannelId ||
+        data.channelId !== selectedChannelId
+      ) {
+        return;
+      }
 
       const normalizedMessages: Message[] = applyStoredPinnedStateForChannel(
         data.channelId,
@@ -312,7 +327,15 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     });
 
     socket.on('feedback:videos', (data) => {
-      if (!data?.videos?.length) return;
+      const selectedChannelId = useChatStore.getState().selectedChannelId;
+
+      if (
+        !data?.videos?.length ||
+        !selectedChannelId ||
+        data.channelId !== selectedChannelId
+      ) {
+        return;
+      }
 
       const videoMessages: Message[] = data.videos.map((video: any) =>
         videoToMessage(video, data.channelId)
@@ -325,21 +348,28 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     });
 
     socket.on('message', (incomingMessage: Message) => {
+      const selectedChannelId = useChatStore.getState().selectedChannelId;
       const message = normalizeMessage(incomingMessage);
 
+      if (!selectedChannelId || message.channelId !== selectedChannelId) {
+        return;
+      }
+
       set((state) => {
-        const sendingIndex = state.messages.findIndex(
+        const optimisticIndex = state.messages.findIndex(
           (item) =>
-            item.tempId &&
-            item.content === message.content &&
             item.channelId === message.channelId &&
-            item.status === 'sending'
+            item.messageType !== 'feedback_video' &&
+            item.tempId &&
+            item.senderId === -1 &&
+            item.content.trim() === message.content.trim() &&
+            (item.status === 'sending' || item.status === 'sent')
         );
 
         const nextMessages =
-          sendingIndex !== -1
+          optimisticIndex !== -1
             ? state.messages.map((item, index) =>
-                index === sendingIndex
+                index === optimisticIndex
                   ? {
                       ...message,
                       status: 'delivered' as MessageStatus,
@@ -361,7 +391,15 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     });
 
     socket.on('feedback:submitted', (data) => {
-      if (!data?.video) return;
+      const selectedChannelId = useChatStore.getState().selectedChannelId;
+
+      if (
+        !data?.video ||
+        !selectedChannelId ||
+        data.channelId !== selectedChannelId
+      ) {
+        return;
+      }
 
       const realMessage = videoToMessage(data.video, data.channelId);
 
@@ -398,8 +436,6 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     });
 
     socket.on('feedback:reviewed', (data) => {
-      if (!data?.campaignVideoId) return;
-
       set((state) => ({
         messages: state.messages.map((message) =>
           message.campaignVideoId === data.campaignVideoId
@@ -410,6 +446,9 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     });
 
     socket.on('message:reaction', (payload: ReactionAddPayload) => {
+      const selectedChannelId = useChatStore.getState().selectedChannelId;
+      if (!selectedChannelId || payload.channelId !== selectedChannelId) return;
+
       set((state) => ({
         messages: state.messages.map((message) =>
           addReactionLocally(message, {
@@ -435,6 +474,9 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     });
 
     socket.on('message:reaction:removed', (payload: ReactionRemovePayload) => {
+      const selectedChannelId = useChatStore.getState().selectedChannelId;
+      if (!selectedChannelId || payload.channelId !== selectedChannelId) return;
+
       set((state) => ({
         messages: state.messages.map((message) =>
           removeReactionLocally(message, {
@@ -456,21 +498,38 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       }));
     });
 
-    socket.on('message:deleted', (payload: { messageId: number }) => {
-      set((state) => ({
-        messages: state.messages.filter(
-          (message) => message.id !== payload.messageId
-        ),
-      }));
-    });
+    socket.on(
+      'message:deleted',
+      (payload: { channelId?: number; messageId: number }) => {
+        const selectedChannelId = useChatStore.getState().selectedChannelId;
+        if (
+          payload.channelId &&
+          selectedChannelId &&
+          payload.channelId !== selectedChannelId
+        ) {
+          return;
+        }
+
+        set((state) => ({
+          messages: state.messages.filter(
+            (message) => message.id !== payload.messageId
+          ),
+        }));
+      }
+    );
 
     socket.on('message:pinned', (payload: Message) => {
+      const selectedChannelId = useChatStore.getState().selectedChannelId;
       const normalized = normalizeMessage(payload);
 
       if (normalized.pinned) {
         addPinnedIdToStorage(normalized.channelId, normalized.id);
       } else {
         removePinnedIdFromStorage(normalized.channelId, normalized.id);
+      }
+
+      if (!selectedChannelId || normalized.channelId !== selectedChannelId) {
+        return;
       }
 
       set((state) => ({
@@ -529,9 +588,22 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     }
   },
 
+  closeChannel: (serverId, channelId) => {
+    const socket = get().socket;
+    if (!socket) return;
+
+    socket.emit('channel:close', {
+      serverId,
+      channelId,
+    });
+  },
+
   sendMessage: (channelId, content) => {
     const socket = get().socket;
     if (!socket) return;
+
+    const trimmedContent = content.trim();
+    if (!trimmedContent) return;
 
     const tempId = `temp_${Date.now()}_${Math.random()}`;
 
@@ -539,7 +611,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       id: Date.now(),
       channelId,
       senderId: -1,
-      content,
+      content: trimmedContent,
       createdAt: new Date().toISOString(),
       pinned: false,
       status: 'sending',
@@ -554,7 +626,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       messages: sortByDate([...state.messages, tempMessage]),
     }));
 
-    socket.emit('message:send', { channelId, content });
+    socket.emit('message:send', { channelId, content: trimmedContent });
 
     setTimeout(() => {
       set((state) => ({
@@ -564,7 +636,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
             : message
         ),
       }));
-    }, 5000);
+    }, 4000);
   },
 
   submitFeedback: (channelId, title, videoUrl) => {

@@ -103,6 +103,7 @@ export interface SocketState {
     channelId: number,
     channelTypeId?: number
   ) => void;
+  closeChannel: (serverId: number, channelId: number) => void;
   sendMessage: (channelId: number, content: string) => void;
   loadMoreMessages: (channelId: number) => void;
   clearMessages: () => void;
@@ -115,7 +116,6 @@ export interface SocketState {
   ) => void;
   pinMessage: (channelId: number, messageId: number, pinned: boolean) => void;
 }
-
 export interface GeneralChatProps {
   chatFull: boolean;
 }

@@ -66,25 +66,6 @@ const PinedMessage = () => {
               <div className="flex flex-col justify-center gap-[15px] w-full">
                 <div className="flex justify-between items-start gap-3">
                   <div className="flex gap-[7px] min-w-0">
-                    <div className="relative bg-[#999999] rounded-full w-[31px] h-[31px] overflow-hidden shrink-0">
-                      {message.senderImageUrl ? (
-                        <Image
-                          src={message.senderImageUrl}
-                          alt={getSenderName(message)}
-                          fill
-                          className="object-cover"
-                        />
-                      ) : null}
-
-                      <Image
-                        src={'/images/chatIcons/svg/activeStatusIcon.svg'}
-                        alt="userStatus"
-                        width={8}
-                        height={8}
-                        className="right-[1px] bottom-[1px] absolute"
-                      />
-                    </div>
-
                     <div className="flex flex-col min-w-0">
                       <div className="flex flex-wrap items-center gap-[4px]">
                         <p className="font-semibold text-[#FFFFFF] text-[15px] break-words">
@@ -94,7 +75,6 @@ const PinedMessage = () => {
                           {formatMessageTime(message.createdAt)}
                         </p>
                       </div>
-
                       <p className="font-[400] text-[#FFFFFFAD] text-[15px] break-words">
                         {message.content ||
                           message.videoTitle ||
