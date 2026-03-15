@@ -1,13 +1,11 @@
 'use client';
 
-import { Loader2 } from 'lucide-react';
 import { Message } from '@/feature/chat/types';
 import { MessageStatusIcon } from './MessageStatusIcon';
 import { FeedbackVideoMessage } from './FeedbackVideoMessage';
 import { MessageReactionPicker } from './MessageReactionPicker';
+
 import { MessageReactionPills } from './MessageReactionPills';
-import { useChatStore } from '@/feature/common/stores/useChatStore';
-import { useSocketStore } from '@/feature/common/stores/useSocketStore';
 
 interface Props {
   message: Message;
@@ -32,20 +30,8 @@ export const MessageItem = ({
   onTogglePicker,
   onClosePicker,
 }: Props) => {
-  const isAdmin = useChatStore((s) => s.isAdmin);
-  const selectedChannelId = useChatStore((s) => s.selectedChannelId);
-  const pinMessage = useSocketStore((s) => s.pinMessage);
-  const pendingPinMessageIds = useSocketStore((s) => s.pendingPinMessageIds);
-
-  const isPinLoading = pendingPinMessageIds.includes(message.id);
-
-  const handlePinToggle = () => {
-    if (!selectedChannelId || isPinLoading) return;
-    pinMessage(selectedChannelId, message.id, !message.pinned);
-  };
-
   return (
-    <div className="mb-4 text-white">
+    <div className="group hover:bg-[#d9d9d90d] mb-4 text-white transition-all duration-200 ease-in-out">
       <div className="flex items-baseline gap-2 mb-1">
         <span className="opacity-70 font-bold text-xs">
           {getSenderName(message)}
@@ -69,7 +55,7 @@ export const MessageItem = ({
           </div>
         </div>
       ) : (
-        <div className="flex flex-col items-start gap-2">
+        <div className="relative flex flex-col items-start gap-2 w-full">
           <div className="flex items-center gap-2">
             <div className="flex items-end gap-2">
               <div className="inline-block bg-[#FFFFFF36] p-2 rounded-lg text-[15px]">
@@ -79,36 +65,20 @@ export const MessageItem = ({
               <MessageStatusIcon status={message.status} />
             </div>
 
-            <MessageReactionPicker
-              message={message}
-              isOpen={isPickerOpen}
-              onToggleOpen={onTogglePicker}
-              onClose={onClosePicker}
-            />
-
-            {isAdmin && message.messageType !== 'feedback_video' && (
-              <button
-                type="button"
-                disabled={isPinLoading}
-                onClick={handlePinToggle}
-                className={`border px-2 h-[28px] rounded-lg text-xs transition flex items-center justify-center gap-1 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed ${
-                  message.pinned
-                    ? 'border-[#0866FF] bg-[#0866FF26] text-white'
-                    : 'border-white/10 text-white/80 hover:bg-white/10'
-                }`}
-              >
-                {isPinLoading ? (
-                  <>
-                    <Loader2 className="w-3 h-3 animate-spin" />
-                    Loading
-                  </>
-                ) : message.pinned ? (
-                  'Unpin'
-                ) : (
-                  'Pin'
-                )}
-              </button>
-            )}
+            <div
+              className={`top-[-38px] right-[46px] absolute transition-all duration-200 ${
+                isPickerOpen
+                  ? 'opacity-100 visible pointer-events-auto'
+                  : 'opacity-0 invisible pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:pointer-events-auto'
+              }`}
+            >
+              <MessageReactionPicker
+                message={message}
+                isOpen={isPickerOpen}
+                onToggleOpen={onTogglePicker}
+                onClose={onClosePicker}
+              />
+            </div>
           </div>
 
           <MessageReactionPills message={message} />

@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import { Loader2 } from 'lucide-react';
 import { Message } from '@/feature/chat/types';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
 import { useSocketStore } from '@/feature/common/stores/useSocketStore';
@@ -21,13 +22,21 @@ export const MessageReactionPicker = ({
   onClose,
 }: Props) => {
   const currentUser = useChatStore((state) => state.currentUser);
+  const isAdmin = useChatStore((state) => state.isAdmin);
+  const selectedChannelId = useChatStore((state) => state.selectedChannelId);
+
   const addReaction = useSocketStore((state) => state.addReaction);
   const removeReaction = useSocketStore((state) => state.removeReaction);
+  const pinMessage = useSocketStore((state) => state.pinMessage);
   const pendingReactionOperations = useSocketStore(
     (state) => state.pendingReactionOperations
   );
+  const pendingPinMessageIds = useSocketStore(
+    (state) => state.pendingPinMessageIds
+  );
 
   const reactions = message.reactions ?? [];
+  const isPinLoading = pendingPinMessageIds.includes(message.id);
 
   const reactedEmojiIds = useMemo(() => {
     if (!currentUser) return new Set<number>();
@@ -40,8 +49,6 @@ export const MessageReactionPicker = ({
         .map((reaction) => reaction.emojiId)
     );
   }, [currentUser, reactions]);
-
-  const hasAnyReactionFromCurrentUser = reactedEmojiIds.size > 0;
 
   const pendingEmojiActions = useMemo(() => {
     if (!currentUser) return new Map<number, 'add' | 'remove'>();
@@ -79,6 +86,13 @@ export const MessageReactionPicker = ({
     onClose();
   };
 
+  const handlePinToggle = () => {
+    if (!selectedChannelId || isPinLoading || !isAdmin) return;
+
+    pinMessage(selectedChannelId, message.id, !message.pinned);
+    onClose();
+  };
+
   return (
     <div className="relative">
       <div className="flex gap-[11px] bg-[#38466D] p-[6px] border border-[#FFFFFF36] rounded-[6px] w-full max-w-[232px] h-[42px]">
@@ -111,7 +125,7 @@ export const MessageReactionPicker = ({
         <div className="bg-[#FFFFFF36] w-[1px] h-full"></div>
 
         <div className="flex justify-between items-center w-[75px] h-full">
-          <button>
+          <button type="button">
             <Image
               src={'/images/messageIcons/svg/Reply.svg'}
               alt="reply"
@@ -120,7 +134,7 @@ export const MessageReactionPicker = ({
             />
           </button>
 
-          <button>
+          <button type="button">
             <Image
               src={'/images/messageIcons/svg/copy.svg'}
               alt="copy"
@@ -129,7 +143,11 @@ export const MessageReactionPicker = ({
             />
           </button>
 
-          <button onClick={onToggleOpen} className="cursor-pointer">
+          <button
+            type="button"
+            onClick={onToggleOpen}
+            className="cursor-pointer"
+          >
             <Image
               src={'/images/messageIcons/svg/moreInfo.svg'}
               alt="moreInfo"
@@ -167,7 +185,43 @@ export const MessageReactionPicker = ({
               );
             })}
           </div>
+
           <div className="bg-[#FFFFFF36] w-full h-[1px]"></div>
+
+          <div className="flex flex-col gap-[15px]">
+            <div className="flex justify-between w-full cursor-pointer">
+              <p className="font-semibold text-[13px]">პასუხი</p>
+            </div>
+
+            <div className="flex justify-between w-full cursor-pointer">
+              <p className="font-semibold text-[13px]">დაკოპირება</p>
+            </div>
+
+            {isAdmin && message.messageType !== 'feedback_video' && (
+              <button
+                type="button"
+                disabled={isPinLoading}
+                onClick={handlePinToggle}
+                className="flex justify-between items-center disabled:opacity-60 w-full cursor-pointer disabled:cursor-not-allowed"
+              >
+                <p className="font-semibold text-[13px]">
+                  {isPinLoading
+                    ? 'იტვირთება...'
+                    : message.pinned
+                      ? 'პინის მოხსნა'
+                      : 'დაპინვა'}
+                </p>
+
+                {isPinLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+              </button>
+            )}
+          </div>
+
+          <div className="bg-[#FFFFFF36] w-full h-[1px]"></div>
+
+          <div className="flex justify-between w-full cursor-pointer">
+            <p className="font-semibold text-[13px]">წაშლა</p>
+          </div>
         </div>
       )}
     </div>
