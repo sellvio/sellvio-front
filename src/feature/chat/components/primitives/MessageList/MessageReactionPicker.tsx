@@ -169,9 +169,13 @@ export const MessageReactionPicker = ({
         <div className="bg-[#FFFFFF36] w-[1px] h-full"></div>
 
         <div className="flex justify-between items-center w-[75px] h-full">
-          <button type="button" onClick={handleReply}>
+          <button
+            type="button"
+            onClick={handleReply}
+            className="cursor-pointer"
+          >
             <Image
-              src={'/images/messageIcons/svg/Reply.svg'}
+              src={'/images/messageIcons/svg/reply-message.svg'}
               alt="reply"
               width={17}
               height={17}
@@ -247,6 +251,12 @@ export const MessageReactionPicker = ({
               className="flex justify-between hover:opacity-80 w-full text-left transition-opacity cursor-pointer"
             >
               <p className="font-semibold text-[13px]">პასუხი</p>
+              <Image
+                src={'/images/messageIcons/svg/reply.svg'}
+                alt="reply"
+                width={17}
+                height={17}
+              />
             </button>
 
             <button
@@ -257,6 +267,12 @@ export const MessageReactionPicker = ({
               <p className="font-semibold text-[13px]">
                 {isCopied ? 'დაკოპირდა' : 'დაკოპირება'}
               </p>
+              <Image
+                src={'/images/messageIcons/svg/copy-popup.svg'}
+                alt="copy-popup"
+                width={17}
+                height={17}
+              />
             </button>
 
             {isAdmin && message.messageType !== 'feedback_video' && (
@@ -273,7 +289,16 @@ export const MessageReactionPicker = ({
                       ? 'პინის მოხსნა'
                       : 'დაპინვა'}
                 </p>
-                {isPinLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+                {isPinLoading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Image
+                    src={'/images/messageIcons/svg/pin.svg'}
+                    alt="pin"
+                    width={17}
+                    height={17}
+                  />
+                )}
               </button>
             )}
           </div>
@@ -289,6 +314,12 @@ export const MessageReactionPicker = ({
               <p className="font-semibold text-[13px] text-red-400 group-hover:text-red-300">
                 წაშლა
               </p>
+              <Image
+                src={'/images/messageIcons/svg/delete.svg'}
+                alt="delete"
+                width={17}
+                height={17}
+              />
             </button>
           )}
         </div>
