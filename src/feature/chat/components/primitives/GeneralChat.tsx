@@ -13,6 +13,7 @@ import MessageInput from './MessageInput';
 import FeedbackChat from './FeedbackChat';
 import { useAutoScroll } from '@/feature/chat/hooks/useAutoScroll';
 import { useInfiniteScroll } from '@/feature/chat/hooks/useInfiniteScroll';
+import Image from 'next/image';
 
 const TAB_CONTENT: Record<string, JSX.Element> = {
   profile: <Member />,
@@ -139,16 +140,17 @@ const GeneralChat = memo(({ chatFull }: GeneralChatProps) => {
       </div>
 
       {replyMessage && !isFeedbackChannel && (
-        <div className="mx-[7px] mb-2 px-4 py-3 border border-[#FFFFFF24] rounded-[10px] text-white">
+        <div className="bg-[#FFFFFF46] mx-[7px] px-[20px] py-[16px] border-[#FFFFFF75] border-b rounded-t-[10px] text-white">
           <div className="flex justify-between items-start gap-3">
-            <div className="min-w-0">
-              <p className="mb-1 font-semibold text-[#9CC2FF] text-[12px]">
-                პასუხობ{' '}
+            <div className="flex items-center gap-[4px]">
+              {/* <p className="mb-1 font-semibold text-[#9CC2FF] text-[12px]">
+                პასუხობ
                 {replyMessage.senderFirstName ??
-                  `User ${replyMessage.senderId}`}{' '}
+                  `User ${replyMessage.senderId}`}
                 -ს
-              </p>
-              <p className="opacity-80 text-[13px] truncate">
+              </p> */}
+              <p className="text-[#FFFFFF80] text-[15px]">Replying to</p>
+              <p className="font-bold text-[#FFFFFF80] text-[15px]">
                 {replyMessage.content}
               </p>
             </div>
@@ -156,9 +158,14 @@ const GeneralChat = memo(({ chatFull }: GeneralChatProps) => {
             <button
               type="button"
               onClick={() => setReplyMessage(null)}
-              className="opacity-70 hover:opacity-100 text-sm cursor-pointer"
+              className="flex justify-center items-center bg-[#22325E4D] border border-[#FFFFFFC7] rounded-full w-[24px] h-[24px] cursor-pointer shrink-0"
             >
-              ✕
+              <Image
+                src={'/images/messageIcons/svg/removeReply.svg'}
+                alt="removeReply"
+                width={9}
+                height={9}
+              />
             </button>
           </div>
         </div>
@@ -174,6 +181,7 @@ const GeneralChat = memo(({ chatFull }: GeneralChatProps) => {
           disabled={!selectedChannelId || isLoadingChannel || isRulesDisabled}
           selectedChannelId={selectedChannelId}
           placeholder={inputPlaceholder}
+          isReplying={!!replyMessage}
         />
       )}
     </div>

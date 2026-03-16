@@ -149,6 +149,7 @@ export interface MessageInputProps {
   disabled: boolean;
   selectedChannelId: number | null;
   placeholder?: string;
+  isReplying?: boolean;
 }
 
 export interface ChatHeaderProps {

@@ -10,6 +10,7 @@ const MessageInput = ({
   disabled,
   selectedChannelId,
   placeholder,
+  isReplying,
 }: MessageInputProps) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !disabled && selectedChannelId) {
@@ -19,14 +20,17 @@ const MessageInput = ({
 
   return (
     <div className="px-[7px] pb-4 w-full">
-      <div className="flex items-center gap-2 bg-[#FFFFFF36] px-[20px] rounded-lg min-h-[56px]">
+      <div
+        className={`flex items-center gap-2 bg-[#FFFFFF36] px-[20px] min-h-[56px] ${
+          isReplying ? 'rounded-b-[10px]' : 'rounded-[10px]'
+        }`}
+      >
         <Image
           src="/images/chatIcons/svg/smile.svg"
           alt="emoji"
           width={22}
           height={22}
         />
-
         <input
           type="text"
           value={text}
@@ -39,7 +43,6 @@ const MessageInput = ({
           }
           className="bg-transparent disabled:opacity-70 outline-none w-full h-[56px] text-white placeholder:text-white/50 disabled:cursor-not-allowed"
         />
-
         <button
           type="button"
           onClick={onSend}
