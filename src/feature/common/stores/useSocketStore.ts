@@ -274,7 +274,6 @@ export const useSocketStore = create<SocketState>((set, get) => ({
   currentPage: 1,
   pendingReactionOperations: [],
   pendingPinMessageIds: [],
-  pendingDeleteMessageIds: [],
 
   connect: (token: string) => {
     if (typeof window === 'undefined' || get().socket?.connected) return;
@@ -364,6 +363,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
             item.tempId &&
             item.senderId === -1 &&
             item.content.trim() === message.content.trim() &&
+            item.replyToId === (message.replyToId ?? null) &&
             (item.status === 'sending' || item.status === 'sent')
         );
 
@@ -515,9 +515,6 @@ export const useSocketStore = create<SocketState>((set, get) => ({
           messages: state.messages.filter(
             (message) => message.id !== payload.messageId
           ),
-          pendingDeleteMessageIds: state.pendingDeleteMessageIds.filter(
-            (id) => id !== payload.messageId
-          ),
         }));
       }
     );
@@ -558,7 +555,6 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       set({
         isLoadingMessages: false,
         pendingPinMessageIds: [],
-        pendingDeleteMessageIds: [],
       });
     });
 
@@ -580,7 +576,6 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       currentPage: 1,
       pendingReactionOperations: [],
       pendingPinMessageIds: [],
-      pendingDeleteMessageIds: [],
     });
 
     socket.emit('channel:open', {
@@ -604,7 +599,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     });
   },
 
-  sendMessage: (channelId, content) => {
+  sendMessage: (channelId, content, replyToId = null) => {
     const socket = get().socket;
     if (!socket) return;
 
@@ -624,15 +619,34 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       tempId,
       images: [],
       reactions: [],
-      replyToId: null,
-      replyTo: null,
+      replyToId,
+      replyTo:
+        replyToId != null
+          ? (() => {
+              const replySource = get().messages.find(
+                (m) => m.id === replyToId
+              );
+              if (!replySource) return null;
+
+              return {
+                id: replySource.id,
+                content: replySource.content,
+                senderId: replySource.senderId,
+                senderFirstName: replySource.senderFirstName ?? null,
+              };
+            })()
+          : null,
     };
 
     set((state) => ({
       messages: sortByDate([...state.messages, tempMessage]),
     }));
 
-    socket.emit('message:send', { channelId, content: trimmedContent });
+    socket.emit('message:send', {
+      channelId,
+      content: trimmedContent,
+      replyToId,
+    });
 
     setTimeout(() => {
       set((state) => ({
@@ -803,13 +817,6 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     const socket = get().socket;
     if (!socket) return;
 
-    set((state) => ({
-      messages: state.messages.filter((message) => message.id !== messageId),
-      pendingDeleteMessageIds: state.pendingDeleteMessageIds.includes(messageId)
-        ? state.pendingDeleteMessageIds
-        : [...state.pendingDeleteMessageIds, messageId],
-    }));
-
     socket.emit('message:delete', {
       channelId,
       messageId,
@@ -838,7 +845,6 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       currentPage: 1,
       pendingReactionOperations: [],
       pendingPinMessageIds: [],
-      pendingDeleteMessageIds: [],
     }),
 
   disconnect: () => {
@@ -853,7 +859,6 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       currentPage: 1,
       pendingReactionOperations: [],
       pendingPinMessageIds: [],
-      pendingDeleteMessageIds: [],
     });
   },
 }));

@@ -4,7 +4,6 @@ import { Message } from '@/feature/chat/types';
 import { MessageStatusIcon } from './MessageStatusIcon';
 import { FeedbackVideoMessage } from './FeedbackVideoMessage';
 import { MessageReactionPicker } from './MessageReactionPicker';
-
 import { MessageReactionPills } from './MessageReactionPills';
 
 interface Props {
@@ -59,7 +58,19 @@ export const MessageItem = ({
           <div className="flex items-center gap-2">
             <div className="flex items-end gap-2">
               <div className="inline-block bg-[#FFFFFF36] p-2 rounded-lg text-[15px]">
-                {message.content}
+                {message.replyTo && (
+                  <div className="bg-[#FFFFFF14] mb-2 px-3 py-2 border-[#8BB8FF] border-l-2 rounded-md max-w-[320px]">
+                    <p className="mb-1 font-semibold text-[#8BB8FF] text-[12px]">
+                      {message.replyTo.senderFirstName ??
+                        `User ${message.replyTo.senderId}`}
+                    </p>
+                    <p className="opacity-70 text-[12px] break-words line-clamp-2">
+                      {message.replyTo.content}
+                    </p>
+                  </div>
+                )}
+
+                <p className="break-words">{message.content}</p>
               </div>
 
               <MessageStatusIcon status={message.status} />

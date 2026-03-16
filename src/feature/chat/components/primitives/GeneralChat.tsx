@@ -4,7 +4,7 @@ import { useState, useEffect, JSX, memo } from 'react';
 import { channelsData, newChannelsData } from '../../data/chatData';
 import Member from './Member';
 import PinedMessage from './PinedMessage';
-import { GeneralChatProps } from '@/feature/chat/types';
+import { GeneralChatProps, Message } from '@/feature/chat/types';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
 import { useSocketStore } from '@/feature/common/stores/useSocketStore';
 import ChatHeader from './ChatHeader';
@@ -27,6 +27,7 @@ const TAB_CONTENT: Record<string, JSX.Element> = {
 const GeneralChat = memo(({ chatFull }: GeneralChatProps) => {
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [text, setText] = useState('');
+  const [replyMessage, setReplyMessage] = useState<Message | null>(null);
 
   const isAdmin = useChatStore((s) => s.isAdmin);
   const fetchMembers = useChatStore((s) => s.fetchMembers);
@@ -63,10 +64,27 @@ const GeneralChat = memo(({ chatFull }: GeneralChatProps) => {
     if (!isLoadingMessages && isLoadingChannel) setChannelLoaded();
   }, [isLoadingMessages, isLoadingChannel, setChannelLoaded]);
 
+  useEffect(() => {
+    const handler = (event: Event) => {
+      const customEvent = event as CustomEvent<{ message: Message }>;
+      if (customEvent.detail?.message) {
+        setReplyMessage(customEvent.detail.message);
+      }
+    };
+
+    window.addEventListener('chat:set-reply-message', handler);
+
+    return () => {
+      window.removeEventListener('chat:set-reply-message', handler);
+    };
+  }, []);
+
   const handleSendMessage = () => {
     if (!text.trim() || !selectedChannelId) return;
-    sendMessage(selectedChannelId, text.trim());
+
+    sendMessage(selectedChannelId, text.trim(), replyMessage?.id ?? null);
     setText('');
+    setReplyMessage(null);
     scrollToBottom();
   };
 
@@ -85,7 +103,9 @@ const GeneralChat = memo(({ chatFull }: GeneralChatProps) => {
     ? 'აირჩიე არხი'
     : isRulesDisabled
       ? 'ამ არხში მხოლოდ ადმინს შეუძლია შეტყობინების გაგზავნა'
-      : 'შეიყვანე შეტყობინება';
+      : replyMessage
+        ? 'პასუხი...'
+        : 'შეიყვანე შეტყობინება';
 
   return (
     <div
@@ -117,6 +137,32 @@ const GeneralChat = memo(({ chatFull }: GeneralChatProps) => {
 
         {activeTab && TAB_CONTENT[activeTab]}
       </div>
+
+      {replyMessage && !isFeedbackChannel && (
+        <div className="mx-[7px] mb-2 px-4 py-3 border border-[#FFFFFF24] rounded-[10px] text-white">
+          <div className="flex justify-between items-start gap-3">
+            <div className="min-w-0">
+              <p className="mb-1 font-semibold text-[#9CC2FF] text-[12px]">
+                პასუხობ{' '}
+                {replyMessage.senderFirstName ??
+                  `User ${replyMessage.senderId}`}{' '}
+                -ს
+              </p>
+              <p className="opacity-80 text-[13px] truncate">
+                {replyMessage.content}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setReplyMessage(null)}
+              className="opacity-70 hover:opacity-100 text-sm cursor-pointer"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
 
       {isFeedbackChannel ? (
         <FeedbackChat />
