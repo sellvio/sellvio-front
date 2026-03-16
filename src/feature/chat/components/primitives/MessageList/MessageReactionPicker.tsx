@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import { Loader2, Check } from 'lucide-react';
 import { Message } from '@/feature/chat/types';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
@@ -22,6 +22,7 @@ export const MessageReactionPicker = ({
   onClose,
 }: Props) => {
   const [isCopied, setIsCopied] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
 
   const currentUser = useChatStore((state) => state.currentUser);
   const isAdmin = useChatStore((state) => state.isAdmin);
@@ -47,11 +48,30 @@ export const MessageReactionPicker = ({
     message.messageType !== 'feedback_video';
 
   useEffect(() => {
-    if (isCopied) {
-      const timeout = setTimeout(() => setIsCopied(false), 2000);
-      return () => clearTimeout(timeout);
-    }
+    if (!isCopied) return;
+
+    const timeout = setTimeout(() => setIsCopied(false), 2000);
+    return () => clearTimeout(timeout);
   }, [isCopied]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
+        onClose();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen, onClose]);
 
   const reactedEmojiIds = useMemo(() => {
     if (!currentUser) return new Set<number>();
@@ -85,8 +105,10 @@ export const MessageReactionPicker = ({
 
   const handleToggleReaction = (emojiId: number) => {
     if (!currentUser) return;
+
     const pendingAction = pendingEmojiActions.get(emojiId);
     if (pendingAction) return;
+
     const alreadyReacted = reactedEmojiIds.has(emojiId);
 
     if (alreadyReacted) {
@@ -101,6 +123,7 @@ export const MessageReactionPicker = ({
 
   const handlePinToggle = () => {
     if (!selectedChannelId || isPinLoading || !isAdmin) return;
+
     pinMessage(selectedChannelId, message.id, !message.pinned);
     onClose();
   };
@@ -112,7 +135,10 @@ export const MessageReactionPicker = ({
     try {
       await navigator.clipboard.writeText(textToCopy);
       setIsCopied(true);
-      setTimeout(() => onClose(), 800);
+
+      setTimeout(() => {
+        onClose();
+      }, 800);
     } catch (error) {
       console.error('Copy failed:', error);
     }
@@ -138,7 +164,7 @@ export const MessageReactionPicker = ({
   };
 
   return (
-    <div className="relative">
+    <div ref={wrapperRef} className="relative">
       <div className="flex gap-[11px] bg-[#38466D] p-[6px] border border-[#FFFFFF36] rounded-[6px] w-full max-w-[232px] h-[42px]">
         <div className="flex gap-[3px]">
           {REACTION_OPTIONS.map((option) => {
@@ -152,10 +178,10 @@ export const MessageReactionPicker = ({
                 title={option.label}
                 disabled={Boolean(pendingAction)}
                 onClick={() => handleToggleReaction(option.id)}
-                className={`p-[8px] rounded-[6px] w-[28px] h-[28px] cursor-pointer flex items-center justify-center bg-[#FFFFFF36] disabled:opacity-70 disabled:cursor-not-allowed ${
+                className={`flex justify-center items-center p-[8px] rounded-[6px] w-[28px] h-[28px] disabled:opacity-70 cursor-pointer disabled:cursor-not-allowed ${
                   isSelected
                     ? 'bg-[#0866FF33] ring-1 ring-[#0866FF]'
-                    : 'hover:bg-white/10'
+                    : 'bg-[#FFFFFF36] hover:bg-white/10'
                 }`}
               >
                 <div className="flex justify-center items-center">
@@ -175,7 +201,7 @@ export const MessageReactionPicker = ({
             className="cursor-pointer"
           >
             <Image
-              src={'/images/messageIcons/svg/reply-message.svg'}
+              src="/images/messageIcons/svg/reply-message.svg"
               alt="reply"
               width={17}
               height={17}
@@ -191,7 +217,7 @@ export const MessageReactionPicker = ({
               <Check className="w-[17px] h-[17px] text-[#FFFFFF] animate-in zoom-in" />
             ) : (
               <Image
-                src={'/images/messageIcons/svg/copy.svg'}
+                src="/images/messageIcons/svg/copy.svg"
                 alt="copy"
                 width={17}
                 height={17}
@@ -205,7 +231,7 @@ export const MessageReactionPicker = ({
             className="cursor-pointer"
           >
             <Image
-              src={'/images/messageIcons/svg/moreInfo.svg'}
+              src="/images/messageIcons/svg/moreInfo.svg"
               alt="moreInfo"
               width={17}
               height={17}
@@ -228,10 +254,10 @@ export const MessageReactionPicker = ({
                   title={option.label}
                   disabled={Boolean(pendingAction)}
                   onClick={() => handleToggleReaction(option.id)}
-                  className={`p-[12px] rounded-[8px] w-[44px] h-[44px] cursor-pointer flex items-center justify-center bg-[#FFFFFF36] disabled:opacity-70 disabled:cursor-not-allowed ${
+                  className={`flex justify-center items-center p-[12px] rounded-[8px] w-[44px] h-[44px] disabled:opacity-70 cursor-pointer disabled:cursor-not-allowed ${
                     isSelected
                       ? 'bg-[#0866FF33] ring-1 ring-[#0866FF]'
-                      : 'hover:bg-white/10'
+                      : 'bg-[#FFFFFF36] hover:bg-white/10'
                   }`}
                 >
                   <div className="flex justify-center items-center">
@@ -252,7 +278,7 @@ export const MessageReactionPicker = ({
             >
               <p className="font-semibold text-[13px]">პასუხი</p>
               <Image
-                src={'/images/messageIcons/svg/reply.svg'}
+                src="/images/messageIcons/svg/reply.svg"
                 alt="reply"
                 width={17}
                 height={17}
@@ -268,7 +294,7 @@ export const MessageReactionPicker = ({
                 {isCopied ? 'დაკოპირდა' : 'დაკოპირება'}
               </p>
               <Image
-                src={'/images/messageIcons/svg/copy-popup.svg'}
+                src="/images/messageIcons/svg/copy-popup.svg"
                 alt="copy-popup"
                 width={17}
                 height={17}
@@ -289,11 +315,12 @@ export const MessageReactionPicker = ({
                       ? 'პინის მოხსნა'
                       : 'დაპინვა'}
                 </p>
+
                 {isPinLoading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   <Image
-                    src={'/images/messageIcons/svg/pin.svg'}
+                    src="/images/messageIcons/svg/pin.svg"
                     alt="pin"
                     width={17}
                     height={17}
@@ -314,7 +341,7 @@ export const MessageReactionPicker = ({
               >
                 <p className="font-semibold text-[13px]">წაშლა</p>
                 <Image
-                  src={'/images/messageIcons/svg/delete.svg'}
+                  src="/images/messageIcons/svg/delete.svg"
                   alt="delete"
                   width={17}
                   height={17}
