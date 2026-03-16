@@ -20,6 +20,25 @@ export interface ChatChannel {
   channel_type_id?: number;
 }
 
+export interface ReactionUser {
+  id: number;
+  firstName: string | null;
+}
+
+export interface MessageReaction {
+  emojiId: number;
+  emoji: string;
+  emojiUrl: string;
+  users: ReactionUser[];
+}
+
+export interface ReplyTo {
+  id: number;
+  content: string;
+  senderId: number;
+  senderFirstName: string | null;
+}
+
 export interface Message {
   id: number;
   channelId: number;
@@ -38,6 +57,19 @@ export interface Message {
   videoCoverUrl?: string | null;
   videoStatus?: VideoStatus;
   campaignVideoId?: number | null;
+  images?: string[];
+  reactions?: MessageReaction[];
+  replyToId?: number | null;
+  replyTo?: ReplyTo | null;
+}
+
+export interface PendingReactionOperation {
+  operationId: string;
+  channelId: number;
+  messageId: number;
+  emojiId: number;
+  userId: number;
+  action: 'add' | 'remove';
 }
 
 export interface ChatStore {
@@ -61,6 +93,9 @@ export interface SocketState {
   isLoadingMessages: boolean;
   hasMore: boolean;
   currentPage: number;
+  pendingReactionOperations: PendingReactionOperation[];
+  pendingPinMessageIds: number[];
+  pendingDeleteMessageIds: number[];
   connect: (token: string) => void;
   disconnect: () => void;
   joinServer: (serverId: number) => void;
@@ -69,12 +104,20 @@ export interface SocketState {
     channelId: number,
     channelTypeId?: number
   ) => void;
+  closeChannel: (serverId: number, channelId: number) => void;
   sendMessage: (channelId: number, content: string) => void;
   loadMoreMessages: (channelId: number) => void;
   clearMessages: () => void;
   submitFeedback: (channelId: number, title: string, videoUrl: string) => void;
+  addReaction: (channelId: number, messageId: number, emojiId: number) => void;
+  removeReaction: (
+    channelId: number,
+    messageId: number,
+    emojiId: number
+  ) => void;
+  pinMessage: (channelId: number, messageId: number, pinned: boolean) => void;
+  deleteMessage: (channelId: number, messageId: number) => void;
 }
-
 export interface GeneralChatProps {
   chatFull: boolean;
 }
@@ -101,6 +144,7 @@ export interface MessageInputProps {
   onSend: () => void;
   disabled: boolean;
   selectedChannelId: number | null;
+  placeholder?: string;
 }
 
 export interface ChatHeaderProps {

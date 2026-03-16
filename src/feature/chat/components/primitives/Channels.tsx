@@ -22,8 +22,15 @@ const Channels = ({
   toggleChatFull,
   chatFull,
 }: ChannelsProps) => {
-  const { socket, connect, isConnected, clearMessages, joinChannel } =
-    useSocketStore();
+  const {
+    socket,
+    connect,
+    isConnected,
+    clearMessages,
+    joinChannel,
+    closeChannel,
+  } = useSocketStore();
+
   const {
     isAdmin,
     fetchMembers,
@@ -49,8 +56,9 @@ const Channels = ({
   }, [data, setServerId]);
 
   useEffect(() => {
-    if (socket && isConnected && serverId)
+    if (socket && isConnected && serverId) {
       socket.emit('server:open', { serverId });
+    }
   }, [socket, isConnected, serverId]);
 
   useEffect(() => {
@@ -60,13 +68,18 @@ const Channels = ({
   const channels: ChatChannel[] = data?.data?.chat_channels ?? [];
 
   const handleChannelSelect = (ch: ChatChannel) => {
+    if (!serverId || !socket || !isConnected) return;
     if (selectedChannelId === ch.id) return;
+
+    const previousChannelId = selectedChannelId;
+
+    if (previousChannelId) {
+      closeChannel(serverId, previousChannelId);
+    }
+
     clearMessages();
     setSelectedChannelId(ch.id, ch.channel_type_id ?? null);
-    if (socket && isConnected && serverId) {
-      socket.emit('server:open', { serverId });
-      joinChannel(serverId, ch.id, ch.channel_type_id ?? undefined);
-    }
+    joinChannel(serverId, ch.id, ch.channel_type_id ?? undefined);
   };
 
   return (
@@ -145,6 +158,7 @@ const Channels = ({
                 />
                 <span className="font-semibold text-[15px]">{ch.name}</span>
               </div>
+
               {isAdmin && (
                 <Link
                   href={`updateChat/${ch.id}`}

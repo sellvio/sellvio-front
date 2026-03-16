@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import { MessageInputProps } from '@/feature/chat/types';
 
@@ -7,32 +9,45 @@ const MessageInput = ({
   onSend,
   disabled,
   selectedChannelId,
+  placeholder,
 }: MessageInputProps) => {
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && text.trim()) onSend();
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !disabled && selectedChannelId) {
+      onSend();
+    }
   };
 
   return (
-    <div className="flex items-center gap-2 mt-2 mb-4 px-[7px] min-h-[56px]">
-      <div className="relative flex items-center w-full">
+    <div className="px-[7px] pb-4 w-full">
+      <div className="flex items-center gap-2 bg-[#FFFFFF36] px-[20px] rounded-lg min-h-[56px]">
         <Image
-          src="/images/chatIcons/svg/plus.svg"
-          width={24}
-          height={24}
-          alt="plus"
-          className="left-2 absolute opacity-70"
+          src="/images/chatIcons/svg/smile.svg"
+          alt="emoji"
+          width={22}
+          height={22}
         />
+
         <input
           type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={handleKeyDown}
-          disabled={disabled}
+          disabled={disabled || !selectedChannelId}
           placeholder={
-            selectedChannelId ? 'Type a message...' : 'Select a channel first'
+            placeholder ??
+            (selectedChannelId ? 'შეიყვანე შეტყობინება' : 'აირჩიე არხი')
           }
-          className="bg-[#FFFFFF36] disabled:opacity-50 py-[10px] pl-[36px] rounded-[10px] focus:outline-none w-full h-[56px] text-white placeholder:text-white/50 disabled:cursor-not-allowed"
+          className="bg-transparent disabled:opacity-70 outline-none w-full h-[56px] text-white placeholder:text-white/50 disabled:cursor-not-allowed"
         />
+
+        <button
+          type="button"
+          onClick={onSend}
+          disabled={disabled || !selectedChannelId || !text.trim()}
+          className="disabled:opacity-50 text-white cursor-pointer disabled:cursor-not-allowed"
+        >
+          გაგზავნა
+        </button>
       </div>
     </div>
   );
