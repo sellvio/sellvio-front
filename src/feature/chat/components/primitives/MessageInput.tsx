@@ -26,7 +26,7 @@ const MessageInput = ({
         }`}
       >
         <Image
-          src="/images/chatIcons/svg/smile.svg"
+          src="/images/chatIcons/svg/plus.svg"
           alt="emoji"
           width={22}
           height={22}
