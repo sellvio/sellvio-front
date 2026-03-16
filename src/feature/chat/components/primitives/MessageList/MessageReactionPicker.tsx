@@ -215,7 +215,7 @@ export const MessageReactionPicker = ({
       </div>
 
       {isOpen && (
-        <div className="top-[-33px] right-[35px] z-[100] absolute flex flex-col gap-[15px] bg-[#38466D] p-[17px] border border-[#FFFFFF36] rounded-[8px] w-full max-w-[221px] min-h-[252px]">
+        <div className="top-[-33px] right-[35px] z-[100] absolute flex flex-col gap-[15px] bg-[#38466D] p-[17px] border border-[#FFFFFF36] rounded-[8px] w-full max-w-[221px]">
           <div className="flex justify-between gap-[4px] w-full max-h-[44px]">
             {REACTION_OPTIONS.map((option) => {
               const isSelected = reactedEmojiIds.has(option.id);
@@ -303,24 +303,24 @@ export const MessageReactionPicker = ({
             )}
           </div>
 
-          <div className="bg-[#FFFFFF36] w-full h-[1px]"></div>
-
           {canDelete && (
-            <button
-              type="button"
-              onClick={handleDelete}
-              className="group flex justify-between hover:opacity-80 w-full text-left transition-opacity cursor-pointer"
-            >
-              <p className="font-semibold text-[13px] text-red-400 group-hover:text-red-300">
-                წაშლა
-              </p>
-              <Image
-                src={'/images/messageIcons/svg/delete.svg'}
-                alt="delete"
-                width={17}
-                height={17}
-              />
-            </button>
+            <>
+              <div className="bg-[#FFFFFF36] w-full h-[1px]"></div>
+
+              <button
+                type="button"
+                onClick={handleDelete}
+                className="group flex justify-between hover:opacity-80 w-full text-left transition-opacity cursor-pointer"
+              >
+                <p className="font-semibold text-[13px]">წაშლა</p>
+                <Image
+                  src={'/images/messageIcons/svg/delete.svg'}
+                  alt="delete"
+                  width={17}
+                  height={17}
+                />
+              </button>
+            </>
           )}
         </div>
       )}
