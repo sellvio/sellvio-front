@@ -90,21 +90,20 @@ export const FeedbackVideoMessage = ({ message }: Props) => {
       </div>
 
       <div className="flex flex-col justify-between gap-2 px-3 py-2 w-full min-h-full">
-        <div className="flex justify-between items-center gap-2 w-full">
-          <p className="font-semibold text-[15px] text-white">
-            {message.videoTitle || message.content}
-          </p>
+        <div className="flex justify-between items-start gap-2">
+          <div className="flex items-center gap-2 w-full min-w-0">
+            <p className="w-full min-w-0 max-w-[200px] font-semibold text-[15px] text-white break-words line-clamp-2">
+              {message.videoTitle || message.content}
+            </p>
+          </div>
 
-          <VideoStatusBadge
-            status={message.videoStatus}
-            isSubmitting={isSubmitting}
-          />
+          <div className="shrink-0">
+            <VideoStatusBadge
+              status={message.videoStatus}
+              isSubmitting={isSubmitting}
+            />
+          </div>
         </div>
-
-        {isSubmitting && (
-          <p className="text-white/70 text-xs">ვიდეო იგზავნება...</p>
-        )}
-
         {isAdmin && message.videoStatus === 'under_review' && !isSubmitting && (
           <FeedbackReviewActions
             isLoading={isReviewLoading}
