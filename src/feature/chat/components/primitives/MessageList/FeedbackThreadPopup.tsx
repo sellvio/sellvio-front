@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Message } from '@/feature/chat/types';
 import { useSocketStore } from '@/feature/common/stores/useSocketStore';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
+import { MessageStatusIcon } from './MessageStatusIcon';
 
 interface FeedbackThreadPopupProps {
   isOpen: boolean;
@@ -23,7 +24,13 @@ const getSenderName = (msg: Message): string => {
 };
 
 const sortMessages = (messages: Message[]) => {
-  return [...messages].sort(
+  const map = new Map<string | number, Message>();
+
+  for (const message of messages) {
+    map.set(message.tempId ?? message.id, message);
+  }
+
+  return [...map.values()].sort(
     (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
   );
 };
@@ -35,11 +42,11 @@ const FeedbackThreadPopup = ({
 }: FeedbackThreadPopupProps) => {
   const socket = useSocketStore((s) => s.socket);
   const selectedChannelId = useChatStore((s) => s.selectedChannelId);
+  const currentUser = useChatStore((s) => s.currentUser);
 
   const [threadMessages, setThreadMessages] = useState<Message[]>([]);
   const [text, setText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isSending, setIsSending] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
@@ -103,13 +110,38 @@ const FeedbackThreadPopup = ({
       }
 
       setThreadMessages((prev) => {
+        const optimisticIndex = prev.findIndex(
+          (item) =>
+            item.tempId &&
+            item.senderId === currentUser?.id &&
+            item.content.trim() === incomingMessage.content.trim() &&
+            (item.status === 'sending' || item.status === 'sent')
+        );
+
+        if (optimisticIndex !== -1) {
+          return sortMessages(
+            prev.map((item, index) =>
+              index === optimisticIndex
+                ? {
+                    ...incomingMessage,
+                    status: 'delivered',
+                  }
+                : item
+            )
+          );
+        }
+
         const exists = prev.some((item) => item.id === incomingMessage.id);
         if (exists) return prev;
 
-        return sortMessages([...prev, incomingMessage]);
+        return sortMessages([
+          ...prev,
+          {
+            ...incomingMessage,
+            status: 'delivered',
+          },
+        ]);
       });
-
-      setIsSending(false);
     };
 
     socket.on('feedback:thread', handleThread);
@@ -119,7 +151,7 @@ const FeedbackThreadPopup = ({
       socket.off('feedback:thread', handleThread);
       socket.off('feedback:message', handleFeedbackMessage);
     };
-  }, [isOpen, socket, selectedChannelId, campaignVideoId]);
+  }, [isOpen, socket, selectedChannelId, campaignVideoId, currentUser?.id]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -142,12 +174,34 @@ const FeedbackThreadPopup = ({
       !selectedChannelId ||
       !campaignVideoId ||
       !trimmed ||
-      isSending
+      !currentUser
     ) {
       return;
     }
 
-    setIsSending(true);
+    const tempId = `thread_temp_${Date.now()}_${Math.random()}`;
+
+    const optimisticMessage: Message = {
+      id: Date.now(),
+      tempId,
+      channelId: selectedChannelId,
+      senderId: currentUser.id,
+      content: trimmed,
+      createdAt: new Date().toISOString(),
+      pinned: false,
+      status: 'sending',
+      senderFirstName: currentUser.name,
+      senderLastName: null,
+      senderImageUrl: null,
+      images: [],
+      reactions: [],
+      replyToId: null,
+      replyTo: null,
+      campaignVideoId,
+    };
+
+    setThreadMessages((prev) => sortMessages([...prev, optimisticMessage]));
+    setText('');
 
     socket.emit('feedback:reply', {
       channelId: selectedChannelId,
@@ -155,7 +209,15 @@ const FeedbackThreadPopup = ({
       content: trimmed,
     });
 
-    setText('');
+    setTimeout(() => {
+      setThreadMessages((prev) =>
+        prev.map((message) =>
+          message.tempId === tempId && message.status === 'sending'
+            ? { ...message, status: 'sent' }
+            : message
+        )
+      );
+    }, 4000);
   };
 
   if (!isOpen) return null;
@@ -164,25 +226,29 @@ const FeedbackThreadPopup = ({
     <div className="z-[999] fixed inset-0 flex justify-center items-center bg-black/40 p-4">
       <div className="absolute inset-0" onClick={onClose} />
 
-      <div className="relative flex flex-col bg-[#24376D] shadow-[0_0_0_2px_#ffffff14] rounded-[16px] w-full max-w-[380px] h-[520px] overflow-hidden">
-        <div className="flex justify-between items-center px-5 pt-4 pb-3">
+      <div className="relative flex flex-col bg-[#202F5C] border-[#FFFFFF16] border-[3px] rounded-[16px] w-full max-w-[492px] h-[623px] overflow-hidden">
+        <div className="flex justify-between items-center px-[24px] py-[30px]">
           <div className="pr-3 min-w-0">
             <p className="font-semibold text-[15px] text-white truncate">
               {popupTitle}
             </p>
-            <p className="mt-1 text-white/55 text-xs">Feedback thread</p>
           </div>
 
           <button
             type="button"
             onClick={onClose}
-            className="flex justify-center items-center bg-white/10 hover:bg-white/20 rounded-[8px] w-[32px] h-[32px] transition cursor-pointer shrink-0"
+            className="flex justify-center items-center bg-[#313A5158] rounded-[10px] w-[38px] h-[38px] transition cursor-pointer shrink-0"
           >
-            <span className="text-white text-lg leading-none">✕</span>
+            <Image
+              src={'/images/svg/chevron-right.svg'}
+              alt="message"
+              width={21}
+              height={21}
+            />
           </button>
         </div>
 
-        <div ref={scrollRef} className="flex-1 px-4 pb-4 overflow-y-auto">
+        <div ref={scrollRef} className="flex-1 px-[24px] pb-4 overflow-y-auto">
           {isLoading ? (
             <div className="flex justify-center items-center h-full text-white/60 text-sm">
               იტვირთება...
@@ -194,9 +260,7 @@ const FeedbackThreadPopup = ({
           ) : (
             <div className="flex flex-col gap-4">
               {threadMessages.map((msg) => (
-                <div key={msg.id} className="flex gap-3">
-                  <div className="bg-[#E6E6E6] rounded-full w-8 h-8 shrink-0" />
-
+                <div key={msg.tempId ?? msg.id} className="flex gap-3">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 text-white/80 text-xs">
                       <span className="font-semibold text-white">
@@ -211,20 +275,26 @@ const FeedbackThreadPopup = ({
                       </span>
                     </div>
 
-                    <div className="bg-[#6B79A61A] mt-2 px-4 py-3 rounded-[10px] max-w-[280px] text-white text-sm break-words">
-                      {msg.replyTo && (
-                        <div className="bg-white/10 mb-2 px-3 py-2 border-[#8BB8FF] border-l-2 rounded-md">
-                          <p className="font-semibold text-[#8BB8FF] text-[11px]">
-                            {msg.replyTo.senderFirstName ??
-                              `User ${msg.replyTo.senderId}`}
-                          </p>
-                          <p className="text-[11px] text-white/70 line-clamp-2">
-                            {msg.replyTo.content}
-                          </p>
-                        </div>
-                      )}
+                    <div className="mt-2">
+                      <div className="flex items-end gap-2">
+                        <div className="bg-[#FFFFFF36] px-4 py-3 rounded-[10px] max-w-[280px] font-semibold text-[15px] text-white break-words">
+                          {msg.replyTo && (
+                            <div className="bg-white/10 mb-2 px-3 py-2 border-[#8BB8FF] border-l-2 rounded-md">
+                              <p className="font-semibold text-[#8BB8FF] text-[11px]">
+                                {msg.replyTo.senderFirstName ??
+                                  `User ${msg.replyTo.senderId}`}
+                              </p>
+                              <p className="text-[11px] text-white/70 line-clamp-2">
+                                {msg.replyTo.content}
+                              </p>
+                            </div>
+                          )}
 
-                      <p>{msg.content}</p>
+                          <p>{msg.content}</p>
+                        </div>
+
+                        <MessageStatusIcon status={msg.status} />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -233,8 +303,8 @@ const FeedbackThreadPopup = ({
           )}
         </div>
 
-        <div className="px-3 pb-3">
-          <div className="flex items-center gap-3 bg-[#6373A4] px-4 rounded-[12px] h-[52px]">
+        <div className="px-[7px] pb-[9px]">
+          <div className="flex items-center gap-[18px] bg-[#FFFFFF36] px-4 rounded-[12px] h-[56px]">
             <button
               type="button"
               className="text-[28px] text-white leading-none cursor-pointer shrink-0"
@@ -256,7 +326,7 @@ const FeedbackThreadPopup = ({
             <button
               type="button"
               onClick={handleSend}
-              disabled={!text.trim() || isSending}
+              disabled={!text.trim()}
               className="flex justify-center items-center disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed shrink-0"
             >
               <Image
