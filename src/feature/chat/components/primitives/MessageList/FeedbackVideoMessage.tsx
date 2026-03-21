@@ -7,6 +7,7 @@ import { VideoStatusBadge } from './VideoStatusBadge';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
 import { useSocketStore } from '@/feature/common/stores/useSocketStore';
 import { FeedbackReviewActions } from '../FeedbackReviewActions';
+import Image from 'next/image';
 
 interface Props {
   message: Message;
@@ -111,6 +112,14 @@ export const FeedbackVideoMessage = ({ message }: Props) => {
             disabled={isSubmitting || !message.videoUrl}
             className="relative rounded-[8px] w-full max-w-[112px] h-[126px] overflow-hidden disabled:cursor-not-allowed"
           >
+            <div className="top-1/2 left-1/2 absolute flex justify-center items-center bg-[#FFFFFF68] rounded-full w-[46px] h-[46px] -translate-x-1/2 -translate-y-1/2">
+              <Image
+                src={'/images/svg/playButton.svg'}
+                alt="playButton"
+                width={15}
+                height={17}
+              />
+            </div>
             <video
               src={message.videoUrl ?? undefined}
               poster={message.videoCoverUrl ?? undefined}
