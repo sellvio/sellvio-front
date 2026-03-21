@@ -6,6 +6,7 @@ import { Message } from '@/feature/chat/types';
 import { useSocketStore } from '@/feature/common/stores/useSocketStore';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
 import { MessageStatusIcon } from './MessageStatusIcon';
+import { SendHorizonal } from 'lucide-react';
 
 interface FeedbackThreadPopupProps {
   isOpen: boolean;
@@ -305,13 +306,6 @@ const FeedbackThreadPopup = ({
 
         <div className="px-[7px] pb-[9px]">
           <div className="flex items-center gap-[18px] bg-[#FFFFFF36] px-4 rounded-[12px] h-[56px]">
-            <button
-              type="button"
-              className="text-[28px] text-white leading-none cursor-pointer shrink-0"
-            >
-              +
-            </button>
-
             <input
               type="text"
               value={text}
@@ -329,12 +323,7 @@ const FeedbackThreadPopup = ({
               disabled={!text.trim()}
               className="flex justify-center items-center disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed shrink-0"
             >
-              <Image
-                src="/images/chatIcons/svg/smile.svg"
-                alt="send"
-                width={20}
-                height={20}
-              />
+              <SendHorizonal size={20} className="text-[#ffffff]" />
             </button>
           </div>
         </div>
