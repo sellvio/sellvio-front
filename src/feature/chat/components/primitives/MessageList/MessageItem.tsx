@@ -5,6 +5,7 @@ import { MessageStatusIcon } from './MessageStatusIcon';
 import { FeedbackVideoMessage } from './FeedbackVideoMessage';
 import { MessageReactionPicker } from './MessageReactionPicker';
 import { MessageReactionPills } from './MessageReactionPills';
+import Image from 'next/image';
 
 interface Props {
   message: Message;
@@ -31,20 +32,30 @@ export const MessageItem = ({
 }: Props) => {
   return (
     <div className="group hover:bg-[#d9d9d90d] mb-4 text-white transition-all duration-200 ease-in-out">
-      <div className="flex items-baseline gap-2 mb-1">
-        <span className="opacity-70 font-bold text-xs">
-          {getSenderName(message)}
-        </span>
-
-        <span className="opacity-40 text-[10px]">
-          {new Date(message.createdAt).toLocaleTimeString()}
-        </span>
-
-        {message.pinned && (
-          <span className="bg-[#0866FF26] px-2 py-[2px] rounded-full font-medium text-[#8BB8FF] text-[10px]">
-            Pinned
+      <div className="flex justify-between items-baseline mb-1 w-full max-w-[529px]">
+        <div className="flex gap-2">
+          <span className="opacity-70 font-bold text-xs">
+            {getSenderName(message)}
           </span>
-        )}
+
+          <span className="opacity-40 text-[10px]">
+            {new Date(message.createdAt).toLocaleTimeString()}
+          </span>
+
+          {message.pinned && (
+            <span className="bg-[#0866FF26] px-2 py-[2px] rounded-full font-medium text-[#8BB8FF] text-[10px]">
+              Pinned
+            </span>
+          )}
+        </div>
+        <button className="cursor-pointer">
+          <Image
+            src={'/images/svg/message.svg'}
+            alt="playButton"
+            width={20}
+            height={20}
+          />
+        </button>
       </div>
 
       {message.messageType === 'feedback_video' ? (
