@@ -305,7 +305,9 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     socket.on('disconnect', () => set({ isConnected: false }));
 
     socket.on('message:history', (data) => {
-      const selectedChannelId = useChatStore.getState().selectedChannelId;
+      const chatState = useChatStore.getState();
+      const selectedChannelId = chatState.selectedChannelId;
+      const selectedChannelTypeId = chatState.selectedChannelTypeId;
 
       if (
         !data?.messages ||
@@ -313,6 +315,11 @@ export const useSocketStore = create<SocketState>((set, get) => ({
         !selectedChannelId ||
         data.channelId !== selectedChannelId
       ) {
+        return;
+      }
+
+      // feedback / verification channel-ში მთავარი view messages history-ზე არ უნდა აიწყოს
+      if (selectedChannelTypeId === 3 || selectedChannelTypeId === 4) {
         return;
       }
 
@@ -352,9 +359,10 @@ export const useSocketStore = create<SocketState>((set, get) => ({
         videoToMessage(video, data.channelId, 'feedback_video')
       );
 
-      set((state) => ({
+      set(() => ({
         messages: sortByDate(videoMessages),
         isLoadingMessages: false,
+        hasMore: false,
       }));
     });
 
@@ -376,14 +384,21 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       set(() => ({
         messages: sortByDate(videoMessages),
         isLoadingMessages: false,
+        hasMore: false,
       }));
     });
 
     socket.on('message', (incomingMessage: Message) => {
-      const selectedChannelId = useChatStore.getState().selectedChannelId;
+      const chatState = useChatStore.getState();
+      const selectedChannelId = chatState.selectedChannelId;
+      const selectedChannelTypeId = chatState.selectedChannelTypeId;
       const message = normalizeMessage(incomingMessage);
 
       if (!selectedChannelId || message.channelId !== selectedChannelId) {
+        return;
+      }
+
+      if (selectedChannelTypeId === 3 || selectedChannelTypeId === 4) {
         return;
       }
 
@@ -502,8 +517,12 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     });
 
     socket.on('message:reaction', (payload: ReactionAddPayload) => {
-      const selectedChannelId = useChatStore.getState().selectedChannelId;
+      const chatState = useChatStore.getState();
+      const selectedChannelId = chatState.selectedChannelId;
+      const selectedChannelTypeId = chatState.selectedChannelTypeId;
+
       if (!selectedChannelId || payload.channelId !== selectedChannelId) return;
+      if (selectedChannelTypeId === 3 || selectedChannelTypeId === 4) return;
 
       set((state) => ({
         messages: state.messages.map((message) =>
@@ -530,8 +549,12 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     });
 
     socket.on('message:reaction:removed', (payload: ReactionRemovePayload) => {
-      const selectedChannelId = useChatStore.getState().selectedChannelId;
+      const chatState = useChatStore.getState();
+      const selectedChannelId = chatState.selectedChannelId;
+      const selectedChannelTypeId = chatState.selectedChannelTypeId;
+
       if (!selectedChannelId || payload.channelId !== selectedChannelId) return;
+      if (selectedChannelTypeId === 3 || selectedChannelTypeId === 4) return;
 
       set((state) => ({
         messages: state.messages.map((message) =>
@@ -557,12 +580,19 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     socket.on(
       'message:deleted',
       (payload: { channelId?: number; messageId: number }) => {
-        const selectedChannelId = useChatStore.getState().selectedChannelId;
+        const chatState = useChatStore.getState();
+        const selectedChannelId = chatState.selectedChannelId;
+        const selectedChannelTypeId = chatState.selectedChannelTypeId;
+
         if (
           payload.channelId &&
           selectedChannelId &&
           payload.channelId !== selectedChannelId
         ) {
+          return;
+        }
+
+        if (selectedChannelTypeId === 3 || selectedChannelTypeId === 4) {
           return;
         }
 
@@ -575,7 +605,9 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     );
 
     socket.on('message:pinned', (payload: Message) => {
-      const selectedChannelId = useChatStore.getState().selectedChannelId;
+      const chatState = useChatStore.getState();
+      const selectedChannelId = chatState.selectedChannelId;
+      const selectedChannelTypeId = chatState.selectedChannelTypeId;
       const normalized = normalizeMessage(payload);
 
       if (normalized.pinned) {
@@ -585,6 +617,10 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       }
 
       if (!selectedChannelId || normalized.channelId !== selectedChannelId) {
+        return;
+      }
+
+      if (selectedChannelTypeId === 3 || selectedChannelTypeId === 4) {
         return;
       }
 
@@ -641,10 +677,12 @@ export const useSocketStore = create<SocketState>((set, get) => ({
 
     if (channelTypeId === 3) {
       socket.emit('feedback:videos', { channelId });
+      return;
     }
 
     if (channelTypeId === 4) {
       socket.emit('verification:videos', { channelId });
+      return;
     }
   },
 
@@ -885,7 +923,9 @@ export const useSocketStore = create<SocketState>((set, get) => ({
 
   loadMoreMessages: (channelId) => {
     const { socket, isLoadingMessages, hasMore, messages } = get();
+    const selectedChannelTypeId = useChatStore.getState().selectedChannelTypeId;
 
+    if (selectedChannelTypeId === 3 || selectedChannelTypeId === 4) return;
     if (!socket || isLoadingMessages || !hasMore) return;
 
     set({ isLoadingMessages: true });
