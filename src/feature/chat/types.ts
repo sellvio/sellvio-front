@@ -39,6 +39,14 @@ export interface ReplyTo {
   senderFirstName: string | null;
 }
 
+export interface SocialPost {
+  id: number;
+  platform: string;
+  postUrl: string;
+  postedAt: string | null;
+  isVerified: boolean;
+}
+
 export interface Message {
   id: number;
   channelId: number;
@@ -51,12 +59,13 @@ export interface Message {
   senderFirstName?: string | null;
   senderLastName?: string | null;
   senderImageUrl?: string | null;
-  messageType?: 'text' | 'feedback_video';
+  messageType?: 'text' | 'feedback_video' | 'verification_video';
   videoUrl?: string | null;
   videoTitle?: string | null;
   videoCoverUrl?: string | null;
   videoStatus?: VideoStatus;
   campaignVideoId?: number | null;
+  socialPosts?: SocialPost[] | null;
   images?: string[];
   reactions?: MessageReaction[];
   replyToId?: number | null;

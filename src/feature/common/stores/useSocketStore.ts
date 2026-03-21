@@ -100,6 +100,7 @@ const sortByDate = (messages: Message[]): Message[] => {
       replyToId: message.replyToId ?? null,
       replyTo: message.replyTo ?? null,
       pinned: Boolean(message.pinned),
+      socialPosts: message.socialPosts ?? null,
     });
   }
 
@@ -115,10 +116,15 @@ const normalizeMessage = (message: Message): Message => ({
   replyToId: message.replyToId ?? null,
   replyTo: message.replyTo ?? null,
   pinned: Boolean(message.pinned),
+  socialPosts: message.socialPosts ?? null,
 });
 
-const videoToMessage = (video: any, channelId: number): Message => ({
-  id: video.id,
+const videoToMessage = (
+  video: any,
+  channelId: number,
+  messageType: 'feedback_video' | 'verification_video' = 'feedback_video'
+): Message => ({
+  id: Number(video.id),
   channelId,
   senderId: video.creatorId,
   content: video.title ?? '',
@@ -128,12 +134,17 @@ const videoToMessage = (video: any, channelId: number): Message => ({
   senderFirstName: video.creatorFirstName,
   senderLastName: video.creatorLastName,
   senderImageUrl: video.creatorImageUrl,
-  messageType: 'feedback_video',
+  messageType,
   campaignVideoId: video.id,
   videoUrl: video.videoUrl,
   videoTitle: video.title,
   videoCoverUrl: video.coverUrl,
-  videoStatus: video.status as VideoStatus,
+  videoStatus:
+    messageType === 'feedback_video'
+      ? (video.status as VideoStatus)
+      : undefined,
+  socialPosts:
+    messageType === 'verification_video' ? (video.socialPosts ?? []) : null,
   images: [],
   reactions: [],
   replyToId: null,
@@ -330,7 +341,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       const selectedChannelId = useChatStore.getState().selectedChannelId;
 
       if (
-        !data?.videos?.length ||
+        !data?.videos ||
         !selectedChannelId ||
         data.channelId !== selectedChannelId
       ) {
@@ -338,11 +349,32 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       }
 
       const videoMessages: Message[] = data.videos.map((video: any) =>
-        videoToMessage(video, data.channelId)
+        videoToMessage(video, data.channelId, 'feedback_video')
       );
 
       set((state) => ({
-        messages: sortByDate([...state.messages, ...videoMessages]),
+        messages: sortByDate(videoMessages),
+        isLoadingMessages: false,
+      }));
+    });
+
+    socket.on('verification:videos', (data) => {
+      const selectedChannelId = useChatStore.getState().selectedChannelId;
+
+      if (
+        !data?.videos ||
+        !selectedChannelId ||
+        data.channelId !== selectedChannelId
+      ) {
+        return;
+      }
+
+      const videoMessages: Message[] = data.videos.map((video: any) =>
+        videoToMessage(video, data.channelId, 'verification_video')
+      );
+
+      set(() => ({
+        messages: sortByDate(videoMessages),
         isLoadingMessages: false,
       }));
     });
@@ -360,6 +392,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
           (item) =>
             item.channelId === message.channelId &&
             item.messageType !== 'feedback_video' &&
+            item.messageType !== 'verification_video' &&
             item.tempId &&
             item.senderId === -1 &&
             item.content.trim() === message.content.trim() &&
@@ -402,7 +435,11 @@ export const useSocketStore = create<SocketState>((set, get) => ({
         return;
       }
 
-      const realMessage = videoToMessage(data.video, data.channelId);
+      const realMessage = videoToMessage(
+        data.video,
+        data.channelId,
+        'feedback_video'
+      );
 
       set((state) => {
         const currentUserId = useChatStore.getState().currentUser?.id;
@@ -442,6 +479,24 @@ export const useSocketStore = create<SocketState>((set, get) => ({
           message.campaignVideoId === data.campaignVideoId
             ? { ...message, videoStatus: data.status }
             : message
+        ),
+      }));
+    });
+
+    socket.on('verification:reviewed', (data) => {
+      set((state) => ({
+        messages: state.messages.map((msg) =>
+          msg.messageType === 'verification_video' &&
+          msg.socialPosts?.some((post) => post.id === data.socialPostId)
+            ? {
+                ...msg,
+                socialPosts: msg.socialPosts.map((post) =>
+                  post.id === data.socialPostId
+                    ? { ...post, isVerified: data.verified }
+                    : post
+                ),
+              }
+            : msg
         ),
       }));
     });
@@ -587,6 +642,10 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     if (channelTypeId === 3) {
       socket.emit('feedback:videos', { channelId });
     }
+
+    if (channelTypeId === 4) {
+      socket.emit('verification:videos', { channelId });
+    }
   },
 
   closeChannel: (serverId, channelId) => {
@@ -689,6 +748,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       reactions: [],
       replyToId: null,
       replyTo: null,
+      socialPosts: null,
     };
 
     set((state) => ({

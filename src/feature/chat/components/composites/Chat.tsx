@@ -10,6 +10,7 @@ import { useChatStore } from '@/feature/common/stores/useChatStore';
 import { ChatFromCampaing } from '../../api/chatApi';
 import ChatHeader from './ChatHeader';
 import GeneralChat from '../primitives/GeneralChat';
+import VerificationChat from '../primitives/VerificationChat';
 
 const Chat = () => {
   const [chatInfoOpen, setChatInfoOpen] = useState<boolean>(false);
@@ -18,6 +19,9 @@ const Chat = () => {
   const { chatFull, toggleChatFull } = useChatLayout();
 
   const setServerId = useChatStore((state) => state.setServerId);
+  const selectedChannelTypeId = useChatStore(
+    (state) => state.selectedChannelTypeId
+  );
 
   useEffect(() => {
     const fetchChatServer = async () => {
@@ -62,6 +66,8 @@ const Chat = () => {
 
         {chatInfoOpen ? (
           <ChanelInfo setChatInfoOpen={setChatInfoOpen} chatFull={chatFull} />
+        ) : selectedChannelTypeId === 4 ? (
+          <VerificationChat chatFull={chatFull} />
         ) : (
           <GeneralChat chatFull={chatFull} />
         )}
