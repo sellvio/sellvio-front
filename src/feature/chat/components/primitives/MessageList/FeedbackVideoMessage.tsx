@@ -168,7 +168,7 @@ export const FeedbackVideoMessage = ({ message }: Props) => {
             <X className="w-[35px] h-[35px]" />
           </button>
           <div
-            className="relative bg-[#111] p-4 rounded-[12px] w-full max-w-[900px]"
+            className="bg-[url('/images/png/iPhoneFrame.png')] bg-cover bg-center px-[15px] py-[16px] rounded-[12px] w-full max-w-[442px] h-[910px] overflow-hidden relativ"
             onClick={(e) => e.stopPropagation()}
           >
             <video
@@ -176,7 +176,7 @@ export const FeedbackVideoMessage = ({ message }: Props) => {
               poster={message.videoCoverUrl ?? undefined}
               controls
               autoPlay
-              className="rounded-[10px] w-full max-h-[80vh] object-contain"
+              className="rounded-[60px] w-full h-full object-contain"
             />
           </div>
         </div>
