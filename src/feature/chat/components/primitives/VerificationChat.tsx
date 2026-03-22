@@ -1,7 +1,16 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Loader2, X } from 'lucide-react';
+import {
+  Loader2,
+  X,
+  Link2,
+  Instagram,
+  Youtube,
+  Facebook,
+  Globe,
+  Video,
+} from 'lucide-react';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
 import { useSocketStore } from '@/feature/common/stores/useSocketStore';
 import VerificationReviewActions from './VerificationReviewActions';
@@ -9,6 +18,24 @@ import Image from 'next/image';
 
 type VerificationChatProps = {
   chatFull: boolean;
+};
+
+type ReviewStatus = 'verified' | 'rejected';
+
+const icons = {
+  instagram: Instagram,
+  youtube: Youtube,
+  facebook: Facebook,
+  tiktok: Video,
+  twitter: Globe,
+  x: Globe,
+};
+
+const getPlatformIcon = (platform?: string) => {
+  const key = platform?.toLowerCase().trim() as keyof typeof icons;
+  const Icon = icons[key] || Link2;
+
+  return <Icon className="w-4 h-4 text-white/80" />;
 };
 
 const VerificationChat = ({ chatFull }: VerificationChatProps) => {
@@ -22,8 +49,10 @@ const VerificationChat = ({ chatFull }: VerificationChatProps) => {
   const [loadingAction, setLoadingAction] = useState<
     'verified' | 'rejected' | null
   >(null);
-
   const [openVideoId, setOpenVideoId] = useState<number | null>(null);
+  const [reviewedPosts, setReviewedPosts] = useState<
+    Record<number, ReviewStatus>
+  >({});
 
   const verificationVideos = messages.filter(
     (m) => m.messageType === 'verification_video'
@@ -34,6 +63,10 @@ const VerificationChat = ({ chatFull }: VerificationChatProps) => {
       socket.emit('verification:videos', { channelId: selectedChannelId });
     }
   }, [socket, selectedChannelId]);
+
+  useEffect(() => {
+    setReviewedPosts({});
+  }, [selectedChannelId]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -53,11 +86,30 @@ const VerificationChat = ({ chatFull }: VerificationChatProps) => {
     };
   }, [openVideoId]);
 
+  const clearLoading = () => {
+    setTimeout(() => {
+      setLoadingPostId(null);
+      setLoadingAction(null);
+    }, 800);
+  };
+
   const handleVerify = (socialPostId: number) => {
     if (!socket || !selectedChannelId) return;
 
+    const currentStatus = reviewedPosts[socialPostId];
+
     setLoadingPostId(socialPostId);
     setLoadingAction('verified');
+
+    if (currentStatus === 'verified') {
+      setReviewedPosts((prev) => {
+        const next = { ...prev };
+        delete next[socialPostId];
+        return next;
+      });
+      clearLoading();
+      return;
+    }
 
     socket.emit('verification:review', {
       channelId: selectedChannelId,
@@ -65,17 +117,31 @@ const VerificationChat = ({ chatFull }: VerificationChatProps) => {
       verified: true,
     });
 
-    setTimeout(() => {
-      setLoadingPostId(null);
-      setLoadingAction(null);
-    }, 800);
+    setReviewedPosts((prev) => ({
+      ...prev,
+      [socialPostId]: 'verified',
+    }));
+
+    clearLoading();
   };
 
   const handleReject = (socialPostId: number) => {
     if (!socket || !selectedChannelId) return;
 
+    const currentStatus = reviewedPosts[socialPostId];
+
     setLoadingPostId(socialPostId);
     setLoadingAction('rejected');
+
+    if (currentStatus === 'rejected') {
+      setReviewedPosts((prev) => {
+        const next = { ...prev };
+        delete next[socialPostId];
+        return next;
+      });
+      clearLoading();
+      return;
+    }
 
     socket.emit('verification:review', {
       channelId: selectedChannelId,
@@ -83,10 +149,12 @@ const VerificationChat = ({ chatFull }: VerificationChatProps) => {
       verified: false,
     });
 
-    setTimeout(() => {
-      setLoadingPostId(null);
-      setLoadingAction(null);
-    }, 800);
+    setReviewedPosts((prev) => ({
+      ...prev,
+      [socialPostId]: 'rejected',
+    }));
+
+    clearLoading();
   };
 
   const handleOpenVideo = (videoId: number) => {
@@ -133,14 +201,15 @@ const VerificationChat = ({ chatFull }: VerificationChatProps) => {
                         onClick={() => handleOpenVideo(video.id)}
                         className="relative rounded-[8px] w-full h-full overflow-hidden"
                       >
-                        <div className="top-1/2 left-1/2 absolute flex justify-center items-center bg-[#FFFFFF68] rounded-full w-[46px] h-[46px] -translate-x-1/2 -translate-y-1/2">
+                        <div className="top-1/2 left-1/2 z-10 absolute flex justify-center items-center bg-[#FFFFFF68] rounded-full w-[46px] h-[46px] -translate-x-1/2 -translate-y-1/2">
                           <Image
-                            src={'/images/svg/playButton.svg'}
+                            src="/images/svg/playButton.svg"
                             alt="playButton"
                             width={15}
                             height={17}
                           />
                         </div>
+
                         <video
                           src={video.videoUrl ?? ''}
                           poster={video.videoCoverUrl ?? ''}
@@ -153,13 +222,14 @@ const VerificationChat = ({ chatFull }: VerificationChatProps) => {
 
                   <div className="w-full">
                     {video.socialPosts && video.socialPosts.length > 0 ? (
-                      video.socialPosts.map((post) => {
-                        const isCurrentLoading = loadingPostId === post.id;
+                      <div className="flex flex-col gap-3">
+                        {video.socialPosts.map((post) => {
+                          const isCurrentLoading = loadingPostId === post.id;
+                          const reviewStatus = reviewedPosts[post.id];
 
-                        return (
-                          <div key={post.id}>
-                            <div className="flex flex-col gap-2 w-full">
-                              <div className="bg-[#3012B31A] px-[4px] py-[3px] font-semibold text-[#FFFFFFB0] text-[18px]">
+                          return (
+                            <div key={post.id} className="flex flex-col gap-2">
+                              <div className="bg-[#3012B31A] px-[8px] py-[6px] rounded-[8px]">
                                 {video.videoTitle && (
                                   <p className="font-semibold text-[16px] text-white leading-[20px]">
                                     {video.videoTitle}
@@ -167,7 +237,7 @@ const VerificationChat = ({ chatFull }: VerificationChatProps) => {
                                 )}
 
                                 {video.videoDescription && (
-                                  <p className="text-[14px] text-white/60 leading-[18px]">
+                                  <p className="mt-1 text-[14px] text-white/60 leading-[18px]">
                                     {video.videoDescription}
                                   </p>
                                 )}
@@ -177,25 +247,54 @@ const VerificationChat = ({ chatFull }: VerificationChatProps) => {
                                 href={post.postUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="bg-[#3012B31A] px-[9px] py-[2px] font-semibold text-[#FFFFFFB0] text-[18px]"
+                                className="inline-flex items-center gap-2 bg-[#3012B31A] px-[9px] py-[6px] rounded-[8px] w-fit font-semibold text-[#FFFFFFB0] text-[16px]"
                               >
-                                Link
+                                {getPlatformIcon(post.platform)}
+                                <span className="capitalize">
+                                  {post.platform || 'Link'}
+                                </span>
                               </a>
 
                               {isAdmin ? (
-                                <div className="w-full">
-                                  <VerificationReviewActions
-                                    isLoading={isCurrentLoading}
-                                    loadingAction={loadingAction}
-                                    onVerify={() => handleVerify(post.id)}
-                                    onReject={() => handleReject(post.id)}
-                                  />
-                                </div>
+                                reviewStatus === 'verified' ? (
+                                  <div className="flex items-center gap-3 mt-1">
+                                    <button
+                                      type="button"
+                                      onClick={() => handleVerify(post.id)}
+                                      className="flex flex-1 justify-center items-center gap-2 bg-[#0866FF] hover:bg-[#0867ffc1] disabled:opacity-70 py-[10px] rounded-[6px] font-medium text-white text-xs transition-colors cursor-pointer disabled:cursor-not-allowed"
+                                    >
+                                      ვერიფიცირებული
+                                    </button>
+                                  </div>
+                                ) : reviewStatus === 'rejected' ? (
+                                  <div className="flex items-center gap-3 mt-1">
+                                    <button
+                                      type="button"
+                                      onClick={() => handleReject(post.id)}
+                                      className="flex flex-1 justify-center items-center gap-2 hover:bg-[#ff00004a] disabled:opacity-70 py-[10px] border border-[#0866FF] rounded-[6px] font-medium text-white text-xs transition-colors cursor-pointer disabled:cursor-not-allowed"
+                                    >
+                                      უარყოფილია
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <div className="w-full">
+                                    <VerificationReviewActions
+                                      isLoading={isCurrentLoading}
+                                      loadingAction={loadingAction}
+                                      onVerify={() => handleVerify(post.id)}
+                                      onReject={() => handleReject(post.id)}
+                                    />
+                                  </div>
+                                )
                               ) : (
                                 <div className="mt-1">
-                                  {post.isVerified ? (
+                                  {reviewStatus === 'verified' ? (
                                     <span className="text-green-400 text-sm">
                                       ✓ ვერიფიცირებული
+                                    </span>
+                                  ) : reviewStatus === 'rejected' ? (
+                                    <span className="text-red-400 text-sm">
+                                      ✕ უარყოფილია
                                     </span>
                                   ) : (
                                     <span className="text-yellow-400 text-sm">
@@ -205,9 +304,9 @@ const VerificationChat = ({ chatFull }: VerificationChatProps) => {
                                 </div>
                               )}
                             </div>
-                          </div>
-                        );
-                      })
+                          );
+                        })}
+                      </div>
                     ) : (
                       <p className="text-white/50 text-sm">
                         სოციალური პოსტები არ არის
@@ -233,8 +332,9 @@ const VerificationChat = ({ chatFull }: VerificationChatProps) => {
           >
             <X className="w-[35px] h-[35px]" />
           </button>
+
           <div
-            className="bg-[url('/images/png/iPhoneFrame.png')] bg-cover bg-center px-[15px] py-[16px] rounded-[12px] w-full max-w-[442px] h-[910px] overflow-hidden relativ"
+            className="relative bg-[url('/images/png/iPhoneFrame.png')] bg-cover bg-center px-[15px] py-[16px] rounded-[12px] w-full max-w-[442px] h-[910px] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             <video
