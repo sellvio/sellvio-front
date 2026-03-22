@@ -63,6 +63,7 @@ export interface Message {
   videoUrl?: string | null;
   videoTitle?: string | null;
   videoCoverUrl?: string | null;
+  videoDescription?: string | null;
   videoStatus?: VideoStatus;
   campaignVideoId?: number | null;
   socialPosts?: SocialPost[] | null;

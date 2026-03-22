@@ -101,6 +101,8 @@ const sortByDate = (messages: Message[]): Message[] => {
       replyTo: message.replyTo ?? null,
       pinned: Boolean(message.pinned),
       socialPosts: message.socialPosts ?? null,
+      videoTitle: message.videoTitle ?? null,
+      videoDescription: message.videoDescription ?? null,
     });
   }
 
@@ -117,6 +119,8 @@ const normalizeMessage = (message: Message): Message => ({
   replyTo: message.replyTo ?? null,
   pinned: Boolean(message.pinned),
   socialPosts: message.socialPosts ?? null,
+  videoTitle: message.videoTitle ?? null,
+  videoDescription: message.videoDescription ?? null,
 });
 
 const videoToMessage = (
@@ -137,7 +141,8 @@ const videoToMessage = (
   messageType,
   campaignVideoId: video.id,
   videoUrl: video.videoUrl,
-  videoTitle: video.title,
+  videoTitle: video.title ?? null,
+  videoDescription: video.description ?? null,
   videoCoverUrl: video.coverUrl,
   videoStatus:
     messageType === 'feedback_video'
