@@ -4,7 +4,7 @@ import { headerData } from '../../data/headerData';
 
 const Header = ({ pageName }: HeaderPropsType) => {
   return (
-    <header className="flex justify-center px-[43px] py-[30px]">
+    <header className="flex justify-center py-[30px]">
       <div className="flex flex-col gap-[26px] w-full max-w-[1440px]">
         <div className="flex justify-between items-center w-full">
           <Image

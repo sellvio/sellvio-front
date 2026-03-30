@@ -8,7 +8,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { campaignSchema, CampaignSchema } from '../../schema/schema';
-import CompanyBasics from '../primitives/CompanyBasics';
+import CompanyBasics from '../../../../src/feature/createCampaing/components/primitives/CompanyBasics';
 import Platforms from '../primitives/Platforms';
 import GoalCreatores from '../primitives/GoalCreatores';
 import ExtraMedia from '../primitives/ExtraMedia';
