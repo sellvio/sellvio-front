@@ -68,15 +68,12 @@ const Registration = () => {
       date_of_birth: new Date(stepOneData.date_of_birth).toISOString(),
     };
 
-    console.log(payload);
-
     try {
       await mutateAsync(payload);
       toast.success('რეგისტრაცია წარმატებით დასრულდა');
       router.push('/');
     } catch (error: any) {
       toast.error(error.message || 'რეგისტრაციის შეცდომა');
-      console.log(error);
     }
   };
 

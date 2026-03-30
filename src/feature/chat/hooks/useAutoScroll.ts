@@ -1,8 +1,12 @@
 import { useEffect, useRef } from 'react';
+import { Message } from '@/feature/chat/types';
 
-export const UseAutoScroll = (messages: any[], isLoadingChannel: boolean) => {
+export const useAutoScroll = (
+  messages: Message[],
+  isLoadingChannel: boolean
+) => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const isAutoScrolling = useRef<boolean>(true);
+  const isAutoScrolling = useRef(true);
 
   useEffect(() => {
     if (!isLoadingChannel && isAutoScrolling.current && scrollRef.current) {
@@ -18,9 +22,8 @@ export const UseAutoScroll = (messages: any[], isLoadingChannel: boolean) => {
 
   const scrollToBottom = () => {
     isAutoScrolling.current = true;
-    if (scrollRef.current) {
+    if (scrollRef.current)
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
   };
 
   return { scrollRef, handleScroll, scrollToBottom };

@@ -1,58 +1,60 @@
-import { ChatStore, Member } from '@/feature/chat/components/type';
 import { create } from 'zustand';
+import { ChatStore, Member } from '@/feature/chat/types';
 
 const parseJwt = (token: string) => {
   try {
-    return JSON.parse(atob(token.split('.')[1]));
+    return JSON.parse(window.atob(token.split('.')[1]));
   } catch {
     return null;
   }
 };
 
-const getCurrentUserId = (): number | undefined => {
-  const token = localStorage.getItem('access_token');
-  const payload = token ? parseJwt(token) : null;
-  return payload?.sub;
-};
-
-export const useChatStore = create<ChatStore>((set) => ({
+export const useChatStore = create<ChatStore>((set, get) => ({
+  serverId: null,
   members: [],
   isAdmin: false,
-  chatInfoOpen: false,
-  selectedChannelId: null,
-  isLoadingChannel: false,
   currentUser: null,
+  selectedChannelId: null,
+  selectedChannelTypeId: null,
+  isLoadingChannel: false,
 
-  setSelectedChannelId: (id) =>
-    set({ selectedChannelId: id, isLoadingChannel: true }),
+  setServerId: (id) => set({ serverId: id }),
+
+  setSelectedChannelId: (id, typeId = null) =>
+    set({
+      selectedChannelId: id,
+      selectedChannelTypeId: typeId,
+      isLoadingChannel: true,
+    }),
 
   setChannelLoaded: () => set({ isLoadingChannel: false }),
 
   fetchMembers: async () => {
+    const { serverId } = get();
+    if (!serverId) return;
+
     try {
       const { ChatMember } = await import('@/feature/chat/api/chatApi');
-      const response = await ChatMember();
+      const response = await ChatMember(serverId);
+      const token = localStorage.getItem('access_token');
+      const currentUserId = token ? parseJwt(token)?.sub : null;
 
-      const members: Member[] = response.data.map(
-        (item: {
-          user: { id: number; email: string };
-          role: 'admin' | 'user';
-        }) => ({
-          id: item.user.id,
-          name: item.user.email,
-          role: item.role,
-        })
-      );
+      const members: Member[] = response.data.map((item: any) => ({
+        id: item.user.id,
+        name: item.user.email,
+        role: item.role,
+      }));
 
-      const currentUserId = getCurrentUserId();
-      const currentUser = members.find((m) => m.id === currentUserId) ?? null;
-      const isAdmin = currentUser?.role === 'admin' || false;
+      const currentUser =
+        members.find((member) => member.id === currentUserId) ?? null;
 
-      set({ members, isAdmin, currentUser });
+      set({
+        members,
+        currentUser,
+        isAdmin: currentUser?.role === 'admin',
+      });
     } catch (error) {
       console.error('Failed to fetch members:', error);
     }
   },
-
-  toggleChatInfo: () => set((state) => ({ chatInfoOpen: !state.chatInfoOpen })),
 }));

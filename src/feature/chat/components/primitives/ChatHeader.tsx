@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { ChatHeaderProps } from '../type';
+import { ChatHeaderProps } from '../../types';
 
 const ChatHeader = ({
   channelTitle,

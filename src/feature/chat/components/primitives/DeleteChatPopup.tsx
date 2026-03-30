@@ -1,33 +1,51 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import { DeleteChatPopupProps } from '../../types';
 
 const DeleteChatPopup = ({
   handleDeleteChannel,
   setIsOpen,
 }: DeleteChatPopupProps) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const onConfirm = async () => {
+    setIsSubmitting(true);
+    try {
+      await handleDeleteChannel();
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <div className="z-50 fixed inset-0 flex justify-center items-center bg-black/50">
-      <div className="relative flex flex-col justify-center items-center gap-[46px] bg-[#FFFFFF36] border border-[#FFFFFF36] rounded-[8px] w-full max-w-[392px] min-h-[159px]">
-        <div className="space-y-[12px]">
-          <p className="font-semibold text-[#ffffff] text-[18px] text-center">
-            წაშალეთ წერილი
-          </p>
-          <p className="font-semiBold text-[#ffffff] text-[13px]">
-            ნამდვილად გსურთ შესწორების გაუქმება?
+    <div className="z-50 fixed inset-0 flex justify-center items-center bg-black/60 backdrop-blur-sm">
+      <div className="relative flex flex-col justify-center items-center gap-[40px] bg-[#1e293b] shadow-2xl p-[24px] border border-[#FFFFFF36] rounded-[12px] w-full max-w-[420px]">
+        <div className="space-y-[12px] text-center">
+          <p className="font-bold text-[#ffffff] text-[20px]">არხის წაშლა</p>
+          <p className="font-medium text-[#cbd5e1] text-[14px] leading-relaxed">
+            ნამდვილად გსურთ ამ არხის წაშლა? <br />
+            ეს ქმედება შეუქცევადია და წაიშლება ყველა მონაცემი.
           </p>
         </div>
-        <div className="flex justify-center gap-[22px] w-full">
+
+        <div className="flex justify-center gap-[15px] w-full">
           <button
+            type="button"
+            disabled={isSubmitting}
             onClick={() => setIsOpen(false)}
-            className="bg-[#FFFFFF1A] hover:bg-[#16EB5440] shadow-[4px_5px_6px_0px_#FFFFFF66_inset,-1px_-3px_4px_0px_#FFFFFF66_inset,0px_8px_13px_0px_#0000000A] border border-[#E3E8EF] rounded-[8px] w-full max-w-[165px] min-h-[38px] font-bold text-[#ffffff] text-[13px] cursor-pointer"
+            className="bg-[#FFFFFF1A] hover:bg-[#FFFFFF2A] disabled:opacity-50 border border-[#FFFFFF36] rounded-[8px] w-full max-w-[170px] min-h-[42px] font-bold text-[#ffffff] text-[13px] transition-all cursor-pointer"
           >
-            უკან დაბრუნება
+            გაუქმება
           </button>
+
           <button
-            onClick={handleDeleteChannel}
-            className="bg-[#FFFFFF1A] hover:bg-[#EB165440] shadow-[4px_5px_6px_0px_#FFFFFF66_inset,-1px_-3px_4px_0px_#FFFFFF66_inset,0px_8px_13px_0px_#0000000A] border border-[#E3E8EF] rounded-[8px] w-full max-w-[165px] min-h-[38px] font-bold text-[#ffffff] text-[13px] cursor-pointer"
+            type="button"
+            disabled={isSubmitting}
+            onClick={onConfirm}
+            className="bg-[#EB165440] hover:bg-[#EB1654] disabled:opacity-50 shadow-lg border border-[#EB1654] rounded-[8px] w-full max-w-[170px] min-h-[42px] font-bold text-[#ffffff] text-[13px] transition-all cursor-pointer"
           >
-            წაშლა
+            {isSubmitting ? 'იშლება...' : 'დიახ, წაშლა'}
           </button>
         </div>
       </div>

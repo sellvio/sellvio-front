@@ -1,17 +1,18 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
-import { Props } from '../../types';
-import { addMember } from '../../api/chatApi';
-import { toast } from 'react-toastify';
-import { useParams } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
-import { addMemberSchema, addMemberValue } from '../../schema/addMemberSchema';
+import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
+import { addMemberSchema, addMemberValue } from '../../schema/addMemberSchema';
+import { addMember } from '../../api/chatApi';
 import AddMemberSkeleton from './AddMemberSkeleton';
 import { useChatLayout } from '@/feature/common/stores/useChatLayout';
+import { useChatStore } from '@/feature/common/stores/useChatStore';
+import { Props } from '../../types';
 
 const InviteMemberView = ({
   searchTerm,
@@ -25,6 +26,8 @@ const InviteMemberView = ({
   const params = useParams();
   const channelId = Number(params.updateChatId);
 
+  const serverId = useChatStore((state) => state.serverId);
+
   const {
     setValue,
     formState: { errors },
@@ -34,15 +37,20 @@ const InviteMemberView = ({
   });
 
   const { isPending, mutate } = useMutation({
-    mutationFn: (data: addMemberValue) => addMember(data, channelId),
+    mutationFn: (data: addMemberValue) => {
+      if (!serverId) throw new Error('Server ID is missing');
+      return addMember(serverId, channelId, data);
+    },
     onSuccess: () => toast.success('add member successfully'),
     onError: () => toast.error('failed'),
   });
 
   const submitForm = () => {
-    setValue('user_ids', selectedIds.map(Number));
-    mutate({ user_ids: selectedIds.map(Number) });
+    const userIds = selectedIds.map(Number);
+    setValue('user_ids', userIds);
+    mutate({ user_ids: userIds });
   };
+
   const { chatFull } = useChatLayout();
 
   return (
@@ -74,18 +82,18 @@ const InviteMemberView = ({
             </p>
 
             <div className="flex bg-[#07070975] p-[6px] rounded-[6px] min-h-[50px]">
-              <div className="flex items-center gap-[6px] w-1/2 overflow-x-auto">
+              <div className="flex items-center gap-[6px] w-1/2 overflow-x-auto custom-scrollbar">
                 {selectedUsers.map(({ user }) => (
                   <div
                     key={user.id}
-                    className="flex items-center gap-[7px] bg-[#FFFFFF36] px-[15px] py-[4px] border-[##FFFFFF75] border-[2px] rounded-[6px]"
+                    className="flex items-center gap-[7px] bg-[#FFFFFF36] px-[15px] py-[4px] border-[#FFFFFF75] border-[2px] rounded-[6px] whitespace-nowrap"
                   >
                     <span className="font-semibold text-[17px] text-white">
                       {user.email}
                     </span>
                     <button
                       onClick={() => toggleUser(user.id)}
-                      className="text-white cursor-pointer"
+                      className="text-white hover:text-red-400 cursor-pointer"
                     >
                       ✕
                     </button>
@@ -100,7 +108,7 @@ const InviteMemberView = ({
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="bg-transparent pl-[35px] outline-none w-full min-h-[38px] text-[18px] text-white"
-                    placeholder="მოთაგეთ ვინმე მაგ: @... (@გიორგი გაბრავა)"
+                    placeholder="მოთაგეთ ვინმე..."
                   />
                   <Image
                     src="/images/chatIcons/svg/searchIcon.svg"
@@ -114,7 +122,9 @@ const InviteMemberView = ({
             </div>
 
             {errors.user_ids && (
-              <p className="text-red-400 text-sm">{errors.user_ids.message}</p>
+              <p className="mt-2 text-red-400 text-sm">
+                {errors.user_ids.message}
+              </p>
             )}
 
             <div className="my-[10px] border border-[#FFFFFF75]" />
@@ -123,7 +133,7 @@ const InviteMemberView = ({
               წევრები
             </p>
 
-            <div className="max-h-[300px] overflow-y-auto">
+            <div className="max-h-[300px] overflow-y-auto custom-scrollbar">
               {isLoading && <AddMemberSkeleton />}
               {filteredUsers.map(({ user }) => (
                 <div
@@ -135,8 +145,9 @@ const InviteMemberView = ({
                     type="checkbox"
                     checked={selectedIds.includes(user.id)}
                     readOnly
+                    className="cursor-pointer"
                   />
-                  <div className="bg-black rounded-full w-[34px] h-[34px]" />
+                  <div className="bg-gray-700 rounded-full w-[34px] h-[34px]" />
                   <p className="font-semibold text-[15px] text-white">
                     {user.email}
                   </p>
@@ -149,12 +160,15 @@ const InviteMemberView = ({
 
       <div className="flex justify-end w-full">
         <div className="flex gap-[13px] mb-[40px] w-full max-w-[414px] min-h-[38px]">
-          <button className="bg-[#FFFFFF36] border border-[#FFFFFF36] rounded-[8px] w-1/2 min-h-[38px] font-semibold text-[13px] text-white cursor-pointer">
-            უკან დაბრუნება
-          </button>
+          <Link href="/chat" className="w-1/2">
+            <button className="bg-[#FFFFFF36] hover:bg-[#FFFFFF50] border border-[#FFFFFF36] rounded-[8px] w-full h-full font-semibold text-[13px] text-white cursor-pointer">
+              უკან დაბრუნება
+            </button>
+          </Link>
           <button
             onClick={submitForm}
-            className="bg-[#0866FF] border border-[#C13D3F36] rounded-[8px] w-1/2 min-h-[38px] font-semibold text-[13px] text-white cursor-pointer"
+            disabled={isPending || !serverId}
+            className="bg-[#0866FF] hover:bg-[#0052D1] disabled:opacity-50 border border-[#C13D3F36] rounded-[8px] w-1/2 min-h-[38px] font-semibold text-[13px] text-white cursor-pointer"
           >
             {isPending ? 'იგზავნება...' : 'დაამატე'}
           </button>

@@ -5,7 +5,7 @@ import ChanellUpdateSidebar from './ChanellUpdateSidebar';
 import UpdateChanel from './UpdateChanel';
 import InviteMember from './InviteMember';
 import { useChatLayout } from '@/feature/common/stores/useChatLayout';
-import ChatHeader from '../../../../../feature/components/composites/ChatHeader';
+import ChatHeader from '../composites/ChatHeader';
 
 type UpdateChatProps = {
   updateChatId: number;

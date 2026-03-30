@@ -65,12 +65,6 @@ export const newChannelsData = [
     image: '/images/chatIcons/svg/Frame 128760.svg',
     isAdmin: false,
   },
-  {
-    id: 'component-2',
-    title: 'კომპონენტი',
-    image: '/images/chatIcons/svg/Component 2.svg',
-    isAdmin: true,
-  },
 
   {
     id: 'notification',
@@ -134,44 +128,7 @@ export const PinedMessageData = [
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem porroveniam quibusdam provident tenetur animi repellat laudantium enim,ullam sunt temporibus. Iure quas laborum quasi. Aspernatur illotenetur enim minus!',
   },
 ];
-export const ClarificationData = [
-  {
-    id: 1,
-    data: 'დღეს 2:30 PM',
-    userName: 'dato_dev',
-    profileImage: '/images/user3.png',
-    messageTitle: 'მესიჯის სახელი',
-    message:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem porroveniam quibusdam provident tenetur animi repellat laudantium enim,ullam sunt temporibus. Iure quas laborum quasi. Aspernatur illotenetur enim minus!',
-  },
-  {
-    id: 2,
-    data: 'დღეს 2:30 PM',
-    userName: 'dato_dev',
-    profileImage: '/images/user3.png',
-    messageTitle: 'მესიჯის სახელი',
-    message:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem porroveniam quibusdam provident tenetur animi repellat laudantium enim,ullam sunt temporibus. Iure quas laborum quasi. Aspernatur illotenetur enim minus!',
-  },
-  {
-    id: 3,
-    data: 'დღეს 2:30 PM',
-    userName: 'dato_dev',
-    profileImage: '/images/user3.png',
-    messageTitle: 'მესიჯის სახელი',
-    message:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem porroveniam quibusdam provident tenetur animi repellat laudantium enim,ullam sunt temporibus. Iure quas laborum quasi. Aspernatur illotenetur enim minus!',
-  },
-  {
-    id: 4,
-    data: 'დღეს 2:30 PM',
-    userName: 'dato_dev',
-    profileImage: '/images/user3.png',
-    messageTitle: 'მესიჯის სახელი',
-    message:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem porroveniam quibusdam provident tenetur animi repellat laudantium enim,ullam sunt temporibus. Iure quas laborum quasi. Aspernatur illotenetur enim minus!',
-  },
-];
+
 export const chanenelType = [
   {
     id: 1,
@@ -196,5 +153,26 @@ export const chanenelType = [
     image: '/images/chatIcons/svg/scissors.svg',
     text: 'კლიპერი',
     type: 'test',
+  },
+];
+
+export const chatHeaderData = [
+  {
+    id: 1,
+    headerIcon: '/images/chatIcons/svg/search.svg',
+    link: '/',
+    name: 'search',
+  },
+  {
+    id: 2,
+    headerIcon: '/images/chatIcons/svg/profile.svg',
+    link: '/',
+    name: 'profile',
+  },
+  {
+    id: 3,
+    headerIcon: '/images/chatIcons/svg/notification.svg',
+    link: '/',
+    name: 'notification',
   },
 ];

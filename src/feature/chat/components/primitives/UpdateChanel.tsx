@@ -5,16 +5,19 @@ import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { updateChamel } from '../../api/chatApi';
 import Link from 'next/link';
 import { updateChanel, updateChanelValue } from '../../schema/updateChanel';
 import { useChatLayout } from '@/feature/common/stores/useChatLayout';
+import { useChatStore } from '@/feature/common/stores/useChatStore';
+import { updateChannel } from '../../api/chatApi';
 
 type UpdateChanelProps = {
   channelId: number;
 };
 
 const UpdateChanel = ({ channelId }: UpdateChanelProps) => {
+  const serverId = useChatStore((state) => state.serverId);
+
   const {
     register,
     handleSubmit,
@@ -24,7 +27,10 @@ const UpdateChanel = ({ channelId }: UpdateChanelProps) => {
   });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (data: updateChanelValue) => updateChamel(data, channelId),
+    mutationFn: (data: updateChanelValue) => {
+      if (!serverId) throw new Error('Server ID is missing');
+      return updateChannel(serverId, channelId, data);
+    },
     onSuccess: () => {
       toast.success('Channel updated successfully');
     },
@@ -38,6 +44,7 @@ const UpdateChanel = ({ channelId }: UpdateChanelProps) => {
   const submitForm = (data: updateChanelValue) => {
     mutate(data);
   };
+
   return (
     <div
       className={`flex flex-col justify-between bg-[#001541D6] w-full ${chatFull ? '' : 'max-w-[1440px]'} h-screen`}
@@ -108,7 +115,7 @@ const UpdateChanel = ({ channelId }: UpdateChanelProps) => {
 
           <div className="w-full">
             <button
-              disabled={isPending}
+              disabled={isPending || !serverId}
               className="hover:bg-[#0866FF] disabled:opacity-50 border border-[#0866FF] rounded-[10px] w-full min-h-[50px] text-white cursor-pointer"
             >
               {isPending ? 'იგზავნება...' : 'დადასტურება'}

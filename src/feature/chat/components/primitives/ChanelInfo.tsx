@@ -1,4 +1,5 @@
 'use client';
+
 import Image from 'next/image';
 import { ChanelInfoProps } from '../../types';
 import { useMutation } from '@tanstack/react-query';
@@ -9,8 +10,11 @@ import ToggleSwitch from './ToggleSwitch';
 import { channelSchema, channelValue } from '../../schema/channelSchema';
 import { addChanel } from '../../api/chatApi';
 import { useChatLayout } from '@/feature/common/stores/useChatLayout';
+import { useChatStore } from '@/feature/common/stores/useChatStore';
 
 const ChanelInfo = ({ setChatInfoOpen }: ChanelInfoProps) => {
+  const serverId = useChatStore((state) => state.serverId);
+
   const {
     register,
     handleSubmit,
@@ -27,9 +31,13 @@ const ChanelInfo = ({ setChatInfoOpen }: ChanelInfoProps) => {
   const channelState = watch('channel_state');
 
   const { mutate, isPending } = useMutation({
-    mutationFn: addChanel,
+    mutationFn: (data: channelValue) => {
+      if (!serverId) throw new Error('Server ID is missing');
+      return addChanel(serverId, data);
+    },
     onSuccess: () => {
       toast.success('Channel created successfully');
+      setChatInfoOpen(false);
     },
     onError: () => {
       toast.error('Channel creation failed');
@@ -39,6 +47,7 @@ const ChanelInfo = ({ setChatInfoOpen }: ChanelInfoProps) => {
   const submitForm = (data: channelValue) => {
     mutate(data);
   };
+
   const { chatFull } = useChatLayout();
 
   return (
@@ -47,11 +56,9 @@ const ChanelInfo = ({ setChatInfoOpen }: ChanelInfoProps) => {
     >
       <div className="flex flex-col">
         <div className="flex justify-between items-center px-[26px] w-full min-h-[72px]">
-          <p className="font-semibold text-[18px] text-white">
-            სერვერის ინფორმაცია
-          </p>
+          <p className="font-semibold text-[18px] text-white">არხის შექმნა</p>
           <button
-            onClick={() => setChatInfoOpen((prev) => !prev)}
+            onClick={() => setChatInfoOpen(false)}
             className="cursor-pointer"
           >
             <Image
@@ -69,7 +76,7 @@ const ChanelInfo = ({ setChatInfoOpen }: ChanelInfoProps) => {
         >
           <div className="flex flex-col gap-[10px]">
             <label className="font-semibold text-[15px] text-white">
-              სერვერის სახელი
+              არხის სახელი
             </label>
 
             <div className="relative w-full min-h-[58px]">
@@ -83,8 +90,8 @@ const ChanelInfo = ({ setChatInfoOpen }: ChanelInfoProps) => {
 
               <input
                 {...register('name')}
-                className="shadow-[4px_5px_6px_0px_#FFFFFF42_inset,-1px_-3px_4px_0px_#FFFFFF42_inset,0px_8px_13px_0px_#0000000A] px-[44px] border-[2px] border-white rounded-[8px] outline-none w-full min-h-[58px] text-[18px] text-white"
-                placeholder="MEAMA-მეამა"
+                className="bg-transparent shadow-[4px_5px_6px_0px_#FFFFFF42_inset,-1px_-3px_4px_0px_#FFFFFF42_inset,0px_8px_13px_0px_#0000000A] px-[44px] border-[2px] border-white rounded-[8px] outline-none w-full min-h-[58px] text-[18px] text-white placeholder:text-gray-400"
+                placeholder="შეიყვანეთ არხის სახელი"
               />
 
               <Image
@@ -124,18 +131,12 @@ const ChanelInfo = ({ setChatInfoOpen }: ChanelInfoProps) => {
                 onToggle={(val) => setValue('channel_state', val)}
               />
             </div>
-
-            {errors.channel_state && (
-              <p className="text-red-400 text-sm">
-                {errors.channel_state.message}
-              </p>
-            )}
           </div>
 
           <div className="flex justify-end items-center w-full">
             <button
-              disabled={isPending}
-              className="hover:bg-[#0866FF] mb-[30px] border border-[#0866FF] hover:border-[#C13D3F36] rounded-[10px] w-full min-h-[50px] text-[#FFFFFF] cursor-pointer"
+              disabled={isPending || !serverId}
+              className="hover:bg-[#0866FF] disabled:opacity-50 mb-[30px] border border-[#0866FF] rounded-[10px] w-full min-h-[50px] text-white transition-colors cursor-pointer"
             >
               {isPending ? 'იგზავნება..' : 'დადასტურება'}
             </button>

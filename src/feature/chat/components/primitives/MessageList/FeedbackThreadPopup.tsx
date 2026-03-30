@@ -1,0 +1,335 @@
+'use client';
+
+import { useEffect, useMemo, useRef, useState } from 'react';
+import Image from 'next/image';
+import { Message } from '@/feature/chat/types';
+import { useSocketStore } from '@/feature/common/stores/useSocketStore';
+import { useChatStore } from '@/feature/common/stores/useChatStore';
+import { MessageStatusIcon } from './MessageStatusIcon';
+import { SendHorizonal } from 'lucide-react';
+
+interface FeedbackThreadPopupProps {
+  isOpen: boolean;
+  onClose: () => void;
+  videoMessage: Message;
+}
+
+const getSenderName = (msg: Message): string => {
+  if (msg.senderFirstName && msg.senderLastName) {
+    return `${msg.senderFirstName} ${msg.senderLastName}`;
+  }
+
+  if (msg.senderFirstName) return msg.senderFirstName;
+
+  return `User ${msg.senderId}`;
+};
+
+const sortMessages = (messages: Message[]) => {
+  const map = new Map<string | number, Message>();
+
+  for (const message of messages) {
+    map.set(message.tempId ?? message.id, message);
+  }
+
+  return [...map.values()].sort(
+    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+  );
+};
+
+const FeedbackThreadPopup = ({
+  isOpen,
+  onClose,
+  videoMessage,
+}: FeedbackThreadPopupProps) => {
+  const socket = useSocketStore((s) => s.socket);
+  const selectedChannelId = useChatStore((s) => s.selectedChannelId);
+  const currentUser = useChatStore((s) => s.currentUser);
+
+  const [threadMessages, setThreadMessages] = useState<Message[]>([]);
+  const [text, setText] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  const campaignVideoId = videoMessage.campaignVideoId;
+
+  const popupTitle = useMemo(() => {
+    return videoMessage.videoTitle || videoMessage.content || 'ვიდეოს განხილვა';
+  }, [videoMessage]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+
+    window.addEventListener('keydown', handleEsc);
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+      document.body.style.overflow = '';
+    };
+  }, [isOpen, onClose]);
+
+  useEffect(() => {
+    if (!isOpen || !socket || !selectedChannelId || !campaignVideoId) return;
+
+    setIsLoading(true);
+    setText('');
+    setThreadMessages([]);
+
+    socket.emit('feedback:thread', {
+      channelId: selectedChannelId,
+      campaignVideoId,
+      limit: 50,
+    });
+
+    const handleThread = (data: {
+      channelId: number;
+      campaignVideoId: number;
+      messages: Message[];
+    }) => {
+      if (
+        data.channelId !== selectedChannelId ||
+        data.campaignVideoId !== campaignVideoId
+      ) {
+        return;
+      }
+
+      setThreadMessages(sortMessages(data.messages ?? []));
+      setIsLoading(false);
+    };
+
+    const handleFeedbackMessage = (incomingMessage: Message) => {
+      if (
+        incomingMessage.channelId !== selectedChannelId ||
+        incomingMessage.campaignVideoId !== campaignVideoId
+      ) {
+        return;
+      }
+
+      setThreadMessages((prev) => {
+        const optimisticIndex = prev.findIndex(
+          (item) =>
+            item.tempId &&
+            item.senderId === currentUser?.id &&
+            item.content.trim() === incomingMessage.content.trim() &&
+            (item.status === 'sending' || item.status === 'sent')
+        );
+
+        if (optimisticIndex !== -1) {
+          return sortMessages(
+            prev.map((item, index) =>
+              index === optimisticIndex
+                ? {
+                    ...incomingMessage,
+                    status: 'delivered',
+                  }
+                : item
+            )
+          );
+        }
+
+        const exists = prev.some((item) => item.id === incomingMessage.id);
+        if (exists) return prev;
+
+        return sortMessages([
+          ...prev,
+          {
+            ...incomingMessage,
+            status: 'delivered',
+          },
+        ]);
+      });
+    };
+
+    socket.on('feedback:thread', handleThread);
+    socket.on('feedback:message', handleFeedbackMessage);
+
+    return () => {
+      socket.off('feedback:thread', handleThread);
+      socket.off('feedback:message', handleFeedbackMessage);
+    };
+  }, [isOpen, socket, selectedChannelId, campaignVideoId, currentUser?.id]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const timeout = setTimeout(() => {
+      scrollRef.current?.scrollTo({
+        top: scrollRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }, 80);
+
+    return () => clearTimeout(timeout);
+  }, [threadMessages, isOpen]);
+
+  const handleSend = () => {
+    const trimmed = text.trim();
+
+    if (
+      !socket ||
+      !selectedChannelId ||
+      !campaignVideoId ||
+      !trimmed ||
+      !currentUser
+    ) {
+      return;
+    }
+
+    const tempId = `thread_temp_${Date.now()}_${Math.random()}`;
+
+    const optimisticMessage: Message = {
+      id: Date.now(),
+      tempId,
+      channelId: selectedChannelId,
+      senderId: currentUser.id,
+      content: trimmed,
+      createdAt: new Date().toISOString(),
+      pinned: false,
+      status: 'sending',
+      senderFirstName: currentUser.name,
+      senderLastName: null,
+      senderImageUrl: null,
+      images: [],
+      reactions: [],
+      replyToId: null,
+      replyTo: null,
+      campaignVideoId,
+    };
+
+    setThreadMessages((prev) => sortMessages([...prev, optimisticMessage]));
+    setText('');
+
+    socket.emit('feedback:reply', {
+      channelId: selectedChannelId,
+      campaignVideoId,
+      content: trimmed,
+    });
+
+    setTimeout(() => {
+      setThreadMessages((prev) =>
+        prev.map((message) =>
+          message.tempId === tempId && message.status === 'sending'
+            ? { ...message, status: 'sent' }
+            : message
+        )
+      );
+    }, 4000);
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="z-[999] fixed inset-0 flex justify-center items-center bg-black/40 p-4">
+      <div className="absolute inset-0" onClick={onClose} />
+
+      <div className="relative flex flex-col bg-[#202F5C] border-[#FFFFFF16] border-[3px] rounded-[16px] w-full max-w-[492px] h-[623px] overflow-hidden">
+        <div className="flex justify-between items-center px-[24px] py-[30px]">
+          <div className="pr-3 min-w-0">
+            <p className="font-semibold text-[15px] text-white truncate">
+              {popupTitle}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex justify-center items-center bg-[#313A5158] rounded-[10px] w-[38px] h-[38px] transition cursor-pointer shrink-0"
+          >
+            <Image
+              src={'/images/svg/chevron-right.svg'}
+              alt="message"
+              width={21}
+              height={21}
+            />
+          </button>
+        </div>
+
+        <div ref={scrollRef} className="flex-1 px-[24px] pb-4 overflow-y-auto">
+          {isLoading ? (
+            <div className="flex justify-center items-center h-full text-white/60 text-sm">
+              იტვირთება...
+            </div>
+          ) : threadMessages.length === 0 ? (
+            <div className="flex justify-center items-center h-full text-white/60 text-sm text-center">
+              ამ ვიდეოზე ჯერ შეტყობინებები არ არის
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {threadMessages.map((msg) => (
+                <div key={msg.tempId ?? msg.id} className="flex gap-3">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 text-white/80 text-xs">
+                      <span className="font-semibold text-white">
+                        {getSenderName(msg)}
+                      </span>
+                      <span>
+                        დღეს{' '}
+                        {new Date(msg.createdAt).toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </span>
+                    </div>
+
+                    <div className="mt-2">
+                      <div className="flex items-end gap-2">
+                        <div className="bg-[#FFFFFF36] px-4 py-3 rounded-[10px] max-w-[280px] font-semibold text-[15px] text-white break-words">
+                          {msg.replyTo && (
+                            <div className="bg-white/10 mb-2 px-3 py-2 border-[#8BB8FF] border-l-2 rounded-md">
+                              <p className="font-semibold text-[#8BB8FF] text-[11px]">
+                                {msg.replyTo.senderFirstName ??
+                                  `User ${msg.replyTo.senderId}`}
+                              </p>
+                              <p className="text-[11px] text-white/70 line-clamp-2">
+                                {msg.replyTo.content}
+                              </p>
+                            </div>
+                          )}
+
+                          <p>{msg.content}</p>
+                        </div>
+
+                        <MessageStatusIcon status={msg.status} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="px-[7px] pb-[9px]">
+          <div className="flex items-center gap-[18px] bg-[#FFFFFF36] px-4 rounded-[12px] h-[56px]">
+            <input
+              type="text"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleSend();
+              }}
+              placeholder="Write a message..."
+              className="flex-1 bg-transparent outline-none text-white placeholder:text-white/55 text-sm"
+            />
+
+            <button
+              type="button"
+              onClick={handleSend}
+              disabled={!text.trim()}
+              className="flex justify-center items-center disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed shrink-0"
+            >
+              <SendHorizonal size={20} className="text-[#ffffff]" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default FeedbackThreadPopup;

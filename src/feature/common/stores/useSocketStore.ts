@@ -1,25 +1,284 @@
+'use client';
+
 import { create } from 'zustand';
 import { io } from 'socket.io-client';
 import {
   Message,
+  MessageReaction,
   MessageStatus,
+  PendingReactionOperation,
+  ReactionUser,
   SocketState,
-} from '@/feature/chat/components/type';
+  VideoStatus,
+} from '@/feature/chat/types';
+import { useChatStore } from '@/feature/common/stores/useChatStore';
+import { REACTION_OPTIONS } from '../data/reactionOptions';
 
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 const MESSAGES_PER_PAGE = 50;
 
-const sortMessagesByDate = (messages: Message[]): Message[] => {
+type ReactionAddPayload = {
+  channelId: number;
+  messageId: number;
+  emojiId: number;
+  emoji: string;
+  emojiUrl: string;
+  userId: number;
+  action: 'add';
+};
+
+type ReactionRemovePayload = {
+  channelId: number;
+  messageId: number;
+  emojiId: number;
+  userId: number;
+};
+
+const getPinnedStorageKey = (channelId: number) => `chat:pinned:${channelId}`;
+
+const getPinnedIdsSet = (channelId: number): Set<number> => {
+  if (typeof window === 'undefined') return new Set();
+
+  try {
+    const raw = localStorage.getItem(getPinnedStorageKey(channelId));
+    if (!raw) return new Set();
+
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return new Set();
+
+    return new Set(parsed.filter((id) => typeof id === 'number'));
+  } catch {
+    return new Set();
+  }
+};
+
+const setPinnedIdsSet = (channelId: number, ids: Set<number>) => {
+  if (typeof window === 'undefined') return;
+
+  try {
+    localStorage.setItem(
+      getPinnedStorageKey(channelId),
+      JSON.stringify(Array.from(ids))
+    );
+  } catch {
+    //
+  }
+};
+
+const addPinnedIdToStorage = (channelId: number, messageId: number) => {
+  const ids = getPinnedIdsSet(channelId);
+  ids.add(messageId);
+  setPinnedIdsSet(channelId, ids);
+};
+
+const removePinnedIdFromStorage = (channelId: number, messageId: number) => {
+  const ids = getPinnedIdsSet(channelId);
+  ids.delete(messageId);
+  setPinnedIdsSet(channelId, ids);
+};
+
+const applyStoredPinnedStateForChannel = (
+  channelId: number,
+  messages: Message[]
+): Message[] => {
+  const storedPinnedIds = getPinnedIdsSet(channelId);
+
+  return messages.map((message) => ({
+    ...message,
+    pinned: Boolean(message.pinned) || storedPinnedIds.has(message.id),
+  }));
+};
+
+const sortByDate = (messages: Message[]): Message[] => {
   const map = new Map<string | number, Message>();
 
-  for (const m of messages) {
-    const key = m.tempId ?? m.id;
-    map.set(key, m);
+  for (const message of messages) {
+    map.set(message.tempId ?? message.id, {
+      ...message,
+      images: message.images ?? [],
+      reactions: message.reactions ?? [],
+      replyToId: message.replyToId ?? null,
+      replyTo: message.replyTo ?? null,
+      pinned: Boolean(message.pinned),
+      socialPosts: message.socialPosts ?? null,
+      videoTitle: message.videoTitle ?? null,
+      videoDescription: message.videoDescription ?? null,
+    });
   }
 
   return Array.from(map.values()).sort(
     (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
   );
+};
+
+const normalizeMessage = (message: Message): Message => ({
+  ...message,
+  images: message.images ?? [],
+  reactions: message.reactions ?? [],
+  replyToId: message.replyToId ?? null,
+  replyTo: message.replyTo ?? null,
+  pinned: Boolean(message.pinned),
+  socialPosts: message.socialPosts ?? null,
+  videoTitle: message.videoTitle ?? null,
+  videoDescription: message.videoDescription ?? null,
+});
+
+const videoToMessage = (
+  video: any,
+  channelId: number,
+  messageType: 'feedback_video' | 'verification_video' = 'feedback_video'
+): Message => ({
+  id: Number(video.id),
+  channelId,
+  senderId: video.creatorId,
+  content: video.title ?? '',
+  createdAt: video.createdAt,
+  pinned: false,
+  status: 'delivered' as MessageStatus,
+  senderFirstName: video.creatorFirstName,
+  senderLastName: video.creatorLastName,
+  senderImageUrl: video.creatorImageUrl,
+  messageType,
+  campaignVideoId: video.id,
+  videoUrl: video.videoUrl,
+  videoTitle: video.title ?? null,
+  videoDescription: video.description ?? null,
+  videoCoverUrl: video.coverUrl,
+  videoStatus:
+    messageType === 'feedback_video'
+      ? (video.status as VideoStatus)
+      : undefined,
+  socialPosts:
+    messageType === 'verification_video' ? (video.socialPosts ?? []) : null,
+  images: [],
+  reactions: [],
+  replyToId: null,
+  replyTo: null,
+});
+
+const getReactionMeta = (emojiId: number) => {
+  const fallback = REACTION_OPTIONS.find((item) => item.id === emojiId);
+
+  return {
+    emoji: fallback?.label ?? `emoji-${emojiId}`,
+    emojiUrl: '',
+  };
+};
+
+const addReactionLocally = (
+  message: Message,
+  payload: {
+    messageId: number;
+    emojiId: number;
+    userId: number;
+    firstName?: string | null;
+    emoji?: string;
+    emojiUrl?: string;
+  }
+): Message => {
+  if (message.id !== payload.messageId) return message;
+
+  const currentReactions = message.reactions ?? [];
+  const reactionIndex = currentReactions.findIndex(
+    (reaction) => reaction.emojiId === payload.emojiId
+  );
+
+  if (reactionIndex === -1) {
+    const nextReaction: MessageReaction = {
+      emojiId: payload.emojiId,
+      emoji: payload.emoji ?? getReactionMeta(payload.emojiId).emoji,
+      emojiUrl: payload.emojiUrl ?? getReactionMeta(payload.emojiId).emojiUrl,
+      users: [
+        {
+          id: payload.userId,
+          firstName: payload.firstName ?? null,
+        },
+      ],
+    };
+
+    return {
+      ...message,
+      reactions: [...currentReactions, nextReaction],
+    };
+  }
+
+  const nextReactions = currentReactions.map((reaction, index) => {
+    if (index !== reactionIndex) return reaction;
+
+    const alreadyExists = reaction.users.some(
+      (user) => user.id === payload.userId
+    );
+
+    if (alreadyExists) return reaction;
+
+    const nextUser: ReactionUser = {
+      id: payload.userId,
+      firstName: payload.firstName ?? null,
+    };
+
+    return {
+      ...reaction,
+      users: [...reaction.users, nextUser],
+    };
+  });
+
+  return {
+    ...message,
+    reactions: nextReactions,
+  };
+};
+
+const removeReactionLocally = (
+  message: Message,
+  payload: {
+    messageId: number;
+    emojiId: number;
+    userId: number;
+  }
+): Message => {
+  if (message.id !== payload.messageId) return message;
+
+  const currentReactions = message.reactions ?? [];
+
+  const nextReactions = currentReactions
+    .map((reaction) => {
+      if (reaction.emojiId !== payload.emojiId) return reaction;
+
+      return {
+        ...reaction,
+        users: reaction.users.filter((user) => user.id !== payload.userId),
+      };
+    })
+    .filter((reaction) => reaction.users.length > 0);
+
+  return {
+    ...message,
+    reactions: nextReactions,
+  };
+};
+
+const removeMatchingPendingOperation = (
+  operations: PendingReactionOperation[],
+  payload: {
+    channelId: number;
+    messageId: number;
+    emojiId: number;
+    userId: number;
+    action: 'add' | 'remove';
+  }
+) => {
+  const index = operations.findIndex(
+    (operation) =>
+      operation.channelId === payload.channelId &&
+      operation.messageId === payload.messageId &&
+      operation.emojiId === payload.emojiId &&
+      operation.userId === payload.userId &&
+      operation.action === payload.action
+  );
+
+  if (index === -1) return operations;
+
+  return operations.filter((_, currentIndex) => currentIndex !== index);
 };
 
 export const useSocketStore = create<SocketState>((set, get) => ({
@@ -29,136 +288,380 @@ export const useSocketStore = create<SocketState>((set, get) => ({
   isLoadingMessages: false,
   hasMore: true,
   currentPage: 1,
+  pendingReactionOperations: [],
+  pendingPinMessageIds: [],
 
   connect: (token: string) => {
     if (typeof window === 'undefined' || get().socket?.connected) return;
 
-    const socketInstance = io(`${baseUrl}/chat`, {
+    const existingSocket = get().socket;
+    if (existingSocket) {
+      existingSocket.removeAllListeners();
+      existingSocket.disconnect();
+    }
+
+    const socket = io(`${baseUrl}/chat`, {
       auth: { token },
       transports: ['websocket', 'polling'],
       reconnection: true,
     });
 
-    socketInstance.on('connect', () => {
-      set({ isConnected: true });
-    });
+    socket.on('connect', () => set({ isConnected: true }));
+    socket.on('disconnect', () => set({ isConnected: false }));
 
-    socketInstance.on('disconnect', () => {
-      set({ isConnected: false });
-    });
+    socket.on('message:history', (data) => {
+      const chatState = useChatStore.getState();
+      const selectedChannelId = chatState.selectedChannelId;
+      const selectedChannelTypeId = chatState.selectedChannelTypeId;
 
-    socketInstance.on('message:history', (data) => {
-      if (!data?.messages) return;
+      if (
+        !data?.messages ||
+        !data?.channelId ||
+        !selectedChannelId ||
+        data.channelId !== selectedChannelId
+      ) {
+        return;
+      }
+
+      // feedback / verification channel-ში მთავარი view messages history-ზე არ უნდა აიწყოს
+      if (selectedChannelTypeId === 3 || selectedChannelTypeId === 4) {
+        return;
+      }
+
+      const normalizedMessages: Message[] = applyStoredPinnedStateForChannel(
+        data.channelId,
+        data.messages.map(normalizeMessage)
+      );
 
       set((state) => {
-        const isFirstLoad = state.messages.length === 0;
-
-        const newMessages = isFirstLoad
-          ? data.messages
-          : [...data.messages, ...state.messages];
+        const isFirst = state.messages.length === 0;
 
         return {
-          messages: sortMessagesByDate(newMessages),
+          messages: sortByDate(
+            isFirst
+              ? normalizedMessages
+              : [...normalizedMessages, ...state.messages]
+          ),
           isLoadingMessages: false,
-          hasMore: data.hasMore,
-          currentPage: isFirstLoad ? 1 : state.currentPage + 1,
+          hasMore: Boolean(data.hasMore),
+          currentPage: isFirst ? 1 : state.currentPage + 1,
         };
       });
     });
 
-    socketInstance.on('message', (msg: Message) => {
+    socket.on('feedback:videos', (data) => {
+      const selectedChannelId = useChatStore.getState().selectedChannelId;
+
+      if (
+        !data?.videos ||
+        !selectedChannelId ||
+        data.channelId !== selectedChannelId
+      ) {
+        return;
+      }
+
+      const videoMessages: Message[] = data.videos.map((video: any) =>
+        videoToMessage(video, data.channelId, 'feedback_video')
+      );
+
+      set(() => ({
+        messages: sortByDate(videoMessages),
+        isLoadingMessages: false,
+        hasMore: false,
+      }));
+    });
+
+    socket.on('verification:videos', (data) => {
+      const selectedChannelId = useChatStore.getState().selectedChannelId;
+
+      if (
+        !data?.videos ||
+        !selectedChannelId ||
+        data.channelId !== selectedChannelId
+      ) {
+        return;
+      }
+
+      const videoMessages: Message[] = data.videos.map((video: any) =>
+        videoToMessage(video, data.channelId, 'verification_video')
+      );
+
+      set(() => ({
+        messages: sortByDate(videoMessages),
+        isLoadingMessages: false,
+        hasMore: false,
+      }));
+    });
+
+    socket.on('message', (incomingMessage: Message) => {
+      const chatState = useChatStore.getState();
+      const selectedChannelId = chatState.selectedChannelId;
+      const selectedChannelTypeId = chatState.selectedChannelTypeId;
+      const message = normalizeMessage(incomingMessage);
+
+      if (!selectedChannelId || message.channelId !== selectedChannelId) {
+        return;
+      }
+
+      if (selectedChannelTypeId === 3 || selectedChannelTypeId === 4) {
+        return;
+      }
+
       set((state) => {
-        const tempMsgIndex = state.messages.findIndex(
-          (m) =>
-            m.tempId &&
-            m.content === msg.content &&
-            m.channelId === msg.channelId &&
-            m.status === 'sending'
+        const optimisticIndex = state.messages.findIndex(
+          (item) =>
+            item.channelId === message.channelId &&
+            item.messageType !== 'feedback_video' &&
+            item.messageType !== 'verification_video' &&
+            item.tempId &&
+            item.senderId === -1 &&
+            item.content.trim() === message.content.trim() &&
+            item.replyToId === (message.replyToId ?? null) &&
+            (item.status === 'sending' || item.status === 'sent')
         );
 
-        let updatedMessages: Message[];
+        const nextMessages =
+          optimisticIndex !== -1
+            ? state.messages.map((item, index) =>
+                index === optimisticIndex
+                  ? {
+                      ...message,
+                      status: 'delivered' as MessageStatus,
+                    }
+                  : item
+              )
+            : [
+                ...state.messages,
+                {
+                  ...message,
+                  status: 'delivered' as MessageStatus,
+                },
+              ];
 
-        if (tempMsgIndex !== -1) {
-          updatedMessages = state.messages.map((m, idx) =>
-            idx === tempMsgIndex
-              ? { ...msg, status: 'delivered' as MessageStatus }
-              : m
-          );
-        } else {
-          updatedMessages = [
-            ...state.messages,
-            { ...msg, status: 'delivered' as MessageStatus },
-          ];
-        }
-
-        return { messages: sortMessagesByDate(updatedMessages) };
+        return {
+          messages: sortByDate(nextMessages),
+        };
       });
     });
 
-    socketInstance.on(
-      'message:sent',
-      (data: { tempId?: string; message: Message }) => {
-        set((state) => {
-          if (!data.tempId) return state;
+    socket.on('feedback:submitted', (data) => {
+      const selectedChannelId = useChatStore.getState().selectedChannelId;
 
-          const updatedMessages = state.messages.map((m) =>
-            m.tempId === data.tempId
-              ? {
-                  ...data.message,
-                  status: 'sent' as MessageStatus,
-                  tempId: data.tempId,
-                }
-              : m
-          );
-
-          return { messages: sortMessagesByDate(updatedMessages) };
-        });
+      if (
+        !data?.video ||
+        !selectedChannelId ||
+        data.channelId !== selectedChannelId
+      ) {
+        return;
       }
-    );
 
-    socketInstance.on(
-      'message:delivered',
-      (data: { tempId: string; messageId: number }) => {
-        set((state) => {
-          const updatedMessages = state.messages.map((m) =>
-            m.tempId === data.tempId
-              ? {
-                  ...m,
-                  id: data.messageId,
-                  status: 'delivered' as MessageStatus,
-                }
-              : m
-          );
+      const realMessage = videoToMessage(
+        data.video,
+        data.channelId,
+        'feedback_video'
+      );
 
-          return { messages: sortMessagesByDate(updatedMessages) };
-        });
-      }
-    );
+      set((state) => {
+        const currentUserId = useChatStore.getState().currentUser?.id;
 
-    socketInstance.on(
-      'message:error',
-      (data: { tempId?: string; error: string }) => {
-        console.error('❌ Message error:', data.error);
+        const optimisticIndex = state.messages.findIndex(
+          (message) =>
+            message.messageType === 'feedback_video' &&
+            Boolean(message.tempId) &&
+            message.channelId === data.channelId &&
+            message.senderId === currentUserId &&
+            message.videoUrl === realMessage.videoUrl &&
+            (message.videoTitle || message.content) ===
+              (realMessage.videoTitle || realMessage.content)
+        );
+
+        const nextMessages =
+          optimisticIndex !== -1
+            ? state.messages.map((message, index) =>
+                index === optimisticIndex
+                  ? {
+                      ...realMessage,
+                      status: 'delivered' as MessageStatus,
+                    }
+                  : message
+              )
+            : [...state.messages, realMessage];
+
+        return {
+          messages: sortByDate(nextMessages),
+        };
+      });
+    });
+
+    socket.on('feedback:reviewed', (data) => {
+      set((state) => ({
+        messages: state.messages.map((message) =>
+          message.campaignVideoId === data.campaignVideoId
+            ? { ...message, videoStatus: data.status }
+            : message
+        ),
+      }));
+    });
+
+    socket.on('verification:reviewed', (data) => {
+      set((state) => ({
+        messages: state.messages.map((msg) =>
+          msg.messageType === 'verification_video' &&
+          msg.socialPosts?.some((post) => post.id === data.socialPostId)
+            ? {
+                ...msg,
+                socialPosts: msg.socialPosts.map((post) =>
+                  post.id === data.socialPostId
+                    ? { ...post, isVerified: data.verified }
+                    : post
+                ),
+              }
+            : msg
+        ),
+      }));
+    });
+
+    socket.on('message:reaction', (payload: ReactionAddPayload) => {
+      const chatState = useChatStore.getState();
+      const selectedChannelId = chatState.selectedChannelId;
+      const selectedChannelTypeId = chatState.selectedChannelTypeId;
+
+      if (!selectedChannelId || payload.channelId !== selectedChannelId) return;
+      if (selectedChannelTypeId === 3 || selectedChannelTypeId === 4) return;
+
+      set((state) => ({
+        messages: state.messages.map((message) =>
+          addReactionLocally(message, {
+            messageId: payload.messageId,
+            emojiId: payload.emojiId,
+            userId: payload.userId,
+            firstName: null,
+            emoji: payload.emoji,
+            emojiUrl: payload.emojiUrl,
+          })
+        ),
+        pendingReactionOperations: removeMatchingPendingOperation(
+          state.pendingReactionOperations,
+          {
+            channelId: payload.channelId,
+            messageId: payload.messageId,
+            emojiId: payload.emojiId,
+            userId: payload.userId,
+            action: 'add',
+          }
+        ),
+      }));
+    });
+
+    socket.on('message:reaction:removed', (payload: ReactionRemovePayload) => {
+      const chatState = useChatStore.getState();
+      const selectedChannelId = chatState.selectedChannelId;
+      const selectedChannelTypeId = chatState.selectedChannelTypeId;
+
+      if (!selectedChannelId || payload.channelId !== selectedChannelId) return;
+      if (selectedChannelTypeId === 3 || selectedChannelTypeId === 4) return;
+
+      set((state) => ({
+        messages: state.messages.map((message) =>
+          removeReactionLocally(message, {
+            messageId: payload.messageId,
+            emojiId: payload.emojiId,
+            userId: payload.userId,
+          })
+        ),
+        pendingReactionOperations: removeMatchingPendingOperation(
+          state.pendingReactionOperations,
+          {
+            channelId: payload.channelId,
+            messageId: payload.messageId,
+            emojiId: payload.emojiId,
+            userId: payload.userId,
+            action: 'remove',
+          }
+        ),
+      }));
+    });
+
+    socket.on(
+      'message:deleted',
+      (payload: { channelId?: number; messageId: number }) => {
+        const chatState = useChatStore.getState();
+        const selectedChannelId = chatState.selectedChannelId;
+        const selectedChannelTypeId = chatState.selectedChannelTypeId;
+
+        if (
+          payload.channelId &&
+          selectedChannelId &&
+          payload.channelId !== selectedChannelId
+        ) {
+          return;
+        }
+
+        if (selectedChannelTypeId === 3 || selectedChannelTypeId === 4) {
+          return;
+        }
 
         set((state) => ({
-          messages: state.messages.map((m) =>
-            data.tempId && m.tempId === data.tempId
-              ? { ...m, status: 'failed' as MessageStatus }
-              : m
+          messages: state.messages.filter(
+            (message) => message.id !== payload.messageId
           ),
         }));
       }
     );
 
-    set({ socket: socketInstance });
+    socket.on('message:pinned', (payload: Message) => {
+      const chatState = useChatStore.getState();
+      const selectedChannelId = chatState.selectedChannelId;
+      const selectedChannelTypeId = chatState.selectedChannelTypeId;
+      const normalized = normalizeMessage(payload);
+
+      if (normalized.pinned) {
+        addPinnedIdToStorage(normalized.channelId, normalized.id);
+      } else {
+        removePinnedIdFromStorage(normalized.channelId, normalized.id);
+      }
+
+      if (!selectedChannelId || normalized.channelId !== selectedChannelId) {
+        return;
+      }
+
+      if (selectedChannelTypeId === 3 || selectedChannelTypeId === 4) {
+        return;
+      }
+
+      set((state) => ({
+        messages: sortByDate(
+          state.messages.map((message) =>
+            message.id === normalized.id
+              ? {
+                  ...message,
+                  ...normalized,
+                  pinned: normalized.pinned,
+                }
+              : message
+          )
+        ),
+        pendingPinMessageIds: state.pendingPinMessageIds.filter(
+          (id) => id !== normalized.id
+        ),
+      }));
+    });
+
+    socket.on('error', () => {
+      set({
+        isLoadingMessages: false,
+        pendingPinMessageIds: [],
+      });
+    });
+
+    set({ socket });
   },
 
-  joinServer: (serverId: number) => {
-    const socket = get().socket;
-    socket?.emit('server:open', { serverId });
+  joinServer: (serverId) => {
+    get().socket?.emit('server:open', { serverId });
   },
 
-  joinChannel: (serverId: number, channelId: number) => {
+  joinChannel: (serverId, channelId, channelTypeId) => {
     const socket = get().socket;
     if (!socket) return;
 
@@ -167,6 +670,8 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       isLoadingMessages: true,
       hasMore: true,
       currentPage: 1,
+      pendingReactionOperations: [],
+      pendingPinMessageIds: [],
     });
 
     socket.emit('channel:open', {
@@ -174,68 +679,281 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       channelId,
       limit: MESSAGES_PER_PAGE,
     });
+
+    if (channelTypeId === 3) {
+      socket.emit('feedback:videos', { channelId });
+      return;
+    }
+
+    if (channelTypeId === 4) {
+      socket.emit('verification:videos', { channelId });
+      return;
+    }
   },
 
-  sendMessage: (channelId: number, content: string) => {
+  closeChannel: (serverId, channelId) => {
     const socket = get().socket;
     if (!socket) return;
 
+    socket.emit('channel:close', {
+      serverId,
+      channelId,
+    });
+  },
+
+  sendMessage: (channelId, content, replyToId = null) => {
+    const socket = get().socket;
+    if (!socket) return;
+
+    const trimmedContent = content.trim();
+    if (!trimmedContent) return;
+
     const tempId = `temp_${Date.now()}_${Math.random()}`;
+
     const tempMessage: Message = {
       id: Date.now(),
       channelId,
       senderId: -1,
-      content,
+      content: trimmedContent,
       createdAt: new Date().toISOString(),
       pinned: false,
       status: 'sending',
       tempId,
+      images: [],
+      reactions: [],
+      replyToId,
+      replyTo:
+        replyToId != null
+          ? (() => {
+              const replySource = get().messages.find(
+                (m) => m.id === replyToId
+              );
+              if (!replySource) return null;
+
+              return {
+                id: replySource.id,
+                content: replySource.content,
+                senderId: replySource.senderId,
+                senderFirstName: replySource.senderFirstName ?? null,
+              };
+            })()
+          : null,
     };
 
     set((state) => ({
-      messages: sortMessagesByDate([...state.messages, tempMessage]),
+      messages: sortByDate([...state.messages, tempMessage]),
     }));
 
-    socket.emit('message:send', { channelId, content, tempId });
+    socket.emit('message:send', {
+      channelId,
+      content: trimmedContent,
+      replyToId,
+    });
 
     setTimeout(() => {
       set((state) => ({
-        messages: state.messages.map((m) =>
-          m.tempId === tempId && m.status === 'sending'
-            ? { ...m, status: 'sent' as MessageStatus }
-            : m
+        messages: state.messages.map((message) =>
+          message.tempId === tempId && message.status === 'sending'
+            ? { ...message, status: 'sent' as MessageStatus }
+            : message
         ),
       }));
-    }, 5000);
+    }, 4000);
   },
 
-  loadMoreMessages: (channelId: number) => {
+  submitFeedback: (channelId, title, videoUrl) => {
+    const { socket, isConnected } = get();
+    const currentUser = useChatStore.getState().currentUser;
+
+    if (!socket || !isConnected || !currentUser) return;
+
+    const tempId = `feedback_temp_${Date.now()}_${Math.random()}`;
+
+    const optimisticMessage: Message = {
+      id: Date.now(),
+      channelId,
+      senderId: currentUser.id,
+      content: title,
+      createdAt: new Date().toISOString(),
+      pinned: false,
+      status: 'sending',
+      tempId,
+      senderFirstName: currentUser.name,
+      senderLastName: null,
+      senderImageUrl: null,
+      messageType: 'feedback_video',
+      campaignVideoId: null,
+      videoUrl,
+      videoTitle: title,
+      videoCoverUrl: null,
+      videoStatus: 'under_review',
+      images: [],
+      reactions: [],
+      replyToId: null,
+      replyTo: null,
+      socialPosts: null,
+    };
+
+    set((state) => ({
+      messages: sortByDate([...state.messages, optimisticMessage]),
+    }));
+
+    socket.emit('feedback:submit', {
+      channelId,
+      title,
+      videoUrl,
+    });
+
+    setTimeout(() => {
+      set((state) => ({
+        messages: state.messages.map((message) =>
+          message.tempId === tempId && message.status === 'sending'
+            ? { ...message, status: 'sent' as MessageStatus }
+            : message
+        ),
+      }));
+    }, 4000);
+  },
+
+  addReaction: (channelId, messageId, emojiId) => {
+    const socket = get().socket;
+    const currentUser = useChatStore.getState().currentUser;
+
+    if (!socket || !currentUser) return;
+
+    const operationId = `reaction_add_${Date.now()}_${Math.random()}`;
+
+    set((state) => ({
+      messages: state.messages.map((message) =>
+        addReactionLocally(message, {
+          messageId,
+          emojiId,
+          userId: currentUser.id,
+          firstName: currentUser.name ?? null,
+        })
+      ),
+      pendingReactionOperations: [
+        ...state.pendingReactionOperations,
+        {
+          operationId,
+          channelId,
+          messageId,
+          emojiId,
+          userId: currentUser.id,
+          action: 'add',
+        },
+      ],
+    }));
+
+    socket.emit('reaction:add', {
+      channelId,
+      messageId,
+      emojiId,
+    });
+  },
+
+  removeReaction: (channelId, messageId, emojiId) => {
+    const socket = get().socket;
+    const currentUser = useChatStore.getState().currentUser;
+
+    if (!socket || !currentUser) return;
+
+    const operationId = `reaction_remove_${Date.now()}_${Math.random()}`;
+
+    set((state) => ({
+      messages: state.messages.map((message) =>
+        removeReactionLocally(message, {
+          messageId,
+          emojiId,
+          userId: currentUser.id,
+        })
+      ),
+      pendingReactionOperations: [
+        ...state.pendingReactionOperations,
+        {
+          operationId,
+          channelId,
+          messageId,
+          emojiId,
+          userId: currentUser.id,
+          action: 'remove',
+        },
+      ],
+    }));
+
+    socket.emit('reaction:remove', {
+      channelId,
+      messageId,
+      emojiId,
+    });
+  },
+
+  pinMessage: (channelId, messageId, pinned) => {
+    const socket = get().socket;
+    if (!socket) return;
+
+    if (pinned) {
+      addPinnedIdToStorage(channelId, messageId);
+    } else {
+      removePinnedIdFromStorage(channelId, messageId);
+    }
+
+    set((state) => ({
+      messages: sortByDate(
+        state.messages.map((message) =>
+          message.id === messageId ? { ...message, pinned } : message
+        )
+      ),
+      pendingPinMessageIds: state.pendingPinMessageIds.includes(messageId)
+        ? state.pendingPinMessageIds
+        : [...state.pendingPinMessageIds, messageId],
+    }));
+
+    socket.emit('message:pin', {
+      channelId,
+      messageId,
+      pinned,
+    });
+  },
+
+  deleteMessage: (channelId, messageId) => {
+    const socket = get().socket;
+    if (!socket) return;
+
+    socket.emit('message:delete', {
+      channelId,
+      messageId,
+    });
+  },
+
+  loadMoreMessages: (channelId) => {
     const { socket, isLoadingMessages, hasMore, messages } = get();
+    const selectedChannelTypeId = useChatStore.getState().selectedChannelTypeId;
+
+    if (selectedChannelTypeId === 3 || selectedChannelTypeId === 4) return;
     if (!socket || isLoadingMessages || !hasMore) return;
 
     set({ isLoadingMessages: true });
 
-    const oldestMessageId = messages[0]?.id;
-
     socket.emit('message:history', {
       channelId,
-      beforeId: oldestMessageId,
+      beforeId: messages[0]?.id,
       limit: MESSAGES_PER_PAGE,
     });
   },
 
-  clearMessages: () => {
+  clearMessages: () =>
     set({
       messages: [],
       isLoadingMessages: false,
       hasMore: true,
       currentPage: 1,
-    });
-  },
+      pendingReactionOperations: [],
+      pendingPinMessageIds: [],
+    }),
 
   disconnect: () => {
-    const socket = get().socket;
-    socket?.disconnect();
+    get().socket?.disconnect();
 
     set({
       socket: null,
@@ -244,6 +962,8 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       isLoadingMessages: false,
       hasMore: true,
       currentPage: 1,
+      pendingReactionOperations: [],
+      pendingPinMessageIds: [],
     });
   },
 }));

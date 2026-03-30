@@ -2,13 +2,18 @@
 import { useQuery } from '@tanstack/react-query';
 import { ChatMember } from '../../api/chatApi';
 import MemberSkeleton from './MemberSkeleton';
+import { useChatStore } from '@/feature/common/stores/useChatStore';
 
 const Member = () => {
+  const serverId = useChatStore((state) => state.serverId);
+
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['member'],
-    queryFn: ChatMember,
+    queryKey: ['member', serverId],
+    queryFn: () => ChatMember(serverId!),
+    enabled: !!serverId,
   });
-  if (isLoading) {
+
+  if (!serverId || isLoading) {
     return <MemberSkeleton />;
   }
 
@@ -18,7 +23,7 @@ const Member = () => {
 
   return (
     <div className="[border-bottom-left-radius:10px] [border-top-left-radius:10px] gap-[14px] bg-[linear-gradient(0deg,rgba(17,24,39,0.42),rgba(17,24,39,0.42)),linear-gradient(0deg,rgba(255,255,255,0.1),rgba(255,255,255,0.1))] w-full max-w-[304px] h-full overflow-y-auto">
-      {data?.data.map((eachElement) => (
+      {data?.data?.map((eachElement: any) => (
         <div
           key={eachElement.user.id}
           className="flex items-center hover:bg-[#FFFFFF36] px-[22px] py-[11px] min-h-[56px] duration-300 ease-in-out cursor-pointer"
