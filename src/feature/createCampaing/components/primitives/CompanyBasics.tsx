@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 const CompanyBasics = () => {
   return (
-    <div className="flex flex-col justify-center bg-[var(--company-basics-bg)] mx-auto px-[30px] py-[30px] border border-[var(--createCampaing-border)] rounded-[8px] w-full">
+    <div className="flex flex-col justify-center bg-[#0866FF33] mx-auto px-[30px] py-[30px] border border-[#00000038] rounded-[8px] w-full">
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
           <Image
@@ -22,30 +22,26 @@ const CompanyBasics = () => {
         </p>
       </div>
 
-      <div className="flex flex-col gap-[37px] mt-[26px] w-full">
-        <div className="flex lg:flex-row flex-col gap-[75px] w-full">
-          <div className="flex-1">
-            <h3 className="mb-4 font-[700] text-[18px] text-[var(--black-color)]">
-              კამპანიის სახელი
-            </h3>
+      <div className="flex flex-col gap-[37px] w-full">
+        <div className="flex justify-between gap-[75px] w-full">
+          <div className="flex flex-col gap-[16px] w-full">
+            <h3 className="w-full font-[700] text-[18px]">კამპანიის სახელი</h3>
             <input
               type="text"
               placeholder="მაგ: საზაფხულო პროდუქტი"
-              className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] px-3 py-2 border border-[#FFFFFF] rounded-[8px] outline-none w-full font-[700] text-[var(--black-color)]"
+              className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] px-3 py-2 border border-[#FFFFFF] rounded-[8px] outline-none w-full min-h-[56px] font-[700] text-[var(--black-color)]"
             />
           </div>
-
-          <div className="flex-1">
-            <h3 className="mb-4 font-[700] text-[18px] text-[var(--black-color)]">
-              ბიუჯეტი (ლარში)
-            </h3>
-            <input
-              placeholder="₾ 5000"
-              className="w-full border bg-[#FFFFFF1A] border-[#FFFFFF] border-[var(--auth-input-border) rounded-[8px] px-3 py-2 text-[var(--black-color)] font-[700] outline-none shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-              style={{ MozAppearance: 'textfield' }}
-            />
-
-            <div className="flex justify-end items-center gap-3 mt-3 w-full cursor-pointer">
+          <div className="flex flex-col gap-[8px] w-full">
+            <div className="flex flex-col gap-[16px] w-full">
+              <h3 className="w-full font-[700] text-[18px]">ბიუჯეტი (ლარში)</h3>
+              <input
+                placeholder="₾ 5000"
+                className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] px-3 py-2 border border-[#FFFFFF] rounded-[8px] outline-none w-full min-h-[56px] font-[700] text-[var(--black-color)]"
+                style={{ MozAppearance: 'textfield' }}
+              />
+            </div>
+            <div className="flex justify-end items-center gap-3 w-full cursor-pointer">
               <p className="font-[700] text-[var(--black-color)]">
                 დამალე ბიუჯეტი შემქნელებისთვის
               </p>
