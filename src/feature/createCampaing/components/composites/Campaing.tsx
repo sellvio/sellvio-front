@@ -4,7 +4,7 @@ import React from 'react';
 const Campaing = () => {
   return (
     <div>
-      <Header />
+      <Header pageName={'კამპანიის შექმნა'} />
     </div>
   );
 };

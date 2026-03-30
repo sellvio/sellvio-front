@@ -26,9 +26,3 @@ export type ChatStore = {
 export type HeaderPropsType = {
   pageName: string;
 };
-
-export type HeaderItemType = {
-  id: number;
-  icon: string;
-  alt: string;
-};
