@@ -22,3 +22,13 @@ export type ChatStore = {
   fetchMembers: () => Promise<void>;
   toggleChatInfo: () => void;
 };
+
+export type HeaderPropsType = {
+  pageName: string;
+};
+
+export type HeaderItemType = {
+  id: number;
+  icon: string;
+  alt: string;
+};
