@@ -26,3 +26,7 @@ export type ChatStore = {
 export type HeaderPropsType = {
   pageName: string;
 };
+
+export type FormErrorProps = {
+  message?: string;
+};
