@@ -1,7 +1,7 @@
-"use client";
-import Image from "next/image";
-import React, { useState } from "react";
-import { GoalCards } from "../../data/data";
+'use client';
+import Image from 'next/image';
+import React, { useState } from 'react';
+import { GoalCards } from '../../../../../feature/createCampaing/data/data';
 
 const GoalCreatores = () => {
   const [selected, setSelected] = useState<string[]>([]);
@@ -13,7 +13,7 @@ const GoalCreatores = () => {
   };
 
   return (
-    <div className="max-w-[1222px] w-full bg-[var(--company-basics-bg)] mx-auto rounded-[8px] px-[30px] border-[var(--createCampaing-border)] py-[30px] flex flex-col border">
+    <div className="flex flex-col bg-[var(--company-basics-bg)] mx-auto px-[30px] py-[30px] border border-[var(--createCampaing-border)] rounded-[8px] w-full">
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
           <Image
@@ -22,16 +22,16 @@ const GoalCreatores = () => {
             height={22}
             alt="logo"
           />
-          <h2 className="text-[27px] font-[600] text-[var(--black-color)]">
+          <h2 className="font-[600] text-[27px] text-[var(--black-color)]">
             სამიზნე შემქმნელების ტიპი
           </h2>
         </div>
-        <p className="text-[var(--campaing-form-paragraphs)] text-[14px] mb-[26px]">
+        <p className="mb-[26px] text-[14px] text-[var(--campaing-form-paragraphs)]">
           აირჩიეთ რომელ ტიპის შემქმნელებთან გსურთ მუშაობა ამ კამპანიისთვის
           (არასავალდებულო)
         </p>
       </div>
-      <div className="flex gap-6 w-full flex-wrap">
+      <div className="flex flex-wrap gap-6 w-full">
         {GoalCards?.map((eachelement) => {
           const isSelected = selected.includes(eachelement.id);
 
@@ -40,14 +40,14 @@ const GoalCreatores = () => {
               tabIndex={0}
               key={eachelement.id}
               onClick={() => toggleCard(eachelement.id)}
-              className={`w-full lg:max-w-[566px] m-auto h-[111px] cursor-pointer border  rounded-[8px] flex items-center gap-4 px-6 py-4 bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset]
+              className={`w-full lg:max-w-[677px] m-auto h-[111px] cursor-pointer border  rounded-[8px] flex items-center gap-4 px-6 py-4 bg-[#FFFFFF1A] border-[#FFFFFF] shadow-[4px_5px_6px_0px_#FFFFFF66_inset]
 =
          backdrop-blur-[7.5px] 
                 ${
-                  isSelected ? "bg-[var(--goal-auditory-bg)]" : "bg-transparent"
+                  isSelected ? 'bg-[var(--goal-auditory-bg)]' : 'bg-transparent'
                 }`}
             >
-              <div className="w-[48px] h-[48px] flex justify-center items-center bg-[var(--goal-auditory-icons-bg)] rounded-md">
+              <div className="flex justify-center items-center bg-[var(--goal-auditory-icons-bg)] rounded-md w-[48px] h-[48px]">
                 <Image
                   src={eachelement.img}
                   width={23}

@@ -11,6 +11,7 @@ import {
   CreateCampaignFormOutput,
   createCampaignSchema,
 } from '../schema/createCampaignSchema';
+import GoalCreatores from '../primitives/GoalCreatores';
 
 const Campaing = () => {
   const {
@@ -44,7 +45,7 @@ const Campaing = () => {
           setValue={setValue}
           errors={errors}
         />
-
+        <GoalCreatores />
         <div className="flex justify-end w-full">
           <button
             type="submit"
