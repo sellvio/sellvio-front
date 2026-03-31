@@ -1,18 +1,21 @@
 import { HeaderPropsType } from '@/feature/common/type';
 import Image from 'next/image';
 import { headerData } from '../../data/headerData';
+import Link from 'next/link';
 
 const Header = ({ pageName }: HeaderPropsType) => {
   return (
     <header className="flex justify-center py-[30px]">
       <div className="flex flex-col gap-[26px] w-full max-w-[1440px]">
         <div className="flex justify-between items-center w-full">
-          <Image
-            src={'/images/headerIcons/svg/logo.svg'}
-            alt="logo"
-            width={240}
-            height={65}
-          />
+          <Link href={'/'}>
+            <Image
+              src={'/images/headerIcons/svg/logo.svg'}
+              alt="logo"
+              width={240}
+              height={65}
+            />
+          </Link>
           <div className="flex gap-[16px]">
             {headerData.map((item) => (
               <button
