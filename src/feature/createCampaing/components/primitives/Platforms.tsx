@@ -77,8 +77,9 @@ const Platforms = ({ selected, setValue, errors }: PlatformsProps) => {
           );
         })}
       </div>
-
-      <FormError message={errors.platforms?.message} />
+      {errors.platforms?.message && (
+        <FormError message={errors.platforms.message} />
+      )}
     </div>
   );
 };

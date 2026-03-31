@@ -21,32 +21,33 @@ export const Socmedia = [
   },
 ] as const;
 
-export const GoalCards: CreatoreGoalProps[] = [
+export const GoalCards = [
   {
-    id: '1',
+    id: 'influencer',
     img: '/images/svg/star.svg',
     title: 'ინფლუენსერი',
     descr: 'ცნობილი შემქმნელები დამკვიდრებული აუდიტორიით',
   },
   {
-    id: '2',
+    id: 'experienced',
     img: '/images/svg/cup.svg',
     title: 'გამოცდილი შემქმნელი',
     descr: 'შემქმნელები დადასტურებული კონტენტის გამოცდილებით',
   },
   {
-    id: '3',
+    id: 'beginner',
     img: '/images/svg/profileGoal.svg',
     title: 'დამწყები შემქმნელი',
     descr: 'ახალი შემქმნელები რომლებიც ცდილობენ გამოცდილების დაგროვებას',
   },
   {
-    id: '4',
+    id: 'clipper',
     img: '/images/svg/scissors.svg',
     title: 'კლიპერი',
     descr: 'ვიდეო მონტაჟის სპეციალისტები',
   },
-];
+] as const;
+
 export const UploadFile: UploadFileProps[] = [
   { id: 1, img: './images/svg/gallery.svg', title: 'ატვირთე ფაილი' },
   { id: 2, img: './images/svg/upload.svg', title: 'ატვირთე ლინკი' },

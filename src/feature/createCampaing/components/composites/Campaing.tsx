@@ -25,6 +25,7 @@ const Campaing = () => {
   });
 
   const selectedPlatforms = watch('platforms') || [];
+  const selectedCreatorTypes = watch('target_creator_types') || [];
 
   const onSubmit = (data: CreateCampaignFormOutput) => {
     console.log(data);
@@ -45,7 +46,11 @@ const Campaing = () => {
           setValue={setValue}
           errors={errors}
         />
-        <GoalCreatores />
+        <GoalCreatores
+          selected={selectedCreatorTypes}
+          setValue={setValue}
+          errors={errors}
+        />
         <div className="flex justify-end w-full">
           <button
             type="submit"
