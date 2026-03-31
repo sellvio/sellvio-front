@@ -18,13 +18,9 @@ const PaymentStructure = ({
 
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-  const activePaymentType =
-    selectedPaymentType &&
-    paymentTypeOptions.find((item) => item.value === selectedPaymentType);
-
-  const currentPaymentType = useMemo(() => {
-    return activePaymentType ?? paymentTypeOptions[0];
-  }, [activePaymentType]);
+  const currentPaymentType =
+    paymentTypeOptions.find((item) => item.value === selectedPaymentType) ??
+    paymentTypeOptions[0];
 
   const handlePaymentTypeSelect = (value: PaymentType) => {
     setValue('payment_type', value, {
@@ -37,25 +33,26 @@ const PaymentStructure = ({
 
   return (
     <div className="flex flex-col bg-[var(--company-basics-bg)] mx-auto px-[30px] py-[30px] border border-[var(--createCampaing-border)] rounded-[8px] w-full">
-      <div className="flex flex-col">
-        <div className="flex items-center gap-2">
-          <Image
-            src="/images/svg/payment.svg"
-            width={22}
-            height={22}
-            alt="logo"
-          />
-          <h2 className="font-[600] text-[27px] text-[var(--black-color)]">
-            გადახდის სტრუქტურა
-          </h2>
+      <div className="flex flex-col gap-[26px]">
+        <div className="flex flex-col">
+          <div className="flex">
+            <Image
+              src="/images/svg/payment.svg"
+              width={22}
+              height={22}
+              alt="logo"
+            />
+            <h2 className="font-[600] text-[27px] text-[var(--black-color)]">
+              გადახდის სტრუქტურა
+            </h2>
+          </div>
+          <p className="text-[14px] text-[var(--campaing-form-paragraphs)]">
+            განსაზღვრე როგორ მიიღებენ შემქმნელები ანაზღაურებას ამ კამპანიაში
+          </p>
         </div>
 
-        <p className="text-[14px] text-[var(--campaing-form-paragraphs)]">
-          განსაზღვრე როგორ მიიღებენ შემქმნელები ანაზღაურებას ამ კამპანიაში
-        </p>
-
-        <div className="flex flex-col mt-[26px]">
-          <div className="relative flex flex-col" ref={dropdownRef}>
+        <div className="flex flex-col gap-[27px]">
+          <div className="relative flex flex-col gap-[15px]" ref={dropdownRef}>
             <h3 className="mb-[16px] font-[700] text-[18px] text-[var(--black-color)]">
               შეთავაზების ტიპი
             </h3>
@@ -96,7 +93,7 @@ const PaymentStructure = ({
                         key={option.value}
                         type="button"
                         onClick={() => handlePaymentTypeSelect(option.value)}
-                        className="flex flex-col gap-[4px] hover:bg-[#FFFFFF33] px-4 py-3 w-full text-left transition-colors"
+                        className="flex flex-col gap-[4px] hover:bg-[#FFFFFF33] px-4 py-3 w-full text-left transition-colors cursor-pointer"
                         whileTap={{ scale: 0.99 }}
                       >
                         <span className="font-[700] text-[var(--black-color)]">
@@ -115,49 +112,35 @@ const PaymentStructure = ({
             <input type="hidden" {...register('payment_type')} />
             <FormError message={errors.payment_type?.message} />
           </div>
+          <div className="flex flex-col gap-[18px]">
+            <h3 className="font-[700] text-[18px] text-[var(--black-color)]">
+              შეთავაზების ტიპი
+            </h3>
+            <div className="flex gap-4">
+              <div className="relative flex flex-col gap-[15px] w-full">
+                <input
+                  type="number"
+                  placeholder={'რაოდენობა'}
+                  {...register('payment_per_quantity')}
+                  onFocus={() => setQuantityPopupOpen(true)}
+                  className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] p-[18px] border border-[#FFFFFF] rounded-[8px] outline-none w-full font-[700] text-[var(--black-color)] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                  style={{ MozAppearance: 'textfield' }}
+                />
 
-          <div className="flex flex-wrap gap-4 mt-8">
-            <div className="relative flex flex-col flex-5 min-w-[250px] max-w-[900px]">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="font-[700] text-[18px] text-[var(--black-color)]">
-                  {currentPaymentType.quantityLabel}
-                </h3>
-
-                <button
-                  type="button"
-                  onClick={() => setQuantityPopupOpen((prev) => !prev)}
-                  className="font-[600] text-[12px] text-[var(--campaing-form-paragraphs)] cursor-pointer"
-                >
-                  დეტალები
-                </button>
+                <FormError message={errors.payment_per_quantity?.message} />
               </div>
 
-              <input
-                type="number"
-                placeholder={currentPaymentType.quantityPlaceholder}
-                {...register('payment_per_quantity')}
-                onFocus={() => setQuantityPopupOpen(true)}
-                className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] p-[18px] border border-[#FFFFFF] rounded-[8px] outline-none w-full font-[700] text-[var(--black-color)] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                style={{ MozAppearance: 'textfield' }}
-              />
+              <div className="flex flex-col flex-1 gap-[15px] min-w-[250px] max-w-[900px]">
+                <input
+                  type="number"
+                  placeholder={'თანხა'}
+                  {...register('payment_amount')}
+                  className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] p-[18px] border border-[#FFFFFF] rounded-[8px] outline-none w-full overflow-hidden font-[700] text-[var(--black-color)] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none text:sm"
+                  style={{ MozAppearance: 'textfield' }}
+                />
 
-              <FormError message={errors.payment_per_quantity?.message} />
-            </div>
-
-            <div className="flex flex-col flex-1 min-w-[250px] max-w-[900px]">
-              <h3 className="mb-4 font-[700] text-[18px] text-[var(--black-color)]">
-                თანხა
-              </h3>
-
-              <input
-                type="number"
-                placeholder={currentPaymentType.amountPlaceholder}
-                {...register('payment_amount')}
-                className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] p-[18px] border border-[#FFFFFF] rounded-[8px] outline-none w-full overflow-hidden font-[700] text-[var(--black-color)] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none text:sm"
-                style={{ MozAppearance: 'textfield' }}
-              />
-
-              <FormError message={errors.payment_amount?.message} />
+                <FormError message={errors.payment_amount?.message} />
+              </div>
             </div>
           </div>
         </div>
