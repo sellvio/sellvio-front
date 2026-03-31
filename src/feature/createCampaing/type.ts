@@ -20,3 +20,12 @@ export type CompanyBasicsProps = {
   register: UseFormRegister<CreateCampaignFormInput>;
   errors: FieldErrors<CreateCampaignFormInput>;
 };
+
+export type PaymentType = CreateCampaignFormInput['payment_type'];
+
+export type PaymentStructureProps = {
+  register: UseFormRegister<CreateCampaignFormInput>;
+  setValue: UseFormSetValue<CreateCampaignFormInput>;
+  errors: FieldErrors<CreateCampaignFormInput>;
+  selectedPaymentType?: PaymentType;
+};

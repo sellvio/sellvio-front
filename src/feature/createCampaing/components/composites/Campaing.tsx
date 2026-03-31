@@ -27,7 +27,7 @@ const Campaing = () => {
 
   const selectedPlatforms = watch('platforms') || [];
   const selectedCreatorTypes = watch('target_creator_types') || [];
-
+  const selectedPaymentType = watch('payment_type');
   const onSubmit = (data: CreateCampaignFormOutput) => {
     console.log(data);
   };
@@ -48,7 +48,12 @@ const Campaing = () => {
           errors={errors}
         />
 
-        <PaymentStructure />
+        <PaymentStructure
+          register={register}
+          setValue={setValue}
+          errors={errors}
+          selectedPaymentType={selectedPaymentType}
+        />
 
         <GoalCreatores
           selected={selectedCreatorTypes}

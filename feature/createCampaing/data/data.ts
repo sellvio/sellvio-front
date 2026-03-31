@@ -104,3 +104,44 @@ export const dayOptions = [
     value: '7 დღე',
   },
 ];
+
+export const paymentTypeOptions = [
+  {
+    value: 'cost_per_view',
+    label: 'Cost per View',
+    description: 'გადახდა თითოეული ნახვის რაოდენობის მიხედვით',
+    quantityLabel: 'ნახვების რაოდენობა',
+    quantityPlaceholder: 'მაგ: 1000',
+    amountPlaceholder: 'მაგ: 50',
+    helperText: 'მიუთითე რამდენ ნახვაზეა გათვლილი გადახდა',
+  },
+  {
+    value: 'cost_per_click',
+    label: 'Cost per Click',
+    description: 'გადახდა თითოეული დაკლიკების რაოდენობის მიხედვით',
+    quantityLabel: 'კლიკების რაოდენობა',
+    quantityPlaceholder: 'მაგ: 500',
+    amountPlaceholder: 'მაგ: 40',
+    helperText: 'მიუთითე რამდენ კლიკზეა გათვლილი გადახდა',
+  },
+  {
+    value: 'cost_per_engagement',
+    label: 'Cost per Engagement',
+    description: 'გადახდა ჩართულობის მიხედვით',
+    quantityLabel: 'ჩართულობის რაოდენობა',
+    quantityPlaceholder: 'მაგ: 300',
+    amountPlaceholder: 'მაგ: 35',
+    helperText: 'მიუთითე engagement-ების რაოდენობა',
+  },
+  {
+    value: 'cost_per_reach',
+    label: 'Cost per Reach',
+    description: 'გადახდა reach-ის მიხედვით',
+    quantityLabel: 'reach-ის რაოდენობა',
+    quantityPlaceholder: 'მაგ: 5000',
+    amountPlaceholder: 'მაგ: 60',
+    helperText: 'მიუთითე reach-ის მიზნობრივი რაოდენობა',
+  },
+] as const;
+
+export type PaymentTypeOption = (typeof paymentTypeOptions)[number];
