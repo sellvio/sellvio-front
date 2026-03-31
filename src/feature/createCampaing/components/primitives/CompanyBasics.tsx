@@ -3,8 +3,15 @@
 import Image from 'next/image';
 import FormError from './FormError';
 import { CompanyBasicsProps } from '../../type';
+import ToggleSwitch from './ToggleSwitch';
 
-const CompanyBasics = ({ register, errors }: CompanyBasicsProps) => {
+const CompanyBasics = ({
+  register,
+  errors,
+  watch,
+  setValue,
+}: CompanyBasicsProps) => {
+  const budgetHidden = watch('budget_hidden') ?? false;
   return (
     <div className="flex flex-col justify-center gap-[26px] bg-[#0866FF33] mx-auto px-[30px] py-[30px] border border-[#00000038] rounded-[8px] w-full">
       <div className="flex flex-col">
@@ -50,12 +57,22 @@ const CompanyBasics = ({ register, errors }: CompanyBasicsProps) => {
               <FormError message={errors.budget?.message} />
             </div>
 
-            <label className="flex justify-end items-center gap-3 w-full cursor-pointer">
+            <label className="flex justify-end items-center gap-3 w-full">
               <p className="font-[700] text-[var(--black-color)]">
                 დამალე ბიუჯეტი შემქნელებისთვის
               </p>
-              <input type="checkbox" {...register('budget_hidden')} />
+
+              <ToggleSwitch
+                value={budgetHidden}
+                onToggle={(newValue) =>
+                  setValue('budget_hidden', newValue, {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  })
+                }
+              />
             </label>
+
             <FormError message={errors.budget_hidden?.message} />
           </div>
         </div>

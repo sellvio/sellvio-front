@@ -18,10 +18,10 @@ const Campaing = () => {
   const {
     handleSubmit,
     register,
-    setValue,
     watch,
+    setValue,
     formState: { errors },
-  } = useForm<CreateCampaignFormInput, unknown, CreateCampaignFormOutput>({
+  } = useForm({
     resolver: zodResolver(createCampaignSchema),
   });
 
@@ -35,13 +35,16 @@ const Campaing = () => {
   return (
     <div className="flex flex-col flex-1 gap-[44px] px-[43px]">
       <Header pageName={'კამპანიის შექმნა'} />
-
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-[64px] mx-auto w-full max-w-[1440px] h-full min-h-screen"
       >
-        <CompanyBasics register={register} errors={errors} />
-
+        <CompanyBasics
+          register={register}
+          errors={errors}
+          watch={watch}
+          setValue={setValue}
+        />
         <Platforms
           selected={selectedPlatforms}
           setValue={setValue}

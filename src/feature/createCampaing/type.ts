@@ -1,4 +1,9 @@
-import { FieldErrors, UseFormRegister, UseFormSetValue } from 'react-hook-form';
+import {
+  FieldErrors,
+  UseFormRegister,
+  UseFormSetValue,
+  UseFormWatch,
+} from 'react-hook-form';
 import { CreateCampaignFormInput } from './components/schema/createCampaignSchema';
 
 export type CreatorType =
@@ -19,6 +24,8 @@ export type PlatformsProps = {
 export type CompanyBasicsProps = {
   register: UseFormRegister<CreateCampaignFormInput>;
   errors: FieldErrors<CreateCampaignFormInput>;
+  watch: UseFormWatch<CreateCampaignFormInput>;
+  setValue: UseFormSetValue<CreateCampaignFormInput>;
 };
 
 export type PaymentType = CreateCampaignFormInput['payment_type'];
@@ -28,4 +35,9 @@ export type PaymentStructureProps = {
   setValue: UseFormSetValue<CreateCampaignFormInput>;
   errors: FieldErrors<CreateCampaignFormInput>;
   selectedPaymentType?: PaymentType;
+};
+
+export type ToggleSwitchProps = {
+  value: boolean;
+  onToggle: (val: boolean) => void;
 };
