@@ -2,9 +2,9 @@
 
 import Image from 'next/image';
 import React from 'react';
-import { GoalCards } from '../../../../../feature/createCampaing/data/data';
 import FormError from './FormError';
 import { CreatorType, GoalCreatoresProps } from '../../type';
+import { GoalCards } from '../../data/data';
 
 const GoalCreatores = ({ selected, setValue, errors }: GoalCreatoresProps) => {
   const toggleCard = (id: CreatorType) => {

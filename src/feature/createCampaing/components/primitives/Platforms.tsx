@@ -1,9 +1,9 @@
 'use client';
 
 import Image from 'next/image';
-import { Socmedia } from '../../../../../feature/createCampaing/data/data';
 import FormError from './FormError';
 import { PlatformsProps } from '../../type';
+import { Socmedia } from '../../data/data';
 
 const Platforms = ({ selected, setValue, errors }: PlatformsProps) => {
   const handleTogglePlatform = (value: 'instagram' | 'tiktok' | 'facebook') => {

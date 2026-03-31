@@ -3,9 +3,9 @@
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMemo, useRef, useState } from 'react';
-import { paymentTypeOptions } from '../../../../../feature/createCampaing/data/data';
 import FormError from './FormError';
 import { PaymentStructureProps, PaymentType } from '../../type';
+import { paymentTypeOptions } from '../../data/data';
 
 const PaymentStructure = ({
   register,
