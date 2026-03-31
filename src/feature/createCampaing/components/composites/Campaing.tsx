@@ -12,6 +12,7 @@ import {
   createCampaignSchema,
 } from '../schema/createCampaignSchema';
 import GoalCreatores from '../primitives/GoalCreatores';
+import PaymentStructure from '../primitives/PaymentStructure';
 
 const Campaing = () => {
   const {
@@ -46,11 +47,15 @@ const Campaing = () => {
           setValue={setValue}
           errors={errors}
         />
+
+        <PaymentStructure />
+
         <GoalCreatores
           selected={selectedCreatorTypes}
           setValue={setValue}
           errors={errors}
         />
+
         <div className="flex justify-end w-full">
           <button
             type="submit"

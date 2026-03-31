@@ -8,13 +8,9 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { campaignSchema, CampaignSchema } from '../../schema/schema';
-import CompanyBasics from '../../../../src/feature/createCampaing/components/primitives/CompanyBasics';
-import Platforms from '../../../../src/feature/createCampaing/components/primitives/Platforms';
-import GoalCreatores from '../../../../src/feature/createCampaing/components/primitives/GoalCreatores';
 import ExtraMedia from '../primitives/ExtraMedia';
 import CompanyDetails from '../primitives/CompanyDetails';
 import { sendCampaign } from '../../api/sendCampaing';
-import PaymentStructure from '../primitives/PaymentStructure';
 import { useState } from 'react';
 
 const CampaingForm = () => {
@@ -62,10 +58,6 @@ const CampaingForm = () => {
         onSubmit={methods.handleSubmit(onSubmit)}
         className="relative flex flex-col gap-16"
       >
-        <CompanyBasics />
-        <Platforms />
-        <PaymentStructure />
-        <GoalCreatores />
         <ExtraMedia />
         <CompanyDetails />
 
