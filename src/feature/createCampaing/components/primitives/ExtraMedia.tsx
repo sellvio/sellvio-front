@@ -55,7 +55,7 @@ const ExtraMedia = () => {
 
         <div className="flex flex-col w-1/2">
           <div className="flex flex-col justify-center items-center gap-5 bg-[#0866FF05] backdrop-blur-[7.5px] pt-[21px] pb-[21px] border border-[#FFFFFF] border-dashed rounded-[8px]">
-            <div className="flex justify-center items-center w-[160px] h-[63px]">
+            <div className="flex justify-center items-center w-[160px] h-[80px]">
               <div className="flex flex-col justify-center items-center">
                 <div className="flex flex-col items-center mt-2 py-[5px]">
                   <Image
