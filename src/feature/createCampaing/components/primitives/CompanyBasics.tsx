@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 const CompanyBasics = () => {
   return (
-    <div className="flex flex-col justify-center bg-[#0866FF33] mx-auto px-[30px] py-[30px] border border-[#00000038] rounded-[8px] w-full">
+    <div className="flex flex-col justify-center gap-[26px] bg-[#0866FF33] mx-auto px-[30px] py-[30px] border border-[#00000038] rounded-[8px] w-full">
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
           <Image
