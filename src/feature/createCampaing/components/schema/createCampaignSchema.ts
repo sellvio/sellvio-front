@@ -146,3 +146,5 @@ export const createCampaignSchema = z.object({
 });
 
 export type CreateCampaignSchemaType = z.infer<typeof createCampaignSchema>;
+export type CreateCampaignFormInput = z.input<typeof createCampaignSchema>;
+export type CreateCampaignFormOutput = z.output<typeof createCampaignSchema>;

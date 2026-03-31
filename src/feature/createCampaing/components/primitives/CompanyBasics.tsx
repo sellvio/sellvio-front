@@ -1,8 +1,15 @@
 'use client';
 
 import Image from 'next/image';
+import { FieldErrors, UseFormRegister } from 'react-hook-form';
+import { CreateCampaignFormInput } from '../schema/createCampaignSchema';
+import FormError from './FormError';
 
-const CompanyBasics = () => {
+type CompanyBasicsProps = {
+  register: UseFormRegister<CreateCampaignFormInput>;
+  errors: FieldErrors<CreateCampaignFormInput>;
+};
+const CompanyBasics = ({ register, errors }: CompanyBasicsProps) => {
   return (
     <div className="flex flex-col justify-center gap-[26px] bg-[#0866FF33] mx-auto px-[30px] py-[30px] border border-[#00000038] rounded-[8px] w-full">
       <div className="flex flex-col">
@@ -29,23 +36,32 @@ const CompanyBasics = () => {
             <input
               type="text"
               placeholder="მაგ: საზაფხულო პროდუქტი"
+              {...register('name')}
               className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] px-3 py-2 border border-[#FFFFFF] rounded-[8px] outline-none w-full min-h-[56px] font-[700] text-[var(--black-color)]"
             />
+            <FormError message={errors.name?.message} />
           </div>
+
           <div className="flex flex-col gap-[8px] w-full">
             <div className="flex flex-col gap-[16px] w-full">
               <h3 className="w-full font-[700] text-[18px]">ბიუჯეტი (ლარში)</h3>
               <input
+                type="number"
                 placeholder="₾ 5000"
+                {...register('budget')}
                 className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] px-3 py-2 border border-[#FFFFFF] rounded-[8px] outline-none w-full min-h-[56px] font-[700] text-[var(--black-color)]"
                 style={{ MozAppearance: 'textfield' }}
               />
+              <FormError message={errors.budget?.message} />
             </div>
-            <div className="flex justify-end items-center gap-3 w-full cursor-pointer">
+
+            <label className="flex justify-end items-center gap-3 w-full cursor-pointer">
               <p className="font-[700] text-[var(--black-color)]">
                 დამალე ბიუჯეტი შემქნელებისთვის
               </p>
-            </div>
+              <input type="checkbox" {...register('budget_hidden')} />
+            </label>
+            <FormError message={errors.budget_hidden?.message} />
           </div>
         </div>
 
@@ -55,8 +71,10 @@ const CompanyBasics = () => {
           </h3>
           <textarea
             placeholder="აღწერეთ თქვენი კამპანიის მიზნები, სამიზნე აუდიტორია და რას ეძებთ შემქმნელებში..."
+            {...register('description')}
             className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] px-3 py-2 border border-[#FFFFFF] rounded-[8px] outline-none w-full min-h-[218px] font-[700] text-[var(--black-color)] resize-none"
           />
+          <FormError message={errors.description?.message} />
         </div>
       </div>
     </div>

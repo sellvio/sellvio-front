@@ -2,17 +2,28 @@
 
 import Image from 'next/image';
 import { Socmedia } from '../../../../../feature/createCampaing/data/data';
-import { useState } from 'react';
+import { FieldErrors, UseFormSetValue } from 'react-hook-form';
+import { CreateCampaignFormInput } from '../schema/createCampaignSchema';
+import FormError from './FormError';
 
-const Platforms = () => {
-  const [selected, setSelected] = useState<string[]>([]);
+type PlatformsProps = {
+  selected: CreateCampaignFormInput['platforms'];
+  setValue: UseFormSetValue<CreateCampaignFormInput>;
+  errors: FieldErrors<CreateCampaignFormInput>;
+};
 
-  const handleTogglePlatform = (title: string) => {
-    setSelected((prev) =>
-      prev.includes(title)
-        ? prev.filter((item) => item !== title)
-        : [...prev, title]
-    );
+const Platforms = ({ selected, setValue, errors }: PlatformsProps) => {
+  const handleTogglePlatform = (value: 'instagram' | 'tiktok' | 'facebook') => {
+    const currentValues = selected || [];
+
+    const updatedValues = currentValues.includes(value)
+      ? currentValues.filter((item) => item !== value)
+      : [...currentValues, value];
+
+    setValue('platforms', updatedValues, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
   };
 
   return (
@@ -36,13 +47,17 @@ const Platforms = () => {
 
       <div className="flex gap-[87px] w-full">
         {Socmedia?.map((eachelement) => {
-          const isSelected = selected.includes(eachelement.title);
+          const value = eachelement.value as
+            | 'instagram'
+            | 'tiktok'
+            | 'facebook';
+          const isSelected = selected?.includes(value);
 
           return (
             <button
               key={eachelement.id}
               type="button"
-              onClick={() => handleTogglePlatform(eachelement.title)}
+              onClick={() => handleTogglePlatform(value)}
               className={`flex flex-col justify-center items-center gap-[17px] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] lg:mx-auto border rounded-[8px] outline-none w-full h-[111px] transition-colors cursor-pointer ${
                 isSelected
                   ? 'bg-[var(--goal-auditory-bg)] border-[var(--goal-auditory-bg)]'
@@ -62,6 +77,8 @@ const Platforms = () => {
           );
         })}
       </div>
+
+      <FormError message={errors.platforms?.message} />
     </div>
   );
 };

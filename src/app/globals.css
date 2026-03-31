@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -182,8 +182,8 @@
 }
 
 @font-face {
-  src: url("/fonts/helvetica-neue-regular.ttf") format("truetype");
-  font-family: "HelveticaNeue";
+  src: url('/fonts/helvetica-neue-regular.ttf') format('truetype');
+  font-family: 'HelveticaNeue';
 }
 
 @layer base {
@@ -196,7 +196,7 @@
 }
 
 body {
-  background: #ffffff;
+  background: #f7f7f7;
   color: #000000;
-  font-family: "HelveticaNeue", Helvetica, sans-serif;
+  font-family: 'HelveticaNeue', Helvetica, sans-serif;
 }
