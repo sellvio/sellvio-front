@@ -3,17 +3,8 @@
 import Image from 'next/image';
 import React from 'react';
 import { GoalCards } from '../../../../../feature/createCampaing/data/data';
-import { FieldErrors, UseFormSetValue } from 'react-hook-form';
-import { CreateCampaignFormInput } from '../schema/createCampaignSchema';
 import FormError from './FormError';
-
-type CreatorType = CreateCampaignFormInput['target_creator_types'][number];
-
-type GoalCreatoresProps = {
-  selected: CreateCampaignFormInput['target_creator_types'];
-  setValue: UseFormSetValue<CreateCampaignFormInput>;
-  errors: FieldErrors<CreateCampaignFormInput>;
-};
+import { CreatorType, GoalCreatoresProps } from '../../type';
 
 const GoalCreatores = ({ selected, setValue, errors }: GoalCreatoresProps) => {
   const toggleCard = (id: CreatorType) => {
@@ -59,11 +50,11 @@ const GoalCreatores = ({ selected, setValue, errors }: GoalCreatoresProps) => {
               onClick={() => toggleCard(eachelement.id)}
               className={`w-full lg:max-w-[677px] m-auto h-[111px] cursor-pointer border rounded-[8px] flex items-center gap-4 px-6 py-4 shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] transition-colors ${
                 isSelected
-                  ? 'bg-[var(--goal-auditory-bg)] border-[var(--goal-auditory-bg)]'
+                  ? 'bg-[#0866FF1F] border-[var(--goal-auditory-bg)]'
                   : 'bg-[#FFFFFF1A] border-[#FFFFFF]'
               }`}
             >
-              <div className="flex justify-center items-center bg-[var(--goal-auditory-icons-bg)] rounded-md w-[48px] h-[48px]">
+              <div className="flex justify-center items-center bg-[#0866FF0F] rounded-md w-[48px] h-[48px]">
                 <Image
                   src={eachelement.img}
                   width={23}

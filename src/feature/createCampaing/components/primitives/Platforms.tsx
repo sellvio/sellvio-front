@@ -2,15 +2,8 @@
 
 import Image from 'next/image';
 import { Socmedia } from '../../../../../feature/createCampaing/data/data';
-import { FieldErrors, UseFormSetValue } from 'react-hook-form';
-import { CreateCampaignFormInput } from '../schema/createCampaignSchema';
 import FormError from './FormError';
-
-type PlatformsProps = {
-  selected: CreateCampaignFormInput['platforms'];
-  setValue: UseFormSetValue<CreateCampaignFormInput>;
-  errors: FieldErrors<CreateCampaignFormInput>;
-};
+import { PlatformsProps } from '../../type';
 
 const Platforms = ({ selected, setValue, errors }: PlatformsProps) => {
   const handleTogglePlatform = (value: 'instagram' | 'tiktok' | 'facebook') => {

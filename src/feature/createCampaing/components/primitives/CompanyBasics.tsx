@@ -1,14 +1,9 @@
 'use client';
 
 import Image from 'next/image';
-import { FieldErrors, UseFormRegister } from 'react-hook-form';
-import { CreateCampaignFormInput } from '../schema/createCampaignSchema';
 import FormError from './FormError';
+import { CompanyBasicsProps } from '../../type';
 
-type CompanyBasicsProps = {
-  register: UseFormRegister<CreateCampaignFormInput>;
-  errors: FieldErrors<CreateCampaignFormInput>;
-};
 const CompanyBasics = ({ register, errors }: CompanyBasicsProps) => {
   return (
     <div className="flex flex-col justify-center gap-[26px] bg-[#0866FF33] mx-auto px-[30px] py-[30px] border border-[#00000038] rounded-[8px] w-full">
