@@ -13,6 +13,7 @@ import {
 } from '../schema/createCampaignSchema';
 import GoalCreatores from '../primitives/GoalCreatores';
 import PaymentStructure from '../primitives/PaymentStructure';
+import ExtraMedia from '../primitives/ExtraMedia';
 
 const Campaing = () => {
   const {
@@ -63,6 +64,7 @@ const Campaing = () => {
           setValue={setValue}
           errors={errors}
         />
+        <ExtraMedia />
 
         <div className="flex justify-end w-full">
           <button
