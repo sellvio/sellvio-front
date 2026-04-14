@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useState } from 'react';
 import { CompanyBasicsProps } from '../../type';
 import FormError from './FormError';
 import ToggleSwitch from './ToggleSwitch';
@@ -12,8 +13,34 @@ const CompanyDetails = ({
   watch,
 }: CompanyBasicsProps) => {
   const chatType = watch('chat_type') ?? 'public';
-
   const isChatPrivate = chatType === 'private';
+
+  const [tagInput, setTagInput] = useState('');
+  const tags: string[] = watch('tags') ?? [];
+
+  const addTag = () => {
+    const newTag = tagInput.trim();
+
+    if (!newTag || tags.includes(newTag)) return;
+
+    setValue('tags', [...tags, newTag], {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+
+    setTagInput('');
+  };
+
+  const removeTag = (tagToRemove: string) => {
+    setValue(
+      'tags',
+      tags.filter((tag) => tag !== tagToRemove),
+      {
+        shouldValidate: true,
+        shouldDirty: true,
+      }
+    );
+  };
   return (
     <div className="flex flex-col justify-center gap-[37px] bg-[#0866FF33] px-[30px] py-[30px] border border-[#00000038] rounded-[8px] w-full">
       <div className="flex flex-col">
@@ -39,7 +66,6 @@ const CompanyDetails = ({
           <div className="flex flex-col gap-2">
             <div className="flex gap-[16px]">
               <input
-                type="date"
                 {...register('duration_days')}
                 className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] px-3 py-2 border border-[#FFFFFF] rounded-[8px] outline-none w-full min-h-[56px] font-[700] text-[var(--black-color)] appearance-none"
               />
@@ -114,6 +140,61 @@ const CompanyDetails = ({
           className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] px-3 py-2 border border-[#FFFFFF] rounded-[8px] outline-none w-full min-h-[218px] font-[700] text-[var(--black-color)] resize-none"
         />
         <FormError message={errors.additional_requirements?.message} />
+      </div>
+      <div className="flex flex-col gap-2">
+        <h3 className="mb-4 font-[700] text-[18px] text-[var(--black-color)]">
+          კამპანიის თეგები
+        </h3>
+
+        <div className="flex gap-[16px]">
+          <input
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                addTag();
+              }
+            }}
+            placeholder="თეგის დამატება"
+            className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] px-3 py-2 border border-[#FFFFFF] rounded-[8px] outline-none w-full min-h-[56px] font-[700] text-[var(--black-color)] appearance-none"
+          />
+
+          <button
+            type="button"
+            onClick={addTag}
+            className="flex justify-center items-center bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] border border-[#FFFFFF] rounded-[8px] w-[58px] h-[58px] cursor-pointer shrink-0"
+          >
+            <Image
+              src="/images/svg/blackPlus.svg"
+              width={22}
+              height={22}
+              alt="add tag"
+            />
+          </button>
+        </div>
+
+        {tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-2">
+            {tags.map((tag, index) => (
+              <div
+                key={index}
+                className="flex items-center gap-[16px] bg-[#3012B31F] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] px-[22px] py-[10px] border border-[#3012B3] rounded-[8px]"
+              >
+                <span>{tag}</span>
+                <button
+                  type="button"
+                  onClick={() => removeTag(tag)}
+                  className="font-bold text-[14px] hover:text-red-500 cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <FormError message={errors.tags?.message} />
       </div>
     </div>
   );
