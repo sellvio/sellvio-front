@@ -63,6 +63,32 @@ const CompanyDetails = ({
           </div>
         </div>
       </div>
+      <div className="w-full">
+        <h3 className="mb-4 font-[700] text-[18px] text-[var(--black-color)]">
+          კამპანიის მოთხოვნები
+        </h3>
+        <textarea
+          placeholder="მიუთითეთ ამ კამპანიისთვის სავალდებულო მოთხოვნები (კონტენტის სახელმძღვანელო მითითებები, შედეგები და ა.შ.)"
+          {...register('requirements')}
+          className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] px-3 py-2 border border-[#FFFFFF] rounded-[8px] outline-none w-full min-h-[218px] font-[700] text-[var(--black-color)] resize-none"
+        />
+        <p className="font-bold text-[#000000D4] text-[18px]">
+          ეს მოთხოვნები გაზიარდება შექმნელებთან{' '}
+          <span className="font-bold text-black">“#მოთხოვნების არხი”</span>
+        </p>
+        <FormError message={errors.requirements?.message} />
+      </div>
+      <div className="w-full">
+        <h3 className="mb-4 font-[700] text-[18px] text-[var(--black-color)]">
+          შემქმნელის დამატებითი მოთხოვნები
+        </h3>
+        <textarea
+          placeholder="არასავალდებულო: შემქმნელისთვის ნებისმიერი დამატებითი მოთხოვნა (მინიმალური გამომწერები, კომტენტის სტილი და ა.შ.)"
+          {...register('additional_requirements')}
+          className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] px-3 py-2 border border-[#FFFFFF] rounded-[8px] outline-none w-full min-h-[218px] font-[700] text-[var(--black-color)] resize-none"
+        />
+        <FormError message={errors.additional_requirements?.message} />
+      </div>
     </div>
   );
 };
