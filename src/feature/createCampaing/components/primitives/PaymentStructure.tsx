@@ -1,8 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useMemo, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
+import { useRef, useState } from 'react';
 import FormError from './FormError';
 import { PaymentStructureProps, PaymentType } from '../../type';
 import { paymentTypeOptions } from '../../data/data';
@@ -78,36 +78,27 @@ const PaymentStructure = ({
               </motion.div>
             </button>
 
-            <AnimatePresence>
-              {isPaymentDropdownOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.2 }}
-                  className="top-[100%] left-0 z-20 absolute mt-2 w-full"
-                >
-                  <div className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF33] backdrop-blur-[7.5px] border border-[#FFFFFF] rounded-[8px] overflow-hidden">
-                    {paymentTypeOptions.map((option) => (
-                      <motion.button
-                        key={option.value}
-                        type="button"
-                        onClick={() => handlePaymentTypeSelect(option.value)}
-                        className="flex flex-col gap-[4px] hover:bg-[#FFFFFF33] px-4 py-3 w-full text-left transition-colors cursor-pointer"
-                        whileTap={{ scale: 0.99 }}
-                      >
-                        <span className="font-[700] text-[var(--black-color)]">
-                          {option.label}
-                        </span>
-                        <span className="text-[13px] text-[var(--campaing-form-paragraphs)]">
-                          {option.description}
-                        </span>
-                      </motion.button>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {isPaymentDropdownOpen && (
+              <div className="top-[100%] left-0 z-20 absolute mt-2 w-full">
+                <div className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF33] backdrop-blur-[7.5px] border border-[#FFFFFF] rounded-[8px] overflow-hidden">
+                  {paymentTypeOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => handlePaymentTypeSelect(option.value)}
+                      className="flex flex-col gap-[4px] hover:bg-[#FFFFFF33] px-4 py-3 w-full text-left transition-colors cursor-pointer"
+                    >
+                      <span className="font-[700] text-[var(--black-color)]">
+                        {option.label}
+                      </span>
+                      <span className="text-[13px] text-[var(--campaing-form-paragraphs)]">
+                        {option.description}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <input type="hidden" {...register('payment_type')} />
             <FormError message={errors.payment_type?.message} />

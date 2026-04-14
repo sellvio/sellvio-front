@@ -66,8 +66,12 @@ const Campaing = () => {
         />
         <ExtraMedia />
 
-        <CompanyDetails />
-
+        <CompanyDetails
+          register={register}
+          errors={errors}
+          watch={watch}
+          setValue={setValue}
+        />
         <div className="flex justify-end w-full">
           <button
             type="submit"
