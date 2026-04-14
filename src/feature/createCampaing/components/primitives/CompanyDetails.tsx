@@ -1,8 +1,9 @@
 'use client';
 
 import Image from 'next/image';
-import { CompanyBasicsProps } from '../../type'; // ვიყენებთ იგივე ტიპებს რაც basics-შია
+import { CompanyBasicsProps } from '../../type';
 import FormError from './FormError';
+import ToggleSwitch from './ToggleSwitch';
 
 const CompanyDetails = ({
   register,
@@ -10,8 +11,11 @@ const CompanyDetails = ({
   setValue,
   watch,
 }: CompanyBasicsProps) => {
+  const chatType = watch('chat_type') ?? 'public';
+
+  const isChatPrivate = chatType === 'private';
   return (
-    <div className="flex flex-col justify-center gap-[26px] bg-[#0866FF33] px-[30px] py-[30px] border border-[#00000038] rounded-[8px] w-full">
+    <div className="flex flex-col justify-center gap-[37px] bg-[#0866FF33] px-[30px] py-[30px] border border-[#00000038] rounded-[8px] w-full">
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
           <Image
@@ -29,7 +33,9 @@ const CompanyDetails = ({
 
       <div className="flex gap-[75px] w-full">
         <div className="flex flex-col gap-[16px] w-1/2">
-          <p className="font-bold text-[18px]">კამპანიის დაწყების თარიღი</p>
+          <p className="font-bold text-[18px]">
+            კამპანიის ხანგრძლივობა (დღეები)
+          </p>
           <div className="flex flex-col gap-2">
             <div className="flex gap-[16px]">
               <input
@@ -63,6 +69,26 @@ const CompanyDetails = ({
           </div>
         </div>
       </div>
+
+      <div className="flex flex-col gap-2">
+        <div className="flex justify-between items-center bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] px-3 py-2 border border-[#FFFFFF] rounded-[8px] outline-none w-full min-h-[56px] font-[700] text-[var(--black-color)] appearance-none">
+          <p>ჩატში გაწევრიანების ტიპი</p>
+          <div className="flex items-center gap-[10px]">
+            <p className="font-bold text-[18px]">
+              {chatType === 'private' ? 'დახურული' : 'საჯარო'}
+            </p>
+            <ToggleSwitch
+              value={isChatPrivate}
+              onToggle={(newValue) =>
+                setValue('chat_type', newValue ? 'private' : 'public', {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                })
+              }
+            />
+          </div>
+        </div>
+      </div>
       <div className="w-full">
         <h3 className="mb-4 font-[700] text-[18px] text-[var(--black-color)]">
           კამპანიის მოთხოვნები
@@ -72,7 +98,7 @@ const CompanyDetails = ({
           {...register('requirements')}
           className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] px-3 py-2 border border-[#FFFFFF] rounded-[8px] outline-none w-full min-h-[218px] font-[700] text-[var(--black-color)] resize-none"
         />
-        <p className="font-bold text-[#000000D4] text-[18px]">
+        <p className="font-bold text-[#00000063] text-[18px]">
           ეს მოთხოვნები გაზიარდება შექმნელებთან{' '}
           <span className="font-bold text-black">“#მოთხოვნების არხი”</span>
         </p>
