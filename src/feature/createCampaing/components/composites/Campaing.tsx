@@ -14,6 +14,8 @@ import GoalCreatores from '../primitives/GoalCreatores';
 import PaymentStructure from '../primitives/PaymentStructure';
 import ExtraMedia from '../primitives/ExtraMedia';
 import CompanyDetails from '../primitives/CompanyDetails';
+import { createCampaign } from '../../api/createCampaingApi';
+import { useMutation } from '@tanstack/react-query';
 
 const Campaing = () => {
   const {
@@ -26,12 +28,23 @@ const Campaing = () => {
     resolver: zodResolver(createCampaignSchema),
   });
 
+  const { mutate, isPending, isError, error, isSuccess } = useMutation({
+    mutationFn: createCampaign,
+    onSuccess: (response) => {
+      console.log('campaign created:', response);
+    },
+    onError: (error) => {
+      console.error('create campaign error:', error);
+    },
+  });
+
+  const onSubmit = (data: CreateCampaignFormOutput) => {
+    mutate(data);
+  };
+
   const selectedPlatforms = watch('platforms') || [];
   const selectedCreatorTypes = watch('target_creator_types') || [];
   const selectedPaymentType = watch('payment_type');
-  const onSubmit = (data: CreateCampaignFormOutput) => {
-    console.log(data);
-  };
 
   return (
     <div className="flex flex-col flex-1 gap-[44px] px-[43px]">
