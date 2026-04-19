@@ -8,12 +8,9 @@ const creatorTypeEnum = z.enum([
   'influencer',
   'clipper',
 ]);
-const paymentTypeEnum = z.enum([
-  'cost_per_view',
-  'cost_per_click',
-  'cost_per_engagement',
-  'cost_per_reach',
-]);
+
+// ✅ შესწორება #4: revenue_share → cost_per_click (Swagger business rules: CPV, CPC, fixed)
+const paymentTypeEnum = z.enum(['cost_per_view', 'cost_per_click', 'fixed']);
 const socialPlatformEnum = z.enum(['instagram', 'tiktok', 'facebook']);
 const campaignAssetTypeEnum = z.enum(['link', 'image', 'video', 'file']);
 
@@ -50,7 +47,8 @@ export const createCampaignSchema = z.object({
     .int({ error: 'Duration days must be an integer' })
     .positive({ error: 'Duration days must be greater than 0' }),
 
-  status: campaignStatusEnum.default('active'),
+  // ✅ შესწორება #3: default 'active' → 'draft'
+  status: campaignStatusEnum.default('draft'),
 
   chat_type: chatTypeEnum.default('public'),
 
@@ -78,7 +76,16 @@ export const createCampaignSchema = z.object({
     .int({ error: 'Payment per quantity must be an integer' })
     .positive({ error: 'Payment per quantity must be greater than 0' }),
 
-  requirements: trimmedString('Requirements', 5000),
+  requirements: z
+    .string({
+      error: (issue) =>
+        issue.input === undefined
+          ? 'Requirements is required'
+          : 'Requirements must be a string',
+    })
+    .trim()
+    .min(10, { error: 'Requirements must be at least 10 characters' })
+    .max(5000, { error: 'Requirements must be less than 5000 characters' }),
 
   target_audience: z
     .string()
@@ -87,12 +94,8 @@ export const createCampaignSchema = z.object({
     .nullable()
     .optional(),
 
-  campaign_image_url: z
-    .string()
-    .trim()
-    .url({ error: 'Campaign image URL must be a valid URL' })
-    .nullable()
-    .optional(),
+  // ✅ შესწორება #1: string().url() → z.instanceof(File) — Swagger: string($binary)
+  campaign_image_url: z.instanceof(File).nullable().optional(),
 
   platforms: z
     .array(socialPlatformEnum)
@@ -122,27 +125,8 @@ export const createCampaignSchema = z.object({
     )
     .default([]),
 
-  asset_files: z
-    .array(
-      z.object({
-        name: trimmedString('Asset file name', 255),
-        url: z
-          .string()
-          .trim()
-          .url({ error: 'Asset file URL must be valid' })
-          .max(500, {
-            error: 'Asset file URL must be less than 500 characters',
-          })
-          .optional(),
-        type: campaignAssetTypeEnum.optional(),
-        size: z.coerce
-          .number()
-          .int({ error: 'Size must be an integer' })
-          .nonnegative({ error: 'Size cannot be negative' })
-          .optional(),
-      })
-    )
-    .default([]),
+  // ✅ შესწორება #2: array of objects → array of File — Swagger: array<string>($binary)
+  asset_files: z.array(z.instanceof(File)).default([]),
 });
 
 export type CreateCampaignSchemaType = z.infer<typeof createCampaignSchema>;

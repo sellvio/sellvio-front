@@ -2,11 +2,11 @@
 
 import Image from 'next/image';
 import FormError from './FormError';
-import { PlatformsProps } from '../../type';
+import { PlatformsProps, SocialPlatform } from '../../type';
 import { Socmedia } from '../../data/data';
 
 const Platforms = ({ selected, setValue, errors }: PlatformsProps) => {
-  const handleTogglePlatform = (value: 'instagram' | 'tiktok' | 'facebook') => {
+  const handleTogglePlatform = (value: SocialPlatform) => {
     const currentValues = selected || [];
 
     const updatedValues = currentValues.includes(value)
@@ -39,11 +39,8 @@ const Platforms = ({ selected, setValue, errors }: PlatformsProps) => {
       </div>
 
       <div className="flex gap-[87px] w-full">
-        {Socmedia?.map((eachelement) => {
-          const value = eachelement.value as
-            | 'instagram'
-            | 'tiktok'
-            | 'facebook';
+        {Socmedia.map((eachelement) => {
+          const value = eachelement.value as SocialPlatform;
           const isSelected = selected?.includes(value);
 
           return (
@@ -70,6 +67,7 @@ const Platforms = ({ selected, setValue, errors }: PlatformsProps) => {
           );
         })}
       </div>
+
       {errors.platforms?.message && (
         <FormError message={errors.platforms.message} />
       )}

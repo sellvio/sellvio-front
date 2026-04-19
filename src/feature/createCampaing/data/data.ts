@@ -1,5 +1,3 @@
-import { CreatoreGoalProps, Item, UploadFileProps } from '../types';
-
 export const Socmedia = [
   {
     id: 1,
@@ -48,10 +46,11 @@ export const GoalCards = [
   },
 ] as const;
 
-export const UploadFile: UploadFileProps[] = [
+export const UploadFile = [
   { id: 1, img: './images/svg/gallery.svg', title: 'ატვირთე ფაილი' },
   { id: 2, img: './images/svg/upload.svg', title: 'ატვირთე ლინკი' },
 ];
+
 export const costOptions = [
   {
     label: 'ნახვის ღირებულება',
@@ -59,21 +58,17 @@ export const costOptions = [
     description: 'შემოქმედები მიიღებს კომპენსაციას თითოეული ნახვისთვის',
   },
   {
-    label: 'ღირებულება თითო მიღწევაზე',
-    value: 'cost_per_reach',
-    description: 'შემოქმედები მიიღებს კომპენსაციას მიღწევის (reach) მიხედვით',
+    label: 'ფიქსირებული ანაზღაურება',
+    value: 'fixed',
+    description: 'შემოქმედები მიიღებს წინასწარ განსაზღვრულ ფიქსირებულ თანხას',
   },
   {
-    label: 'ღირებულება თითო ჩართულობაზე',
-    value: 'cost_per_engagement',
-    description: 'შემოქმედები მიიღებს კომპენსაციას თითოეული ჩართულობისთვის',
+    label: 'შემოსავლის გაზიარება',
+    value: 'revenue_share',
+    description: 'შემოქმედები მიიღებს გაყიდვებიდან ან შემოსავლებიდან პროცენტს',
   },
-  {
-    label: 'დაწკაპუნების ღირებულება',
-    value: 'cost_per_click',
-    description: 'შემოქმედები მიიღებს კომპენსაციას თითოეული კლიკისთვის',
-  },
-];
+] as const;
+
 export const dayOptions = [
   {
     label: '1 დღე',
@@ -116,31 +111,22 @@ export const paymentTypeOptions = [
     helperText: 'მიუთითე რამდენ ნახვაზეა გათვლილი გადახდა',
   },
   {
-    value: 'cost_per_click',
-    label: 'Cost per Click',
-    description: 'გადახდა თითოეული დაკლიკების რაოდენობის მიხედვით',
-    quantityLabel: 'კლიკების რაოდენობა',
-    quantityPlaceholder: 'მაგ: 500',
-    amountPlaceholder: 'მაგ: 40',
-    helperText: 'მიუთითე რამდენ კლიკზეა გათვლილი გადახდა',
+    value: 'fixed',
+    label: 'Fixed',
+    description: 'ფიქსირებული თანხით ანაზღაურება',
+    quantityLabel: 'რაოდენობა',
+    quantityPlaceholder: 'მაგ: 1',
+    amountPlaceholder: 'მაგ: 500',
+    helperText: 'მიუთითე ფიქსირებული გადახდის პარამეტრები',
   },
   {
-    value: 'cost_per_engagement',
-    label: 'Cost per Engagement',
-    description: 'გადახდა ჩართულობის მიხედვით',
-    quantityLabel: 'ჩართულობის რაოდენობა',
-    quantityPlaceholder: 'მაგ: 300',
-    amountPlaceholder: 'მაგ: 35',
-    helperText: 'მიუთითე engagement-ების რაოდენობა',
-  },
-  {
-    value: 'cost_per_reach',
-    label: 'Cost per Reach',
-    description: 'გადახდა reach-ის მიხედვით',
-    quantityLabel: 'reach-ის რაოდენობა',
-    quantityPlaceholder: 'მაგ: 5000',
-    amountPlaceholder: 'მაგ: 60',
-    helperText: 'მიუთითე reach-ის მიზნობრივი რაოდენობა',
+    value: 'revenue_share',
+    label: 'Revenue Share',
+    description: 'შემოსავლის პროცენტული განაწილებით გადახდა',
+    quantityLabel: 'პროცენტი / რაოდენობა',
+    quantityPlaceholder: 'მაგ: 10',
+    amountPlaceholder: 'მაგ: 100',
+    helperText: 'მიუთითე revenue share-ის პირობები',
   },
 ] as const;
 

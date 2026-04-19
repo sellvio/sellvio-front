@@ -85,7 +85,9 @@ const PaymentStructure = ({
                     <button
                       key={option.value}
                       type="button"
-                      onClick={() => handlePaymentTypeSelect(option.value)}
+                      onClick={() =>
+                        handlePaymentTypeSelect(option.value as PaymentType)
+                      }
                       className="flex flex-col gap-[4px] hover:bg-[#FFFFFF33] px-4 py-3 w-full text-left transition-colors cursor-pointer"
                     >
                       <span className="font-[700] text-[var(--black-color)]">
@@ -103,15 +105,17 @@ const PaymentStructure = ({
             <input type="hidden" {...register('payment_type')} />
             <FormError message={errors.payment_type?.message} />
           </div>
+
           <div className="flex flex-col gap-[18px]">
             <h3 className="font-[700] text-[18px] text-[var(--black-color)]">
               შეთავაზების ტიპი
             </h3>
+
             <div className="flex gap-4">
               <div className="relative flex flex-col gap-[15px] w-full">
                 <input
                   type="number"
-                  placeholder={'რაოდენობა'}
+                  placeholder={currentPaymentType.quantityPlaceholder}
                   {...register('payment_per_quantity')}
                   onFocus={() => setQuantityPopupOpen(true)}
                   className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] p-[18px] border border-[#FFFFFF] rounded-[8px] outline-none w-full font-[700] text-[var(--black-color)] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
@@ -124,7 +128,7 @@ const PaymentStructure = ({
               <div className="flex flex-col flex-1 gap-[15px] min-w-[250px] max-w-[900px]">
                 <input
                   type="number"
-                  placeholder={'თანხა'}
+                  placeholder={currentPaymentType.amountPlaceholder}
                   {...register('payment_amount')}
                   className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] p-[18px] border border-[#FFFFFF] rounded-[8px] outline-none w-full overflow-hidden font-[700] text-[var(--black-color)] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none text:sm"
                   style={{ MozAppearance: 'textfield' }}
@@ -133,6 +137,12 @@ const PaymentStructure = ({
                 <FormError message={errors.payment_amount?.message} />
               </div>
             </div>
+
+            {isQuantityPopupOpen && (
+              <p className="text-[13px] text-[var(--campaing-form-paragraphs)]">
+                {currentPaymentType.helperText}
+              </p>
+            )}
           </div>
         </div>
       </div>

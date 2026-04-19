@@ -6,6 +6,8 @@ import {
 } from 'react-hook-form';
 import { CreateCampaignFormInput } from './components/schema/createCampaignSchema';
 
+export type SocialPlatform = 'instagram' | 'tiktok' | 'facebook';
+
 export type CreatorType =
   CreateCampaignFormInput['target_creator_types'][number];
 

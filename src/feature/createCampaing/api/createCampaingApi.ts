@@ -8,48 +8,61 @@ export async function createCampaign(data: CreateCampaignFormOutput) {
   if (!token) {
     throw new Error('ავტორიზაცია არ არის გავლილი');
   }
+
   const formData = new FormData();
 
   formData.append('name', data.name);
-  formData.append('budget', data.budget.toString());
-  formData.append('duration_days', data.duration_days.toString());
+  formData.append('budget', String(data.budget));
+  formData.append('duration_days', String(data.duration_days));
   formData.append('payment_type', data.payment_type);
-  formData.append('payment_amount', data.payment_amount.toString());
+  formData.append('payment_amount', String(data.payment_amount));
+  formData.append('payment_per_quantity', String(data.payment_per_quantity));
   formData.append('requirements', data.requirements);
+  formData.append('budget_hidden', String(data.budget_hidden));
+  formData.append('status', data.status);
+  formData.append('chat_type', data.chat_type);
 
-  data.target_creator_types.forEach((type) => {
-    formData.append('target_creator_types[]', type);
-  });
+  if (data.description?.trim()) {
+    formData.append('description', data.description);
+  }
 
-  if (data.platforms) {
-    data.platforms.forEach((platform) => {
-      formData.append('platforms[]', platform);
+  if (data.additional_requirements?.trim()) {
+    formData.append('additional_requirements', data.additional_requirements);
+  }
+
+  if (data.target_audience?.trim()) {
+    formData.append('target_audience', data.target_audience);
+  }
+
+  if (data.campaign_image_url?.trim()) {
+    formData.append('campaign_image_url', data.campaign_image_url);
+  }
+
+  if (data.target_creator_types?.length) {
+    data.target_creator_types.forEach((type) => {
+      formData.append('target_creator_types', type);
     });
   }
 
-  if (data.description) formData.append('description', data.description);
-  if (data.budget_hidden !== undefined)
-    formData.append('budget_hidden', data.budget_hidden.toString());
-  if (data.status) formData.append('status', data.status);
-  if (data.chat_type) formData.append('chat_type', data.chat_type);
-  if (data.additional_requirements)
-    formData.append('additional_requirements', data.additional_requirements);
-  if (data.payment_per_quantity)
-    formData.append(
-      'payment_per_quantity',
-      data.payment_per_quantity.toString()
-    );
-  if (data.target_audience)
-    formData.append('target_audience', data.target_audience);
+  if (data.platforms?.length) {
+    data.platforms.forEach((platform) => {
+      formData.append('platforms', platform);
+    });
+  }
 
-  if (data.media) {
+  if (data.tags?.length) {
+    data.tags.forEach((tag) => {
+      formData.append('tags', tag);
+    });
+  }
+
+  if (data.media?.length) {
     formData.append('media', JSON.stringify(data.media));
   }
 
-  if (data.asset_files) {
-    data.asset_files.forEach((file) => {
-      formData.append('asset_files', file);
-    });
+  console.log('📦 FormData contents:');
+  for (const [key, value] of formData.entries()) {
+    console.log(`${key}:`, value);
   }
 
   const res = await fetch(`${baseUrl}/campaigns`, {
@@ -60,10 +73,18 @@ export async function createCampaign(data: CreateCampaignFormOutput) {
     body: formData,
   });
 
+  const text = await res.text();
+
+  console.log('📥 Response status:', res.status);
+  console.log('📥 Response body:', text);
+
   if (!res.ok) {
-    const errorData = await res.json().catch(() => ({}));
-    throw new Error(errorData.message || 'კამპანიის შექმნა ვერ მოხერხდა');
+    throw new Error(text || 'კამპანიის შექმნა ვერ მოხერხდა');
   }
 
-  return res.json();
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text;
+  }
 }

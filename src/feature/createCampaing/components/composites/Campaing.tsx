@@ -91,7 +91,7 @@ const Campaing = () => {
             className="relative bg-[#0866FF]/[0.88] shadow-[inset_4px_5px_6px_0px_rgba(255,255,255,0.4),inset_-1px_-3px_4px_0px_rgba(255,255,255,0.4)] px-[47px] py-[16px] border-[#FFFFFF] border-[0.5px] rounded-[8px] overflow-hidden font-bold text-[#FFFFFF] text-[14px] cursor-pointer"
           >
             <div className="absolute inset-0 bg-[length:6px_6px] bg-[radial-gradient(rgba(255,255,255,0.55)_0.3px,transparent_0.3px)] opacity-25 pointer-events-none mix-blend-soft-light" />
-            შექმენი კამპანია
+            {isPending ? 'იგზავნება...' : 'შექმენი კამპანია'}
           </button>
         </div>
       </form>
