@@ -10,7 +10,12 @@ const creatorTypeEnum = z.enum([
 ]);
 
 // ✅ შესწორება #4: revenue_share → cost_per_click (Swagger business rules: CPV, CPC, fixed)
-const paymentTypeEnum = z.enum(['cost_per_view', 'cost_per_click', 'fixed']);
+const paymentTypeEnum = z.enum([
+  'cost_per_view',
+  'cost_per_click',
+  'cost_per_engagement',
+  'cost_per_reach',
+]);
 const socialPlatformEnum = z.enum(['instagram', 'tiktok', 'facebook']);
 const campaignAssetTypeEnum = z.enum(['link', 'image', 'video', 'file']);
 

@@ -34,7 +34,7 @@ export async function createCampaign(data: CreateCampaignFormOutput) {
     formData.append('target_audience', data.target_audience);
   }
 
-  if (data.campaign_image_url?.trim()) {
+  if (data.campaign_image_url) {
     formData.append('campaign_image_url', data.campaign_image_url);
   }
 
@@ -58,6 +58,12 @@ export async function createCampaign(data: CreateCampaignFormOutput) {
 
   if (data.media?.length) {
     formData.append('media', JSON.stringify(data.media));
+  }
+
+  if (data.asset_files?.length) {
+    data.asset_files.forEach((file) => {
+      formData.append('asset_files', file);
+    });
   }
 
   console.log('📦 FormData contents:');

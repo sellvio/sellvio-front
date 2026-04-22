@@ -74,14 +74,6 @@ const CompanyDetails = ({
                 {...register('duration_days')}
                 className="bg-[#eff4f9] px-5 py-4 border-none rounded-xl outline-none focus:ring-[#0040e0] focus:ring-2 w-full font-bold text-[#171c20] transition-all appearance-none"
               />
-              <div className="flex justify-center items-center bg-[#eff4f9] rounded-xl w-14 h-14 shrink-0">
-                <Image
-                  src="/images/svg/calendar.svg"
-                  width={22}
-                  height={22}
-                  alt="calendar"
-                />
-              </div>
             </div>
             <FormError message={errors.duration_days?.message} />
           </div>

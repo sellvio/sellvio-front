@@ -43,3 +43,7 @@ export type ToggleSwitchProps = {
   value: boolean;
   onToggle: (val: boolean) => void;
 };
+
+export type MediaPreviewFile = File & {
+  preview?: string;
+};

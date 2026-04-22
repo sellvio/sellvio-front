@@ -7,6 +7,7 @@ import Platforms from '../primitives/Platforms';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
+  CreateCampaignFormInput,
   CreateCampaignFormOutput,
   createCampaignSchema,
 } from '../schema/createCampaignSchema';
@@ -24,11 +25,11 @@ const Campaing = () => {
     watch,
     setValue,
     formState: { errors },
-  } = useForm({
+  } = useForm<CreateCampaignFormInput, unknown, CreateCampaignFormOutput>({
     resolver: zodResolver(createCampaignSchema),
   });
 
-  const { mutate, isPending, isError, error, isSuccess } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: createCampaign,
     onSuccess: (response) => {
       console.log('campaign created:', response);
@@ -42,8 +43,8 @@ const Campaing = () => {
     mutate(data);
   };
 
-  const selectedPlatforms = watch('platforms') || [];
-  const selectedCreatorTypes = watch('target_creator_types') || [];
+  const selectedPlatforms = watch('platforms') ?? [];
+  const selectedCreatorTypes = watch('target_creator_types') ?? [];
   const selectedPaymentType = watch('payment_type');
 
   return (
@@ -81,7 +82,7 @@ const Campaing = () => {
             errors={errors}
           />
 
-          <ExtraMedia />
+          <ExtraMedia watch={watch} setValue={setValue} errors={errors} />
 
           <CompanyDetails
             register={register}
@@ -92,6 +93,7 @@ const Campaing = () => {
 
           <div className="flex justify-between items-center pt-8 border-[#c4c5d9]/30 border-t">
             <div></div>
+
             <div className="flex gap-4">
               <button
                 type="submit"
