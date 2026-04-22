@@ -12,56 +12,62 @@ const CompanyBasics = ({
   setValue,
 }: CompanyBasicsProps) => {
   const budgetHidden = watch('budget_hidden') ?? false;
+
   return (
-    <div className="flex flex-col justify-center gap-[26px] bg-[#0866FF33] px-[30px] py-[30px] border border-[#00000038] rounded-[8px] w-full">
-      <div className="flex flex-col">
-        <div className="flex items-center gap-2">
+    <section className="relative bg-white shadow-[0px_12px_32px_-4px_rgba(0,19,86,0.06)] p-10 rounded-[1.5rem] overflow-hidden">
+      {/* Section Header */}
+      <div className="flex items-center gap-3 mb-1">
+        <div className="flex justify-center items-center bg-[#0040e0]/10 rounded-xl w-9 h-9 shrink-0">
           <Image
             src="/images/svg/companyBasics.svg"
-            width={22}
-            height={22}
+            width={20}
+            height={20}
             alt="logo"
           />
-          <h2 className="font-[600] text-[27px] text-[var(--)]">
-            კამპანიის საფუძვლები
-          </h2>
         </div>
-        <p className="text-[14px] text-[var(--campaing-form-paragraphs)]">
-          დააყენეთ თქვენი კამპანიის ფუნდამენტური დეტალები
-        </p>
+        <h2 className="font-bold text-[#171c20] text-2xl">
+          კამპანიის საფუძვლები
+        </h2>
       </div>
+      <p className="mb-8 ml-12 text-[#434656] text-sm">
+        დააყენეთ თქვენი კამპანიის ფუნდამენტური დეტალები
+      </p>
 
-      <div className="flex flex-col gap-[37px] w-full">
-        <div className="flex justify-between gap-[75px] w-full">
-          <div className="flex flex-col gap-[16px] w-full">
-            <h3 className="w-full font-[700] text-[18px]">კამპანიის სახელი</h3>
-            <input
-              type="text"
-              placeholder="მაგ: საზაფხულო პროდუქტი"
-              {...register('name')}
-              className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] px-3 py-2 border border-[#FFFFFF] rounded-[8px] outline-none w-full min-h-[56px] font-[700] text-[var(--black-color)]"
-            />
-            <FormError message={errors.name?.message} />
+      <div className="space-y-6">
+        {/* Campaign Name */}
+        <div>
+          <label className="block mb-2 px-1 font-semibold text-[#0040e0] text-xs uppercase tracking-wide">
+            კამპანიის სახელი
+          </label>
+          <input
+            type="text"
+            placeholder="მაგ: საზაფხულო პროდუქტი"
+            {...register('name')}
+            className="bg-[#eff4f9] px-5 py-4 border-none rounded-xl focus:outline-none focus:ring-[#0040e0] focus:ring-2 w-full text-[#171c20] placeholder:text-[#747688]/50 transition-all"
+          />
+          <FormError message={errors.name?.message} />
+        </div>
+
+        {/* Budget Row */}
+        <div className="flex flex-wrap justify-between items-center gap-4 bg-[#eff4f9] p-6 rounded-xl">
+          <div>
+            <p className="font-bold text-[#171c20]">ბიუჯეტი (ლარში)</p>
+            <p className="text-[#434656] text-sm">
+              მიუთითეთ კამპანიის სასურველი ბიუჯეტი
+            </p>
           </div>
-
-          <div className="flex flex-col gap-[8px] w-full">
-            <div className="flex flex-col gap-[16px] w-full">
-              <h3 className="w-full font-[700] text-[18px]">ბიუჯეტი (ლარში)</h3>
-              <input
-                type="number"
-                placeholder="₾ 5000"
-                {...register('budget')}
-                className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] px-3 py-2 border border-[#FFFFFF] rounded-[8px] outline-none w-full min-h-[56px] font-[700] text-[var(--black-color)]"
-                style={{ MozAppearance: 'textfield' }}
-              />
-              <FormError message={errors.budget?.message} />
-            </div>
-
-            <label className="flex justify-end items-center gap-3 w-full">
-              <p className="font-[700] text-[var(--black-color)]">
-                დამალე ბიუჯეტი შემქნელებისთვის
-              </p>
-
+          <div className="flex items-center gap-4 shrink-0">
+            <input
+              type="number"
+              placeholder="₾ 5000"
+              {...register('budget')}
+              className="bg-white px-5 py-2.5 border-none rounded-xl focus:outline-none focus:ring-[#0040e0] focus:ring-2 w-36 font-bold text-[#171c20] placeholder:text-[#747688]/50 text-right transition-all"
+              style={{ MozAppearance: 'textfield' }}
+            />
+            <label className="flex items-center gap-2 cursor-pointer select-none">
+              <span className="font-medium text-[#434656] text-sm whitespace-nowrap">
+                დამალე ბიუჯეტი
+              </span>
               <ToggleSwitch
                 value={budgetHidden}
                 onToggle={(newValue) =>
@@ -72,24 +78,26 @@ const CompanyBasics = ({
                 }
               />
             </label>
-
-            <FormError message={errors.budget_hidden?.message} />
           </div>
         </div>
+        <FormError message={errors.budget?.message} />
+        <FormError message={errors.budget_hidden?.message} />
 
-        <div className="w-full">
-          <h3 className="mb-4 font-[700] text-[18px] text-[var(--black-color)]">
+        {/* Description */}
+        <div>
+          <label className="block mb-2 px-1 font-semibold text-[#0040e0] text-xs uppercase tracking-wide">
             კამპანიის აღწერა
-          </h3>
+          </label>
           <textarea
             placeholder="აღწერეთ თქვენი კამპანიის მიზნები, სამიზნე აუდიტორია და რას ეძებთ შემქმნელებში..."
             {...register('description')}
-            className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] px-3 py-2 border border-[#FFFFFF] rounded-[8px] outline-none w-full min-h-[218px] font-[700] text-[var(--black-color)] resize-none"
+            className="bg-[#eff4f9] px-5 py-4 border-none rounded-xl focus:outline-none focus:ring-[#0040e0] focus:ring-2 w-full text-[#171c20] placeholder:text-[#747688]/50 transition-all resize-none"
+            rows={4}
           />
           <FormError message={errors.description?.message} />
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

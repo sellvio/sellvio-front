@@ -41,35 +41,40 @@ const CompanyDetails = ({
       }
     );
   };
+
   return (
-    <div className="flex flex-col justify-center gap-[37px] bg-[#0866FF33] px-[30px] py-[30px] border border-[#00000038] rounded-[8px] w-full">
-      <div className="flex flex-col">
-        <div className="flex items-center gap-2">
+    <section className="bg-white shadow-[0px_12px_32px_-4px_rgba(0,19,86,0.06)] p-10 rounded-[1.5rem]">
+      {/* Section Header */}
+      <div className="flex items-center gap-3 mb-1">
+        <div className="flex justify-center items-center bg-[#0040e0]/10 rounded-xl w-9 h-9 shrink-0">
           <Image
             src="/images/svg/companyDetails.svg"
-            width={22}
-            height={22}
+            width={20}
+            height={20}
             alt="logo"
           />
-          <h2 className="font-[600] text-[27px]">კამპანიის დეტალები</h2>
         </div>
-        <p className="text-[14px] text-[var(--campaing-form-paragraphs)]">
-          კამპანიის მოთხოვნები და დამატებითი კონფიგურაცია
-        </p>
+        <h2 className="font-bold text-[#171c20] text-2xl">
+          კამპანიის დეტალები
+        </h2>
       </div>
+      <p className="mb-8 ml-12 text-[#434656] text-sm">
+        კამპანიის მოთხოვნები და დამატებითი კონფიგურაცია
+      </p>
 
-      <div className="flex gap-[75px] w-full">
-        <div className="flex flex-col gap-[16px] w-1/2">
-          <p className="font-bold text-[18px]">
-            კამპანიის ხანგრძლივობა (დღეები)
-          </p>
-          <div className="flex flex-col gap-2">
-            <div className="flex gap-[16px]">
+      <div className="space-y-8">
+        {/* Duration + Target Audience */}
+        <div className="gap-6 grid grid-cols-1 md:grid-cols-2">
+          <div>
+            <label className="block mb-2 px-1 font-semibold text-[#0040e0] text-xs uppercase tracking-wide">
+              კამპანიის ხანგრძლივობა (დღეები)
+            </label>
+            <div className="flex gap-3">
               <input
                 {...register('duration_days')}
-                className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] px-3 py-2 border border-[#FFFFFF] rounded-[8px] outline-none w-full min-h-[56px] font-[700] text-[var(--black-color)] appearance-none"
+                className="bg-[#eff4f9] px-5 py-4 border-none rounded-xl outline-none focus:ring-[#0040e0] focus:ring-2 w-full font-bold text-[#171c20] transition-all appearance-none"
               />
-              <div className="flex justify-center items-center bg-[#DBDBDB59] border border-[#E3E8EF] rounded-[8px] w-[58px] h-[58px] shrink-0">
+              <div className="flex justify-center items-center bg-[#eff4f9] rounded-xl w-14 h-14 shrink-0">
                 <Image
                   src="/images/svg/calendar.svg"
                   width={22}
@@ -80,29 +85,28 @@ const CompanyDetails = ({
             </div>
             <FormError message={errors.duration_days?.message} />
           </div>
-        </div>
 
-        <div className="flex flex-col gap-[16px] w-1/2">
-          <p className="font-bold text-[18px]">სამიზნე აუდიტორია</p>
-          <div className="flex flex-col gap-2">
+          <div>
+            <label className="block mb-2 px-1 font-semibold text-[#0040e0] text-xs uppercase tracking-wide">
+              სამიზნე აუდიტორია
+            </label>
             <input
               placeholder="მაგ: ტექნოლოგიების მოყვარული, 18-35 წლის"
               type="text"
               {...register('target_audience')}
-              className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] px-3 py-2 border border-[#FFFFFF] rounded-[8px] outline-none w-full min-h-[56px] font-[700] text-[var(--black-color)]"
+              className="bg-[#eff4f9] px-5 py-4 border-none rounded-xl outline-none focus:ring-[#0040e0] focus:ring-2 w-full font-bold text-[#171c20] transition-all"
             />
             <FormError message={errors.target_audience?.message} />
           </div>
         </div>
-      </div>
 
-      <div className="flex flex-col gap-2">
-        <div className="flex justify-between items-center bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] px-3 py-2 border border-[#FFFFFF] rounded-[8px] outline-none w-full min-h-[56px] font-[700] text-[var(--black-color)] appearance-none">
-          <p>ჩატში გაწევრიანების ტიპი</p>
-          <div className="flex items-center gap-[10px]">
-            <p className="font-bold text-[18px]">
+        {/* Chat Type Toggle */}
+        <div className="flex justify-between items-center bg-[#eff4f9] p-6 rounded-xl">
+          <p className="font-bold text-[#171c20]">ჩატში გაწევრიანების ტიპი</p>
+          <div className="flex items-center gap-3">
+            <span className="font-bold text-[#171c20] text-sm">
               {chatType === 'private' ? 'დახურული' : 'საჯარო'}
-            </p>
+            </span>
             <ToggleSwitch
               value={isChatPrivate}
               onToggle={(newValue) =>
@@ -114,89 +118,99 @@ const CompanyDetails = ({
             />
           </div>
         </div>
-      </div>
-      <div className="w-full">
-        <h3 className="mb-4 font-[700] text-[18px] text-[var(--black-color)]">
-          კამპანიის მოთხოვნები
-        </h3>
-        <textarea
-          placeholder="მიუთითეთ ამ კამპანიისთვის სავალდებულო მოთხოვნები (კონტენტის სახელმძღვანელო მითითებები, შედეგები და ა.შ.)"
-          {...register('requirements')}
-          className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] px-3 py-2 border border-[#FFFFFF] rounded-[8px] outline-none w-full min-h-[218px] font-[700] text-[var(--black-color)] resize-none"
-        />
-        <p className="font-bold text-[#00000063] text-[18px]">
-          ეს მოთხოვნები გაზიარდება შექმნელებთან{' '}
-          <span className="font-bold text-black">“#მოთხოვნების არხი”</span>
-        </p>
-        <FormError message={errors.requirements?.message} />
-      </div>
-      <div className="w-full">
-        <h3 className="mb-4 font-[700] text-[18px] text-[var(--black-color)]">
-          შემქმნელის დამატებითი მოთხოვნები
-        </h3>
-        <textarea
-          placeholder="არასავალდებულო: შემქმნელისთვის ნებისმიერი დამატებითი მოთხოვნა (მინიმალური გამომწერები, კომტენტის სტილი და ა.შ.)"
-          {...register('additional_requirements')}
-          className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] px-3 py-2 border border-[#FFFFFF] rounded-[8px] outline-none w-full min-h-[218px] font-[700] text-[var(--black-color)] resize-none"
-        />
-        <FormError message={errors.additional_requirements?.message} />
-      </div>
-      <div className="flex flex-col gap-2">
-        <h3 className="mb-4 font-[700] text-[18px] text-[var(--black-color)]">
-          კამპანიის თეგები
-        </h3>
 
-        <div className="flex gap-[16px]">
-          <input
-            value={tagInput}
-            onChange={(e) => setTagInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                addTag();
-              }
-            }}
-            placeholder="თეგის დამატება"
-            className="bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] px-3 py-2 border border-[#FFFFFF] rounded-[8px] outline-none w-full min-h-[56px] font-[700] text-[var(--black-color)] appearance-none"
+        {/* Requirements */}
+        <div>
+          <label className="block mb-2 px-1 font-semibold text-[#0040e0] text-xs uppercase tracking-wide">
+            კამპანიის მოთხოვნები
+          </label>
+          <textarea
+            placeholder="მიუთითეთ ამ კამპანიისთვის სავალდებულო მოთხოვნები (კონტენტის სახელმძღვანელო მითითებები, შედეგები და ა.შ.)"
+            {...register('requirements')}
+            className="bg-[#eff4f9] px-5 py-4 border-none rounded-xl outline-none focus:ring-[#0040e0] focus:ring-2 w-full font-bold text-[#171c20] transition-all resize-none"
+            rows={4}
           />
-
-          <button
-            type="button"
-            onClick={addTag}
-            className="flex justify-center items-center bg-[#FFFFFF1A] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] border border-[#FFFFFF] rounded-[8px] w-[58px] h-[58px] cursor-pointer shrink-0"
-          >
-            <Image
-              src="/images/svg/blackPlus.svg"
-              width={22}
-              height={22}
-              alt="add tag"
-            />
-          </button>
+          <p className="mt-2 px-1 text-[#434656]/80 text-sm">
+            ეს მოთხოვნები გაზიარდება შექმნელებთან{' '}
+            <span className="font-bold text-[#171c20]">
+              &quot;#მოთხოვნების არხი&quot;
+            </span>
+          </p>
+          <FormError message={errors.requirements?.message} />
         </div>
 
-        {tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-2">
-            {tags.map((tag, index) => (
-              <div
-                key={index}
-                className="flex items-center gap-[16px] bg-[#3012B31F] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] px-[22px] py-[10px] border border-[#3012B3] rounded-[8px]"
-              >
-                <span>{tag}</span>
-                <button
-                  type="button"
-                  onClick={() => removeTag(tag)}
-                  className="font-bold text-[14px] hover:text-red-500 cursor-pointer"
-                >
-                  ✕
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+        {/* Additional Requirements */}
+        <div>
+          <label className="block mb-2 px-1 font-semibold text-[#0040e0] text-xs uppercase tracking-wide">
+            შემქმნელის დამატებითი მოთხოვნები
+          </label>
+          <textarea
+            placeholder="არასავალდებულო: შემქმნელისთვის ნებისმიერი დამატებითი მოთხოვნა (მინიმალური გამომწერები, კომტენტის სტილი და ა.შ.)"
+            {...register('additional_requirements')}
+            className="bg-[#eff4f9] px-5 py-4 border-none rounded-xl outline-none focus:ring-[#0040e0] focus:ring-2 w-full font-bold text-[#171c20] transition-all resize-none"
+            rows={4}
+          />
+          <FormError message={errors.additional_requirements?.message} />
+        </div>
 
-        <FormError message={errors.tags?.message} />
+        {/* Tags */}
+        <div>
+          <label className="block mb-3 px-1 font-semibold text-[#0040e0] text-xs uppercase tracking-wide">
+            კამპანიის თეგები
+          </label>
+
+          <div className="flex gap-3 mb-4">
+            <input
+              value={tagInput}
+              onChange={(e) => setTagInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  addTag();
+                }
+              }}
+              placeholder="თეგის დამატება"
+              className="bg-[#eff4f9] px-5 py-4 border-none rounded-xl outline-none focus:ring-[#0040e0] focus:ring-2 w-full font-bold text-[#171c20] transition-all"
+            />
+            <button
+              type="button"
+              onClick={addTag}
+              className="flex justify-center items-center bg-[#0040e0] rounded-xl w-14 h-14 hover:scale-105 active:scale-95 transition-all shrink-0"
+            >
+              <Image
+                src="/images/svg/blackPlus.svg"
+                width={20}
+                height={20}
+                alt="add tag"
+                className="brightness-0 invert"
+              />
+            </button>
+          </div>
+
+          {tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 bg-[#eff4f9] p-4 border-2 border-transparent focus-within:border-[#0040e0]/20 rounded-xl transition-all">
+              {tags.map((tag, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-2 bg-[#0040e0] px-4 py-1.5 rounded-full font-bold text-white text-sm"
+                >
+                  <span>{tag}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeTag(tag)}
+                    className="hover:opacity-70 text-[14px] leading-none transition-opacity cursor-pointer"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <FormError message={errors.tags?.message} />
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 

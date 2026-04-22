@@ -20,25 +20,29 @@ const Platforms = ({ selected, setValue, errors }: PlatformsProps) => {
   };
 
   return (
-    <div className="flex flex-col gap-[26px] bg-[var(--company-basics-bg)] mx-auto px-[30px] py-[30px] border border-[var(--createCampaing-border)] rounded-[8px] w-full">
-      <div className="flex flex-col">
-        <div className="flex items-center gap-2">
+    <div className="space-y-6">
+      {/* Section Header */}
+      <div className="flex items-center gap-3">
+        <div className="flex justify-center items-center bg-[#0040e0]/10 rounded-xl w-9 h-9 shrink-0">
           <Image
             src="/images/svg/platforms.svg"
-            width={22}
-            height={22}
+            width={20}
+            height={20}
             alt="logo"
           />
-          <h2 className="font-[600] text-[27px] text-[var(--black-color)]">
+        </div>
+        <div>
+          <h2 className="font-bold text-[#171c20] text-2xl">
             აირჩიე პლატფორმები
           </h2>
+          <p className="text-[#434656] text-sm">
+            აირჩიე რომელ პლატფორმებზე გსურთ ამ კამპანიის მიზნობრივი გამოყენება
+          </p>
         </div>
-        <p className="text-[14px] text-[var(--campaing-form-paragraphs)]">
-          აირჩიე რომელ პლატფორმებზე გსურთ ამ კამპანიის მიზნობრივი გამოყენება
-        </p>
       </div>
 
-      <div className="flex gap-[87px] w-full">
+      {/* Platform Cards Grid */}
+      <div className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {Socmedia.map((eachelement) => {
           const value = eachelement.value as SocialPlatform;
           const isSelected = selected?.includes(value);
@@ -48,21 +52,39 @@ const Platforms = ({ selected, setValue, errors }: PlatformsProps) => {
               key={eachelement.id}
               type="button"
               onClick={() => handleTogglePlatform(value)}
-              className={`flex flex-col justify-center items-center gap-[17px] shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] lg:mx-auto border rounded-[8px] outline-none w-full h-[111px] transition-colors cursor-pointer ${
+              className={`group bg-white p-6 rounded-xl border-2 transition-all cursor-pointer flex flex-col items-center text-center relative hover:shadow-lg ${
                 isSelected
-                  ? 'bg-[var(--goal-auditory-bg)] border-[var(--goal-auditory-bg)]'
-                  : 'bg-[#FFFFFF1A] border-[#FFFFFF]'
+                  ? 'border-[#0040e0] shadow-[0px_8px_24px_-4px_rgba(0,64,224,0.15)]'
+                  : 'border-transparent hover:border-[#0040e0]/20'
               }`}
             >
-              <Image
-                src={eachelement.img}
-                width={36}
-                height={36}
-                alt={eachelement.title}
-              />
-              <span className="font-[600] text-[var(--black-color)]">
+              {isSelected && (
+                <div className="top-3 right-3 absolute text-[#0040e0]">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+              )}
+              <div className="flex justify-center items-center bg-[#eff4f9] mb-4 rounded-full w-16 h-16 group-hover:scale-110 transition-transform">
+                <Image
+                  src={eachelement.img}
+                  width={36}
+                  height={36}
+                  alt={eachelement.title}
+                />
+              </div>
+              <p className="font-bold text-[#171c20] text-lg">
                 {eachelement.title}
-              </span>
+              </p>
             </button>
           );
         })}

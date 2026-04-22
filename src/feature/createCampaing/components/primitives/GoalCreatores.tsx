@@ -21,25 +21,29 @@ const GoalCreatores = ({ selected, setValue, errors }: GoalCreatoresProps) => {
   };
 
   return (
-    <div className="flex flex-col bg-[var(--company-basics-bg)] mx-auto px-[30px] py-[30px] border border-[var(--createCampaing-border)] rounded-[8px] w-full">
-      <div className="flex flex-col">
-        <div className="flex items-center gap-2">
+    <div className="space-y-6">
+      {/* Section Header */}
+      <div className="flex items-center gap-3">
+        <div className="flex justify-center items-center bg-[#0040e0]/10 rounded-xl w-9 h-9 shrink-0">
           <Image
             src="/images/svg/creators.svg"
-            width={22}
-            height={22}
+            width={20}
+            height={20}
             alt="logo"
           />
-          <h2 className="font-[600] text-[27px] text-[var(--black-color)]">
+        </div>
+        <div>
+          <h2 className="font-bold text-[#171c20] text-2xl">
             სამიზნე შემქმნელების ტიპი
           </h2>
+          <p className="text-[#434656] text-sm">
+            აირჩიეთ რომელ ტიპის შემქმნელებთან გსურთ მუშაობა ამ კამპანიისთვის
+          </p>
         </div>
-        <p className="mb-[26px] text-[14px] text-[var(--campaing-form-paragraphs)]">
-          აირჩიეთ რომელ ტიპის შემქმნელებთან გსურთ მუშაობა ამ კამპანიისთვის
-        </p>
       </div>
 
-      <div className="flex flex-wrap gap-6 w-full">
+      {/* Cards Grid */}
+      <div className="gap-6 grid grid-cols-1 md:grid-cols-2">
         {GoalCards.map((eachelement) => {
           const isSelected = selected?.includes(eachelement.id);
 
@@ -48,36 +52,52 @@ const GoalCreatores = ({ selected, setValue, errors }: GoalCreatoresProps) => {
               type="button"
               key={eachelement.id}
               onClick={() => toggleCard(eachelement.id)}
-              className={`w-full lg:max-w-[677px] m-auto h-[111px] cursor-pointer border rounded-[8px] flex items-center gap-4 px-6 py-4 shadow-[4px_5px_6px_0px_#FFFFFF66_inset] backdrop-blur-[7.5px] transition-colors ${
+              className={`group p-8 bg-white rounded-xl border-2 transition-all cursor-pointer flex items-center gap-5 text-left relative hover:shadow-lg ${
                 isSelected
-                  ? 'bg-[#0866FF1F] border-[var(--goal-auditory-bg)]'
-                  : 'bg-[#FFFFFF1A] border-[#FFFFFF]'
+                  ? 'border-[#0040e0] shadow-[0px_8px_24px_-4px_rgba(0,64,224,0.15)]'
+                  : 'border-transparent hover:border-[#0040e0]/20'
               }`}
             >
-              <div className="flex justify-center items-center bg-[#0866FF0F] rounded-md w-[48px] h-[48px]">
+              {isSelected && (
+                <div className="top-0 right-0 absolute bg-[#0040e0] px-3 py-1 rounded-tr-xl rounded-bl-xl font-black text-[10px] text-white uppercase tracking-widest">
+                  Selected
+                </div>
+              )}
+              <div
+                className={`p-3 rounded-xl transition-all shrink-0 ${
+                  isSelected
+                    ? 'bg-[#0040e0] text-white'
+                    : 'bg-[#0040e0]/5 text-[#0040e0] group-hover:bg-[#0040e0] group-hover:text-white'
+                }`}
+              >
                 <Image
                   src={eachelement.img}
-                  width={23}
-                  height={23}
+                  width={28}
+                  height={28}
                   alt={eachelement.title}
+                  className={
+                    isSelected
+                      ? 'brightness-0 invert'
+                      : 'group-hover:brightness-0 group-hover:invert'
+                  }
                 />
               </div>
-
-              <div className="flex flex-col text-left">
-                <span className="font-[600] text-[16px] text-[var(--black-color)]">
+              <div className="flex flex-col">
+                <span className="font-bold text-[#171c20] text-lg">
                   {eachelement.title}
                 </span>
-                <span className="text-[14px] text-[var(--campaing-form-paragraphs)]">
+                <span className="text-[#434656] text-sm">
                   {eachelement.descr}
                 </span>
               </div>
             </button>
           );
         })}
-        {errors.target_creator_types?.message && (
-          <FormError message={errors.target_creator_types.message} />
-        )}
       </div>
+
+      {errors.target_creator_types?.message && (
+        <FormError message={errors.target_creator_types.message} />
+      )}
     </div>
   );
 };
