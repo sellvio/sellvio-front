@@ -1,12 +1,13 @@
-import VideoCards from "../../../feature/creatodVideos/components/primitives/VideoCards";
 import CreatorDashboard from "../../../feature/creatorDashboard/components/composites/CreatorDashboard";
+import RequireUserType from "../../../feature/components/RequireUserType";
 
 const CreatorDashboardPage = () => {
   return (
-    <div>
-      <CreatorDashboard />
-      <VideoCards />
-    </div>
+    <RequireUserType userType="creator">
+      <div>
+        <CreatorDashboard />
+      </div>
+    </RequireUserType>
   );
 };
 

@@ -1,9 +1,16 @@
-import React from 'react';
-
 export type ChatType = 'public' | 'private';
-export type CampaignStatus = 'active' | 'draft';
-export type PaymentType = 'cost_per_view' | 'cost_per_click';
-export type CreatorType = 'beginner' | 'influencer' | 'experienced';
+export type CampaignStatus =
+  | 'active'
+  | 'draft'
+  | 'paused'
+  | 'completed'
+  | 'cancelled';
+export type PaymentType =
+  | 'cost_per_view'
+  | 'cost_per_click'
+  | 'cost_per_engagement'
+  | 'cost_per_reach';
+export type CreatorType = 'beginner' | 'influencer' | 'experienced' | 'clipper';
 
 export type BusinessProfile = {
   company_name: string;
@@ -27,7 +34,7 @@ export type Campaign = {
   id: number;
   business_id: number;
   name: string;
-  description: string;
+  description: string | null;
   budget: string;
   budget_hidden: boolean;
   duration_days: number;
@@ -48,20 +55,49 @@ export type Campaign = {
   updated_at: string;
   business_profiles: BusinessProfile;
   campaign_tags: CampaignTag[];
+  campaign_platforms?: { platform: string }[];
+  campaign_budget_tracking?: CampaignBudgetTracking[];
   _count: CampaignCount;
 };
 
+export type CampaignBudgetTracking = {
+  total_budget: string;
+  spent_amount: string | null;
+};
+
+export type CampaignDetails = Campaign & {
+  business_profiles: BusinessProfile & { business_email: string | null };
+  campaign_assets: {
+    asset_name: string | null;
+    asset_url: string;
+    asset_type: string | null;
+  }[];
+  campaign_videos: {
+    id: number;
+    title: string | null;
+    cover_url: string | null;
+    created_at: string | null;
+  }[];
+};
+
+export type BusinessCampaign = Campaign & {
+  campaign_budget_tracking: CampaignBudgetTracking[];
+};
+
+export type JoinableCampaign = Pick<Campaign, 'id' | 'chat_type'>;
+
 export type CompanyCardProps = {
   task: Campaign;
-  setPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onOpenDetails: (campaignId: number) => void;
+  onJoin: (campaign: JoinableCampaign) => void;
 };
 
-export type CompanyCardsProps = {
-  setPopupOpen: CompanyCardProps['setPopupOpen'];
-};
+export type CompanyCardsProps = Pick<CompanyCardProps, 'onOpenDetails' | 'onJoin'>;
 
 export type CampaingDetailInfoPopupProps = {
-  setPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  campaignId: number;
+  onClose: () => void;
+  onJoin: CompanyCardProps['onJoin'];
 };
 
 export type ProgressBarProps = {
@@ -91,6 +127,15 @@ export type Item = {
 export type DataProps = {
   business: Item[];
   creator: Item[];
+};
+
+export type companyStatsDataProps = {
+  id: number;
+  quantity: string;
+  title: string;
+  description: string;
+  icon: string;
+  alt: string;
 };
 
 export type CampaingPopupSocialMediaSliderProps = {

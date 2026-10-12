@@ -1,10 +1,16 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import ReUsableInput from '@/feature/Authorization/components/primitives/ReusableInput';
-import { RegistrationStepBusinessValues } from '@/feature/registrationSocials/type';
+import { RegistrationStepBusinesValuess } from '@/feature/schema/registrationSchema';
+import { FieldErrors, UseFormRegister } from 'react-hook-form';
+
+type RegistrationBusinessStepTwoFormProps = {
+  register: UseFormRegister<RegistrationStepBusinesValuess>;
+  errors: FieldErrors<RegistrationStepBusinesValuess>;
+};
 
 const RegistrationBusinessStepTwoForm: React.FC<
-  RegistrationStepBusinessValues
+  RegistrationBusinessStepTwoFormProps
 > = ({ register, errors }) => {
   return (
     <form className="space-y-[22px] mt-[39px]">
@@ -46,7 +52,7 @@ const RegistrationBusinessStepTwoForm: React.FC<
 
         <ReUsableInput
           label="გაიმეორე პაროლი"
-          id="confirmPassword"
+          id="repeatPassword"
           type="password"
           placeholder="გაიმეორეთ პაროლი"
           register={register}

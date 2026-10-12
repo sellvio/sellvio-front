@@ -5,14 +5,16 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   currentAmount,
   goalAmount,
 }) => {
-  const percentage = Math.min((currentAmount / goalAmount) * 100, 100);
+  const percentage =
+    goalAmount > 0 ? Math.min((currentAmount / goalAmount) * 100, 100) : 0;
+  const remaining = Math.max(goalAmount - currentAmount, 0);
 
   return (
     <div className="mx-auto w-full">
       <div className="flex justify-between mb-[3px] w-full">
         <p className="font-medium text-[12px]">ბიუჯეტი</p>
         <p className="font-medium text-[14px]">
-          ${goalAmount - currentAmount} დარჩა
+          ${remaining.toLocaleString()} დარჩა
         </p>
       </div>
       <div className="bg-[var(--gray-color)] rounded-full w-full h-2 overflow-hidden">

@@ -60,7 +60,7 @@ const GoalCreatores = ({ selected, setValue, errors }: GoalCreatoresProps) => {
             >
               {isSelected && (
                 <div className="top-0 right-0 absolute bg-[#0040e0] px-3 py-1 rounded-tr-xl rounded-bl-xl font-black text-[10px] text-white uppercase tracking-widest">
-                  Selected
+                  არჩეული
                 </div>
               )}
               <div

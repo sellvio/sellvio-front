@@ -5,12 +5,21 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 export type RegistrationType = 'business' | 'creator';
 
-export const useRegistrationType = (basePath: string) => {
+const REGISTRATION_PATHS: Record<RegistrationType, string> = {
+  business: '/registrationBussines',
+  creator: '/registration',
+};
+
+const isRegistrationType = (value: string | null): value is RegistrationType =>
+  value === 'business' || value === 'creator';
+
+// `defaultType` is the type the current page renders the form for
+export const useRegistrationType = (defaultType: RegistrationType) => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const typeFromUrl =
-    (searchParams.get('type') as RegistrationType) || 'creator';
+  const typeParam = searchParams.get('type');
+  const typeFromUrl = isRegistrationType(typeParam) ? typeParam : defaultType;
   const [registrationType, setRegistrationType] =
     useState<RegistrationType>(typeFromUrl);
 
@@ -20,7 +29,7 @@ export const useRegistrationType = (basePath: string) => {
 
   const handleChangeType = (type: RegistrationType) => {
     setRegistrationType(type);
-    router.push(`${basePath}?type=${type}`);
+    router.push(`${REGISTRATION_PATHS[type]}?type=${type}`);
   };
 
   return { registrationType, handleChangeType };

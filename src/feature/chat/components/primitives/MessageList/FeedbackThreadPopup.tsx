@@ -24,6 +24,18 @@ const getSenderName = (msg: Message): string => {
   return `User ${msg.senderId}`;
 };
 
+const formatThreadTime = (createdAt: string) => {
+  const date = new Date(createdAt);
+  const time = date.toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
+  return date.toDateString() === new Date().toDateString()
+    ? `დღეს ${time}`
+    : `${date.toLocaleDateString()} ${time}`;
+};
+
 const sortMessages = (messages: Message[]) => {
   const map = new Map<string | number, Message>();
 
@@ -44,6 +56,7 @@ const FeedbackThreadPopup = ({
   const socket = useSocketStore((s) => s.socket);
   const selectedChannelId = useChatStore((s) => s.selectedChannelId);
   const currentUser = useChatStore((s) => s.currentUser);
+  const isAdmin = useChatStore((s) => s.isAdmin);
 
   const [threadMessages, setThreadMessages] = useState<Message[]>([]);
   const [text, setText] = useState('');
@@ -52,6 +65,9 @@ const FeedbackThreadPopup = ({
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   const campaignVideoId = videoMessage.campaignVideoId;
+  // backend-ი პასუხის უფლებას აძლევს მხოლოდ ადმინს და ვიდეოს ავტორს
+  const canReply =
+    isAdmin || (!!currentUser && currentUser.id === videoMessage.senderId);
 
   const popupTitle = useMemo(() => {
     return videoMessage.videoTitle || videoMessage.content || 'ვიდეოს განხილვა';
@@ -175,7 +191,8 @@ const FeedbackThreadPopup = ({
       !selectedChannelId ||
       !campaignVideoId ||
       !trimmed ||
-      !currentUser
+      !currentUser ||
+      !canReply
     ) {
       return;
     }
@@ -267,13 +284,7 @@ const FeedbackThreadPopup = ({
                       <span className="font-semibold text-white">
                         {getSenderName(msg)}
                       </span>
-                      <span>
-                        დღეს{' '}
-                        {new Date(msg.createdAt).toLocaleTimeString([], {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                      </span>
+                      <span>{formatThreadTime(msg.createdAt)}</span>
                     </div>
 
                     <div className="mt-2">
@@ -313,14 +324,19 @@ const FeedbackThreadPopup = ({
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleSend();
               }}
-              placeholder="Write a message..."
-              className="flex-1 bg-transparent outline-none text-white placeholder:text-white/55 text-sm"
+              disabled={!canReply}
+              placeholder={
+                canReply
+                  ? 'დაწერე შეტყობინება...'
+                  : 'პასუხის გაცემა შეუძლია მხოლოდ ავტორს და ადმინს'
+              }
+              className="flex-1 bg-transparent disabled:opacity-70 outline-none text-white placeholder:text-white/55 text-sm disabled:cursor-not-allowed"
             />
 
             <button
               type="button"
               onClick={handleSend}
-              disabled={!text.trim()}
+              disabled={!canReply || !text.trim()}
               className="flex justify-center items-center disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed shrink-0"
             >
               <SendHorizonal size={20} className="text-[#ffffff]" />

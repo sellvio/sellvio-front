@@ -32,7 +32,7 @@ const HeroSectionBottomSide = () => {
           დარეგისტრირდი როგორც:
         </p>
         <div className="flex items-center gap-[26px]">
-          <Link href="/registration?type=creator">
+          <Link href="/registration">
             <button className="group flex justify-center items-center gap-[10px] bg-[var(--lending-light-button)] hover:bg-[var(--auth-registrationas-text)] border border-[var(--lending-border)] rounded-[8px] w-[192px] min-h-[52px] font-bold text-[18px] transition-all duration-300 ease-in-out cursor-pointer">
               <Creator className="text-[var(--hero-icon)] group-hover:text-[var(--white-color)]" />
               <span className="text-[var(--black-color)] group-hover:text-[var(--white-color)]">
@@ -44,7 +44,7 @@ const HeroSectionBottomSide = () => {
           <p className="font-bold text-[20px] text-[var(--lending-title)]">
             ან
           </p>
-          <Link href="/registration?type=business">
+          <Link href="/registrationBussines?type=business">
             <button className="group flex justify-center items-center gap-[10px] bg-[var(--lending-light-button)] hover:bg-[var(--auth-registrationas-text)] border border-[var(--lending-border)] rounded-[8px] w-[192px] min-h-[52px] font-bold text-[18px] transition-all duration-300 ease-in-out cursor-pointer">
               <Company className="text-[var(--hero-icon)] group-hover:text-[var(--white-color)]" />
               <span className="text-[var(--black-color)] group-hover:text-[var(--white-color)]">

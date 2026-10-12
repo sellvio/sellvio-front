@@ -1,6 +1,21 @@
-const PrimaryInformation = () => {
-  "use client";
+import { ProfileFormState } from "../../types";
 
+type PrimaryInformationProps = {
+  form: ProfileFormState;
+  email: string;
+  isEditing: boolean;
+  onChange: (patch: Partial<ProfileFormState>) => void;
+};
+
+const inputClass =
+  "w-full border border-[var(--auth-input-border)] rounded-[8px] px-3 py-2 text-[18px] text-[var(--adding-tags-color)] font-[700] outline-none read-only:bg-[#F7F7F7]";
+
+const PrimaryInformation = ({
+  form,
+  email,
+  isEditing,
+  onChange,
+}: PrimaryInformationProps) => {
   return (
     <div className="max-w-[1222px] w-full bg-transparent mx-auto border-[var(--component-border-color)]   rounded-[8px] px-[30px] py-[30px] flex flex-col border">
       <div className="flex flex-col">
@@ -14,7 +29,10 @@ const PrimaryInformation = () => {
         </p>
       </div>
 
-      <form className="flex-col max-w-[1222px] w-full gap-[75px] mx-auto">
+      <form
+        className="flex-col max-w-[1222px] w-full gap-[75px] mx-auto"
+        onSubmit={(e) => e.preventDefault()}
+      >
         <div className="flex lg:flex-row flex-col gap-[75px] max-w-[1162px] w-full mt-[26px]">
           <div className="w-full">
             <h3 className="text-[var(--black-color)] font-[700] text-[18px] mb-4">
@@ -23,49 +41,49 @@ const PrimaryInformation = () => {
             <div className="max-w-[543px] w-full">
               <input
                 type="text"
-                placeholder="სალომე შავიანიძე"
-                className="max-w-[543px] w-full  border border-[var(--auth-input-border)] rounded-[8px] px-3 py-2 text-[18px] text-[var(--adding-tags-color)]  font-[700] outline-none"
+                value={form.fullName}
+                readOnly={!isEditing}
+                onChange={(e) => onChange({ fullName: e.target.value })}
+                placeholder="სახელი გვარი"
+                className={inputClass}
               />
             </div>
           </div>
 
           <div className="w-full">
-            <div>
-              <h3 className="font-[700] text-[18px] text-[var(--black-color)] mb-4 ">
-                იმეილი
-              </h3>
-              <div>
-                <input
-                  type="text"
-                  placeholder="noza@example.com"
-                  className="max-w-[543px] w-full border border-[var(--auth-input-border)] rounded-[8px] px-3 py-2 text-[18px] text-[var(--adding-tags-color)]  font-[700] outline-none"
-                />
-              </div>
+            <h3 className="font-[700] text-[18px] text-[var(--black-color)] mb-4 ">
+              იმეილი
+            </h3>
+            <div className="max-w-[543px] w-full">
+              <input type="email" value={email} readOnly className={inputClass} />
             </div>
           </div>
         </div>
 
         <div className="mt-[37px]">
           <h3 className="font-[700] text-[18px] text-[var(--black-color)] mb-4">
-            bio
+            ბიო
           </h3>
-          <div>
-            <input
-              placeholder="კონტეტის შემქმნელი, სპეციალიზირებული ტექნოლოგიურ მიმოხილვებსა და ცხოვრების წესის კონტენტში. გატაცებული მიმზიდველი ვიდეოების შექმნით, რომლებიც ეხმარება ადამიანებს ინფორმირებული გადაწყვეტილებების მიღებაში "
-              className=" max-w-[1440px] w-full border border-[var(--auth-input-border)] rounded-[8px] px-3 h-[78px]  text-[var(--adding-tags-color)]   font-[700]  outline-none  text-[18px]"
-            />
-          </div>
+          <textarea
+            value={form.bio}
+            readOnly={!isEditing}
+            onChange={(e) => onChange({ bio: e.target.value })}
+            placeholder="მოკლედ აღწერეთ თქვენი კონტენტი"
+            rows={3}
+            className={`${inputClass} resize-none`}
+          />
         </div>
         <div className="mt-[37px]">
-          <h3 className="font-[700] text-[18px] text-[var(--adding-tags-color)]  mb-4">
+          <h3 className="font-[700] text-[18px] text-[var(--black-color)]  mb-4">
             ლოკაცია
           </h3>
-          <div>
-            <input
-              placeholder="Georgia, Tbilisi"
-              className="w-full border border-[var(--auth-input-border)]  rounded-[8px] px-3 py-2  text-[var(--adding-tags-color)]  font-[700] outline-none  text-[18px]"
-            />
-          </div>
+          <input
+            value={form.location}
+            readOnly={!isEditing}
+            onChange={(e) => onChange({ location: e.target.value })}
+            placeholder="Georgia, Tbilisi"
+            className={inputClass}
+          />
         </div>
       </form>
     </div>

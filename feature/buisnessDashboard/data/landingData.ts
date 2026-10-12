@@ -3,18 +3,15 @@ import { HeaderBtnsProps } from "../../buisnessDashboard/types";
 export const headerBtns: HeaderBtnsProps[] = [
   {
     id: 1,
-    alt: "search",
-    src: "./images/svg/search.svg",
+    alt: "analytics",
+    src: "/images/svg/analytic.svg",
+    href: "/analytic",
   },
   {
     id: 2,
     alt: "profile",
-    src: "./images/svg/profile.svg",
-  },
-  {
-    id: 3,
-    alt: "profile",
-    src: "./images/svg/notification.svg",
+    src: "/images/svg/profile.svg",
+    href: "/businessProfile",
   },
 ];
 export const data = [

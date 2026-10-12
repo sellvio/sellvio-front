@@ -1,28 +1,25 @@
+// Card styling only; values come from GET /analytics/creator/overview
 export const creatorAnalytic = [
   {
     id: 1,
-    quantity: "24,000",
     title: "ჯამური გამომუშავება",
     bg: "bg-[#00D54014]",
     text: "text-[#00D540]",
   },
   {
     id: 2,
-    quantity: "3",
     title: "აქტიური კამპანიები",
     bg: "bg-[#FB8A2E14]",
     text: "text-[#FB8A2E]",
   },
   {
     id: 3,
-    quantity: "8",
     title: "განხილვის პროცესში",
     bg: "bg-[#0866FF14]",
     text: "text-[#0866FF]",
   },
   {
     id: 4,
-    quantity: "24,000",
     title: "ჯამური ნახვები",
     bg: "bg-[#583CCF14]",
     text: "text-[#583CCF]",

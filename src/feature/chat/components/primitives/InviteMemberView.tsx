@@ -1,18 +1,17 @@
 'use client';
 
 import Image from 'next/image';
-import { useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 import { addMemberSchema, addMemberValue } from '../../schema/addMemberSchema';
 import { addMember } from '../../api/chatApi';
 import AddMemberSkeleton from './AddMemberSkeleton';
 import { useChatLayout } from '@/feature/common/stores/useChatLayout';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
-import { Props } from '../../types';
+import { InvitePeopleProps } from '../../types';
+import { getUserDisplayName } from '../../utils/getUserDisplayName';
 
 const InviteMemberView = ({
   searchTerm,
@@ -22,33 +21,45 @@ const InviteMemberView = ({
   selectedIds,
   toggleUser,
   isLoading,
-}: Props) => {
-  const params = useParams();
-  const channelId = Number(params.updateChatId);
-
+  isError,
+  channelId,
+  backHref,
+  onInvited,
+}: InvitePeopleProps) => {
+  const queryClient = useQueryClient();
   const serverId = useChatStore((state) => state.serverId);
-
-  const {
-    setValue,
-    formState: { errors },
-  } = useForm<addMemberValue>({
-    resolver: zodResolver(addMemberSchema),
-    defaultValues: { user_ids: selectedIds.map(Number) },
-  });
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   const { isPending, mutate } = useMutation({
     mutationFn: (data: addMemberValue) => {
       if (!serverId) throw new Error('Server ID is missing');
       return addMember(serverId, channelId, data);
     },
-    onSuccess: () => toast.success('add member successfully'),
-    onError: () => toast.error('failed'),
+    onSuccess: (res) => {
+      const added = res?.data?.added ?? 0;
+      if (added > 0) {
+        toast.success(`დაემატა ${added} წევრი`);
+      } else {
+        toast.warning(
+          'წევრები ვერ დაემატა (მხოლოდ კამპანიის დადასტურებული შემქმნელების დამატებაა შესაძლებელი)'
+        );
+      }
+      queryClient.invalidateQueries({
+        queryKey: ['invitableMembers', serverId, channelId],
+      });
+      onInvited();
+    },
+    onError: () => toast.error('წევრების დამატება ვერ მოხერხდა'),
   });
 
   const submitForm = () => {
-    const userIds = selectedIds.map(Number);
-    setValue('user_ids', userIds);
-    mutate({ user_ids: userIds });
+    const parsed = addMemberSchema.safeParse({ user_ids: selectedIds });
+    if (!parsed.success) {
+      setValidationError(parsed.error.issues[0]?.message ?? null);
+      return;
+    }
+    setValidationError(null);
+    mutate(parsed.data);
   };
 
   const { chatFull } = useChatLayout();
@@ -63,7 +74,7 @@ const InviteMemberView = ({
             მოწვევის გაკეთება
           </p>
 
-          <Link href="/chat">
+          <Link href={backHref}>
             <Image
               src="/images/chatIcons/svg/closeButton.svg"
               alt="close"
@@ -89,7 +100,7 @@ const InviteMemberView = ({
                     className="flex items-center gap-[7px] bg-[#FFFFFF36] px-[15px] py-[4px] border-[#FFFFFF75] border-[2px] rounded-[6px] whitespace-nowrap"
                   >
                     <span className="font-semibold text-[17px] text-white">
-                      {user.email}
+                      {getUserDisplayName({ user })}
                     </span>
                     <button
                       onClick={() => toggleUser(user.id)}
@@ -121,10 +132,8 @@ const InviteMemberView = ({
               </div>
             </div>
 
-            {errors.user_ids && (
-              <p className="mt-2 text-red-400 text-sm">
-                {errors.user_ids.message}
-              </p>
+            {validationError && (
+              <p className="mt-2 text-red-400 text-sm">{validationError}</p>
             )}
 
             <div className="my-[10px] border border-[#FFFFFF75]" />
@@ -135,6 +144,16 @@ const InviteMemberView = ({
 
             <div className="max-h-[300px] overflow-y-auto custom-scrollbar">
               {isLoading && <AddMemberSkeleton />}
+              {isError && (
+                <p className="py-2 text-red-400 text-sm">
+                  წევრების ჩატვირთვა ვერ მოხერხდა
+                </p>
+              )}
+              {!isLoading && !isError && filteredUsers.length === 0 && (
+                <p className="py-2 text-white/60 text-sm">
+                  მოსაწვევი წევრები არ მოიძებნა
+                </p>
+              )}
               {filteredUsers.map(({ user }) => (
                 <div
                   key={user.id}
@@ -149,7 +168,7 @@ const InviteMemberView = ({
                   />
                   <div className="bg-gray-700 rounded-full w-[34px] h-[34px]" />
                   <p className="font-semibold text-[15px] text-white">
-                    {user.email}
+                    {getUserDisplayName({ user })}
                   </p>
                 </div>
               ))}
@@ -160,14 +179,15 @@ const InviteMemberView = ({
 
       <div className="flex justify-end w-full">
         <div className="flex gap-[13px] mb-[40px] w-full max-w-[414px] min-h-[38px]">
-          <Link href="/chat" className="w-1/2">
-            <button className="bg-[#FFFFFF36] hover:bg-[#FFFFFF50] border border-[#FFFFFF36] rounded-[8px] w-full h-full font-semibold text-[13px] text-white cursor-pointer">
-              უკან დაბრუნება
-            </button>
+          <Link
+            href={backHref}
+            className="flex justify-center items-center bg-[#FFFFFF36] hover:bg-[#FFFFFF50] border border-[#FFFFFF36] rounded-[8px] w-1/2 font-semibold text-[13px] text-white cursor-pointer"
+          >
+            უკან დაბრუნება
           </Link>
           <button
             onClick={submitForm}
-            disabled={isPending || !serverId}
+            disabled={isPending || !serverId || selectedIds.length === 0}
             className="bg-[#0866FF] hover:bg-[#0052D1] disabled:opacity-50 border border-[#C13D3F36] rounded-[8px] w-1/2 min-h-[38px] font-semibold text-[13px] text-white cursor-pointer"
           >
             {isPending ? 'იგზავნება...' : 'დაამატე'}

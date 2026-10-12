@@ -15,9 +15,10 @@ export interface Member {
 export interface ChatChannel {
   id: number;
   name: string;
-  description?: string;
+  description?: string | null;
   createdAt?: string;
   channel_type_id?: number;
+  channel_state?: ChannelState | null;
 }
 
 export interface ReactionUser {
@@ -84,16 +85,23 @@ export interface PendingReactionOperation {
 
 export interface ChatStore {
   serverId: number | null;
+  serverName: string | null;
   members: Member[];
   isAdmin: boolean;
   currentUser: Member | null;
   selectedChannelId: number | null;
   selectedChannelTypeId: number | null;
+  selectedChannelName: string | null;
   isLoadingChannel: boolean;
-  setServerId: (id: number) => void;
-  setSelectedChannelId: (id: number | null, typeId?: number | null) => void;
+  setServerId: (id: number, name?: string | null) => void;
+  setSelectedChannelId: (
+    id: number | null,
+    typeId?: number | null,
+    name?: string | null
+  ) => void;
   setChannelLoaded: () => void;
   fetchMembers: () => Promise<void>;
+  resetChat: () => void;
 }
 
 export interface SocketState {
@@ -137,6 +145,7 @@ export interface GeneralChatProps {
 }
 
 export interface ChannelsProps {
+  campaignId: number;
   setChatInfoOpen: (value: boolean | ((prev: boolean) => boolean)) => void;
   setIsOpen?: (value: boolean) => void;
   toggleChatFull: () => void;
@@ -191,7 +200,13 @@ export type ChanelInfoProps = {
 };
 
 export type User = {
-  user: { id: string; email: string };
+  user: {
+    id: number;
+    email?: string | null;
+    first_name?: string | null;
+    last_name?: string | null;
+    company_name?: string | null;
+  };
 };
 
 export type InvitePeopleProps = {
@@ -199,8 +214,11 @@ export type InvitePeopleProps = {
   setSearchTerm: (value: string) => void;
   filteredUsers: User[];
   selectedUsers: User[];
-  selectedIds: string[];
-  toggleUser: (id: string) => void;
+  selectedIds: number[];
+  toggleUser: (id: number) => void;
+  channelId: number;
+  backHref: string;
+  onInvited: () => void;
   isLoading: boolean;
   isError: boolean;
 };
@@ -211,6 +229,7 @@ export type ChanellUpdateSidebarProps = {
   channelId: number;
   chatFull: boolean;
   toggleChatFull: () => void;
+  backHref: string;
 };
 
 export type CreateChanelPopupProps = {

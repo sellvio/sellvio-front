@@ -10,14 +10,14 @@ export const CompanySchema = z.object({
     })
     .max(100, { message: 'კომპანიის სამართლებრივი სახელი ძალიან გრძელია.' }),
   legal_status_id: z
-    .number()
+    .number({ error: 'არ აგირჩევიათ კომპანიის სამართლებრივი სტატუსი' })
+    .int()
     .min(1, {
       message: 'არ აგირჩევიათ კომპანიის სამართლებრივი სტატუსი',
-    })
-    .max(50, { message: 'კომპანიის სამართლებრივი სტატუსი ძალიან გრძელია.' }),
+    }),
   website: z.string().trim().url({ message: 'უნდა იყოს ვალიდური URL.' }),
   business_tags: z
-    .array(z.number().min(1))
+    .array(z.number().min(1), { error: 'მინიმუმ ერთი თეგი უნდა მიუთითო' })
     .min(1, { message: 'მინიმუმ ერთი თეგი უნდა მიუთითო' }),
 });
 

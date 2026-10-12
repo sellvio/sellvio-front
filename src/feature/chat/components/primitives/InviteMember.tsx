@@ -2,33 +2,43 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
-import { ChatMember } from '../../api/chatApi';
+import { ChatInvitableMembers } from '../../api/chatApi';
 import { User } from '../../types';
 import InviteMemberView from './InviteMemberView';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
+import { getUserDisplayName } from '../../utils/getUserDisplayName';
 
-const InviteMember = () => {
+type InviteMemberProps = {
+  channelId: number;
+  backHref: string;
+};
+
+const InviteMember = ({ channelId, backHref }: InviteMemberProps) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const serverId = useChatStore((state) => state.serverId);
 
+  // მხოლოდ ის წევრები, ვინც ამ არხში ჯერ არ არიან
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['member', serverId],
-    queryFn: () => ChatMember(serverId!),
-    enabled: !!serverId,
+    queryKey: ['invitableMembers', serverId, channelId],
+    queryFn: () => ChatInvitableMembers(serverId!, channelId),
+    enabled: !!serverId && !!channelId,
   });
 
-  const users: User[] = data?.data ?? [];
+  const users: User[] = useMemo(() => data?.data ?? [], [data]);
 
   const filteredUsers = useMemo(() => {
-    if (!searchTerm.trim()) return users;
-    return users.filter((u) =>
-      u.user.email.toLowerCase().includes(searchTerm.toLowerCase())
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) return users;
+    return users.filter(
+      (u) =>
+        getUserDisplayName(u).toLowerCase().includes(term) ||
+        (u.user.email ?? '').toLowerCase().includes(term)
     );
   }, [users, searchTerm]);
 
-  const toggleUser = (id: string) => {
+  const toggleUser = (id: number) => {
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
@@ -46,6 +56,9 @@ const InviteMember = () => {
       toggleUser={toggleUser}
       isLoading={isLoading}
       isError={isError}
+      channelId={channelId}
+      backHref={backHref}
+      onInvited={() => setSelectedIds([])}
     />
   );
 };

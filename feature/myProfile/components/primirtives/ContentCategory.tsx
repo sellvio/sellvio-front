@@ -1,46 +1,37 @@
 "use client";
 
-import React, { useState } from "react";
-import { initialTags } from "../../data/data";
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchAllTags } from "@/lib/api/creator";
 
-const ContentCategory = () => {
-  const [tags, setTags] = useState(initialTags);
-  const [selectedTags, setSelectedTags] = useState(new Set());
+type ContentCategoryProps = {
+  selectedIds: number[];
+  isEditing: boolean;
+  onChange: (ids: number[]) => void;
+};
 
-  const handleTagClick = (categoryIndex: number, tagIndex: number) => {
-    const tagKey = `${categoryIndex}-${tagIndex}`;
-    const newSelectedTags = new Set(selectedTags);
+const ContentCategory = ({
+  selectedIds,
+  isEditing,
+  onChange,
+}: ContentCategoryProps) => {
+  const { data: tags = [], isLoading, isError } = useQuery({
+    queryKey: ["allTags"],
+    queryFn: fetchAllTags,
+    staleTime: 5 * 60 * 1000,
+  });
 
-    if (selectedTags.has(tagKey)) {
-      newSelectedTags.delete(tagKey);
-    } else {
-      newSelectedTags.add(tagKey);
-    }
+  const visibleTags = isEditing
+    ? tags
+    : tags.filter((tag) => selectedIds.includes(tag.id));
 
-    setSelectedTags(newSelectedTags);
-  };
-
-  const handleRemoveTag = (
-    e: React.MouseEvent<SVGSVGElement>,
-    categoryIndex: number,
-    tagIndex: number
-  ) => {
-    e.stopPropagation();
-    const updatedTags = tags.map((category, catIdx) => {
-      if (catIdx === categoryIndex) {
-        return {
-          ...category,
-          tags: category.tags.filter((_, idx) => idx !== tagIndex),
-        };
-      }
-      return category;
-    });
-    setTags(updatedTags);
-
-    const tagKey = `${categoryIndex}-${tagIndex}`;
-    const newSelectedTags = new Set(selectedTags);
-    newSelectedTags.delete(tagKey);
-    setSelectedTags(newSelectedTags);
+  const handleTagClick = (id: number) => {
+    if (!isEditing) return;
+    onChange(
+      selectedIds.includes(id)
+        ? selectedIds.filter((tagId) => tagId !== id)
+        : [...selectedIds, id]
+    );
   };
 
   return (
@@ -55,46 +46,50 @@ const ContentCategory = () => {
           აირჩიეთ კატეგორიები რომლებიც შეესაბამება თქვენი კონტენტის სტილს
         </p>
       </div>
-      <div className="mt-6">
-        {tags.map((eachElement, categoryId) => (
-          <div key={categoryId} className="flex flex-wrap gap-3">
-            {eachElement.tags.map((tag, tagIndex) => {
-              const tagKey = `${categoryId}-${tagIndex}`;
-              const isSelected = selectedTags.has(tagKey);
+      <div className="mt-6 flex flex-wrap gap-3">
+        {isLoading && <p>იტვირთება...</p>}
+        {isError && (
+          <p className="text-[#E53935]">კატეგორიების ჩატვირთვა ვერ მოხერხდა</p>
+        )}
+        {!isLoading && !isError && visibleTags.length === 0 && (
+          <p className="text-[var(--campaing-form-paragraphs)]">
+            კატეგორიები არ არის არჩეული
+          </p>
+        )}
+        {visibleTags.map((tag) => {
+          const isSelected = selectedIds.includes(tag.id);
 
-              return (
-                <div
-                  key={tagIndex}
-                  className={`relative px-4 py-2 rounded-lg cursor-pointer transition-all duration-200 flex items-center gap-2 ${
-                    isSelected
-                      ? "bg-[var(--tags-bg)] px-[12px] py-[6px] rounded-[6px]   border-[var(--auth-social-input-border)] border text-[var( --auth-social-input-border)] font-[600] flex items-center gap-2"
-                      : "bg-[var(--white-color)] border "
-                  }`}
-                  onClick={() => handleTagClick(categoryId, tagIndex)}
+          return (
+            <button
+              type="button"
+              key={tag.id}
+              disabled={!isEditing}
+              className={`relative px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 border ${
+                isSelected
+                  ? "bg-[var(--tags-bg)] border-[var(--auth-social-input-border)] font-[600]"
+                  : "bg-[var(--white-color)]"
+              } ${isEditing ? "cursor-pointer" : "cursor-default"}`}
+              onClick={() => handleTagClick(tag.id)}
+            >
+              <span>{tag.name}</span>
+              {isEditing && isSelected && (
+                <svg
+                  className="w-4 h-4 text-[var(--black-color)] ml-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <span>{tag}</span>
-
-                  {isSelected && (
-                    <svg
-                      className="w-4 h-4 text-[var(--black-color)] cursor-pointer ml-1"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      onClick={(e) => handleRemoveTag(e, categoryId, tagIndex)}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        ))}
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              )}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

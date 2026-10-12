@@ -1,14 +1,23 @@
-import { analyticCards } from "../../data/data";
+export type TotalCard = {
+  id: number;
+  title: string;
+  quantity: string;
+};
 
-const AnaliticTotalCards = () => {
+type AnaliticTotalCardsProps = {
+  title: string;
+  cards: TotalCard[];
+};
+
+const AnaliticTotalCards = ({ title, cards }: AnaliticTotalCardsProps) => {
   return (
     <div className="px-[15px] flex flex-col">
-      <h3 className="font-[600] text-[22px] mb-[26px] pl-[11px] ">ანალიტიკა</h3>
+      <h3 className="font-[600] text-[22px] mb-[26px] pl-[11px] ">{title}</h3>
       <div className="max-w-[1440px] w-full flex flex-wrap justify-center gap-[17px]">
-        {analyticCards.map((eachElement) => (
+        {cards.map((eachElement) => (
           <div
             key={eachElement.id}
-            className="w-[334px] h-[107px] bg-[var(--analytic-cards-border)] rounded-[8px] border border-[var(--lending-border))] flex flex-col justify-center px-6 gap-[6px] "
+            className="w-[334px] h-[107px] bg-[var(--analytic-cards-border)] rounded-[8px] border border-[var(--lending-border)] flex flex-col justify-center px-6 gap-[6px] "
           >
             <p className="text-[14px] font-[500]">{eachElement.title}</p>
             <p className=" font-[600]">{eachElement.quantity}</p>

@@ -10,6 +10,7 @@ export const RegistrationStepTwoSchema = z
     email: z
       .string()
       .trim()
+      .toLowerCase()
       .email({ message: 'უნდა იყოს ვალიდური Email მისამართი.' }),
     company_nickName: z
       .string()
@@ -18,10 +19,12 @@ export const RegistrationStepTwoSchema = z
         message: 'კომპანიის Nickname უნდა შეიცავდეს მინიმუმ 2 სიმბოლოს.',
       })
       .max(50, { message: 'კომპანიის Nickname ძალიან გრძელია.' }),
+    // Backend RegisterDto: password must be 12-72 characters
     password: z
       .string()
-      .min(6, { message: 'პაროლი უნდა იყოს მინიმუმ 6 სიმბოლო.' }),
-    repeatPassword: z.string().min(6, { message: 'პაროლები არ ემთხვევა' }),
+      .min(12, { message: 'პაროლი უნდა იყოს მინიმუმ 12 სიმბოლო.' })
+      .max(72, { message: 'პაროლი ძალიან გრძელია.' }),
+    repeatPassword: z.string().min(1, { message: 'გაიმეორეთ პაროლი' }),
   })
   .refine((data) => data.password === data.repeatPassword, {
     message: 'პაროლები არ ემთხვევა',

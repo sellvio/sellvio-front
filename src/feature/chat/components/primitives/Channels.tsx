@@ -3,20 +3,18 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { ChatFromCampaing } from '../../api/chatApi';
 import { ChannelsProps, ChatChannel } from '@/feature/chat/types';
 import ChannelSkeleton from './ChannelSkeleton';
 import ChannelHeaderSkeleton from './ChannelHeaderSkeleton';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
 import { useSocketStore } from '@/feature/common/stores/useSocketStore';
-
-const CAMPAIGN_ID = 44;
+import { useChatServer } from '@/feature/chat/hooks/useChatServer';
 
 const truncate = (text: string, max: number) =>
   text.length > max ? `${text.slice(0, max)}...` : text;
 
 const Channels = ({
+  campaignId,
   setChatInfoOpen,
   setIsOpen,
   toggleChatFull,
@@ -37,7 +35,6 @@ const Channels = ({
     setSelectedChannelId,
     selectedChannelId,
     currentUser,
-    setServerId,
     serverId,
   } = useChatStore();
 
@@ -46,14 +43,7 @@ const Channels = ({
     if (token) connect(token);
   }, [connect]);
 
-  const { isLoading, isError, data } = useQuery({
-    queryKey: ['channelName', CAMPAIGN_ID],
-    queryFn: () => ChatFromCampaing(CAMPAIGN_ID),
-  });
-
-  useEffect(() => {
-    if (data?.data?.id) setServerId(data.data.id);
-  }, [data, setServerId]);
+  const { isLoading, isError, server, channels } = useChatServer(campaignId);
 
   useEffect(() => {
     if (socket && isConnected && serverId) {
@@ -64,8 +54,6 @@ const Channels = ({
   useEffect(() => {
     if (serverId) fetchMembers();
   }, [serverId, fetchMembers]);
-
-  const channels: ChatChannel[] = data?.data?.chat_channels ?? [];
 
   const handleChannelSelect = (ch: ChatChannel) => {
     if (!serverId || !socket || !isConnected) return;
@@ -78,7 +66,7 @@ const Channels = ({
     }
 
     clearMessages();
-    setSelectedChannelId(ch.id, ch.channel_type_id ?? null);
+    setSelectedChannelId(ch.id, ch.channel_type_id ?? null, ch.name);
     joinChannel(serverId, ch.id, ch.channel_type_id ?? undefined);
   };
 
@@ -100,7 +88,7 @@ const Channels = ({
               height={21}
             />
           </button>
-          <p>{data?.data?.name && truncate(data.data.name, 20)}</p>
+          <p>{server?.name && truncate(server.name, 20)}</p>
           {isAdmin && (
             <button onClick={() => setChatInfoOpen((prev) => !prev)}>
               <Image
@@ -136,7 +124,11 @@ const Channels = ({
           <ChannelSkeleton />
         ) : isError ? (
           <div className="px-2 py-3 text-white/70 text-sm">
-            ასეთი ჩენელი არ არსებობს
+            ჩატი ვერ მოიძებნა ან მასზე წვდომა არ გაქვს
+          </div>
+        ) : channels.length === 0 ? (
+          <div className="px-2 py-3 text-white/70 text-sm">
+            არხები ჯერ არ არის
           </div>
         ) : (
           channels.map((ch) => (
@@ -161,7 +153,7 @@ const Channels = ({
 
               {isAdmin && (
                 <Link
-                  href={`updateChat/${ch.id}`}
+                  href={`/updateChat/${ch.id}?campaignId=${campaignId}`}
                   className="opacity-0 group-hover:opacity-100"
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -184,7 +176,9 @@ const Channels = ({
           <p className="max-w-[150px] font-semibold text-[15px] text-white truncate">
             {currentUser?.name ?? 'მომხმარებელი'}
           </p>
-          <p className="font-semibold text-[12px] text-white/70">ონლაინ</p>
+          <p className="font-semibold text-[12px] text-white/70">
+            {isConnected ? 'ონლაინ' : 'კავშირი არ არის'}
+          </p>
         </div>
       </div>
     </div>

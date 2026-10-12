@@ -22,7 +22,7 @@ import Link from 'next/link';
 const BusinessRegistration = () => {
   const router = useRouter();
   const { registrationType, handleChangeType } =
-    useRegistrationType('/registration');
+    useRegistrationType('business');
   const [currentStep, setCurrentStep] = useState<1 | 2>(1);
   const [stepOneData, setStepOneData] = useState<CompanyValues | null>(null);
 
@@ -46,17 +46,21 @@ const BusinessRegistration = () => {
   const { mutateAsync, isPending } = useMutation({
     mutationFn: (payload: BusinessRegisterBody) => registerUser(payload),
     onSuccess: () => {
-      toast.success('რეგისტრაცია წარმატებით დასრულდა');
-      router.push('/');
+      // Clear persisted step-one inputs so the next registration starts empty
+      sessionStorage.removeItem('tags_business_tags');
+      sessionStorage.removeItem('enum_legal_status_id');
+      toast.success(
+        'რეგისტრაცია წარმატებით დასრულდა. ვერიფიკაციის ბმული გამოგზავნილია ემაილზე'
+      );
+      // Register returns tokens, so the user is already logged in
+      router.replace('/buisnessDashboard');
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast.error(error.message || 'რეგისტრაციის შეცდომა');
-      console.error('Registration error:', error);
     },
   });
 
   const onSubmitBusiness = (data: CompanyValues) => {
-    console.log('Step 1 data:', data);
     setStepOneData(data);
     setCurrentStep(2);
   };
@@ -77,16 +81,14 @@ const BusinessRegistration = () => {
       legal_status_id: stepOneData.legal_status_id,
       website_url: stepOneData.website,
       business_email: data.email,
-      phone: data.phone || '',
+      phone: data.phone.replace(/\s/g, ''),
       business_tags: stepOneData.business_tags || [],
     };
 
-    console.log('Final payload:', payload);
-
     try {
       await mutateAsync(payload);
-    } catch (error) {
-      console.error('Submission error:', error);
+    } catch {
+      // handled in onError
     }
   };
 

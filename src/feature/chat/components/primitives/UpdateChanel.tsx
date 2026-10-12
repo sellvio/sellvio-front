@@ -1,7 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { useMutation } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -10,21 +11,34 @@ import { updateChanel, updateChanelValue } from '../../schema/updateChanel';
 import { useChatLayout } from '@/feature/common/stores/useChatLayout';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
 import { updateChannel } from '../../api/chatApi';
+import { ChatChannel } from '../../types';
+import { CHAT_SERVER_QUERY_KEY } from '../../hooks/useChatServer';
 
 type UpdateChanelProps = {
   channelId: number;
+  channel: ChatChannel | null;
+  backHref: string;
 };
 
-const UpdateChanel = ({ channelId }: UpdateChanelProps) => {
+const UpdateChanel = ({ channelId, channel, backHref }: UpdateChanelProps) => {
+  const queryClient = useQueryClient();
   const serverId = useChatStore((state) => state.serverId);
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<updateChanelValue>({
     resolver: zodResolver(updateChanel),
   });
+
+  // ფორმას ვავსებთ არხის მიმდინარე მონაცემებით
+  useEffect(() => {
+    if (channel) {
+      reset({ name: channel.name, description: channel.description ?? '' });
+    }
+  }, [channel, reset]);
 
   const { mutate, isPending } = useMutation({
     mutationFn: (data: updateChanelValue) => {
@@ -32,10 +46,11 @@ const UpdateChanel = ({ channelId }: UpdateChanelProps) => {
       return updateChannel(serverId, channelId, data);
     },
     onSuccess: () => {
-      toast.success('Channel updated successfully');
+      toast.success('არხი წარმატებით განახლდა');
+      queryClient.invalidateQueries({ queryKey: [CHAT_SERVER_QUERY_KEY] });
     },
     onError: () => {
-      toast.error('Channel update failed');
+      toast.error('არხის განახლება ვერ მოხერხდა');
     },
   });
 
@@ -55,7 +70,7 @@ const UpdateChanel = ({ channelId }: UpdateChanelProps) => {
             არხის ინფორმაცია
           </p>
 
-          <Link href={'/chat'} className="cursor-pointer">
+          <Link href={backHref} className="cursor-pointer">
             <Image
               src="/images/chatIcons/svg/closeButton.svg"
               alt="close"

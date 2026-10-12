@@ -5,14 +5,14 @@ export const SocialMediaSliderData = [
   },
   {
     id: 2,
-    socialMedia: 'TikTok',
+    socialMedia: 'მოთხოვნები',
   },
   {
     id: 3,
-    socialMedia: 'Instagram',
+    socialMedia: 'მასალები',
   },
   {
     id: 4,
-    socialMedia: 'Facebook',
+    socialMedia: 'ვიდეოები',
   },
 ];

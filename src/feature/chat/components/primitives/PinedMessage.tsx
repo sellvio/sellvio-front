@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { useMemo } from 'react';
 import { Loader2 } from 'lucide-react';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
@@ -78,7 +77,7 @@ const PinedMessage = () => {
                       <p className="font-[400] text-[#FFFFFFAD] text-[15px] break-words">
                         {message.content ||
                           message.videoTitle ||
-                          'Pinned message'}
+                          'აპინული შეტყობინება'}
                       </p>
                     </div>
                   </div>
@@ -93,10 +92,10 @@ const PinedMessage = () => {
                       {isPinLoading ? (
                         <>
                           <Loader2 className="w-3 h-3 animate-spin" />
-                          Loading
+                          იტვირთება
                         </>
                       ) : (
-                        'Unpin'
+                        'პინის მოხსნა'
                       )}
                     </button>
                   )}

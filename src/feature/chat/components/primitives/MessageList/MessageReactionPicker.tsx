@@ -139,8 +139,8 @@ export const MessageReactionPicker = ({
       setTimeout(() => {
         onClose();
       }, 800);
-    } catch (error) {
-      console.error('Copy failed:', error);
+    } catch {
+      //
     }
   };
 
@@ -278,7 +278,7 @@ export const MessageReactionPicker = ({
             >
               <p className="font-semibold text-[13px]">პასუხი</p>
               <Image
-                src="/images/messageIcons/svg/reply.svg"
+                src="/images/messageIcons/svg/Reply.svg"
                 alt="reply"
                 width={17}
                 height={17}

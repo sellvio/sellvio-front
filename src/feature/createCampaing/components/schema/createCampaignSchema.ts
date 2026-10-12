@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const campaignStatusEnum = z.enum(['draft', 'active', 'completed']);
+const campaignStatusEnum = z.enum(['draft', 'active']);
 const chatTypeEnum = z.enum(['public', 'private']);
 const creatorTypeEnum = z.enum([
   'beginner',
@@ -9,129 +9,159 @@ const creatorTypeEnum = z.enum([
   'clipper',
 ]);
 
-// ✅ შესწორება #4: revenue_share → cost_per_click (Swagger business rules: CPV, CPC, fixed)
-const paymentTypeEnum = z.enum([
-  'cost_per_view',
-  'cost_per_click',
-  'cost_per_engagement',
-  'cost_per_reach',
-]);
+// Matches the backend `payment_type` enum (prisma schema / swagger)
+const paymentTypeEnum = z.enum(
+  ['cost_per_view', 'cost_per_click', 'cost_per_engagement', 'cost_per_reach'],
+  { error: 'აირჩიეთ შეთავაზების ტიპი' }
+);
 const socialPlatformEnum = z.enum(['instagram', 'tiktok', 'facebook']);
 const campaignAssetTypeEnum = z.enum(['link', 'image', 'video', 'file']);
 
-export const trimmedString = (field: string, max = 255) =>
+const hasMaxTwoDecimals = (value: number) =>
+  Math.abs(Math.round(value * 100) - value * 100) < 1e-6;
+
+export const trimmedString = (field: string, max = 255, min = 1) =>
   z
-    .string({
-      error: (issue) =>
-        issue.input === undefined
-          ? `${field} is required`
-          : `${field} must be a string`,
-    })
+    .string({ error: `${field} სავალდებულოა` })
     .trim()
-    .min(1, { error: `${field} is required` })
-    .max(max, { error: `${field} must be less than ${max} characters` });
+    .min(1, { error: `${field} სავალდებულოა` })
+    .min(min, { error: `${field} უნდა შეიცავდეს მინიმუმ ${min} სიმბოლოს` })
+    .max(max, {
+      error: `${field} არ უნდა აღემატებოდეს ${max} სიმბოლოს`,
+    });
+
+// Empty inputs become `undefined` so the user sees "required" instead of "> 0"
+const toNumber = (value: unknown) =>
+  value === '' || value === null || value === undefined
+    ? undefined
+    : Number(value);
+
+const numberField = (field: string) =>
+  z.number({
+    error: (issue) =>
+      issue.input === undefined
+        ? `${field} სავალდებულოა`
+        : `${field} უნდა იყოს რიცხვი`,
+  });
 
 export const createCampaignSchema = z.object({
-  name: trimmedString('Name', 255),
+  name: trimmedString('კამპანიის სახელი', 255, 3),
 
   description: z
     .string()
     .trim()
-    .max(5000, { error: 'Description must be less than 5000 characters' })
+    .max(5000, { error: 'აღწერა არ უნდა აღემატებოდეს 5000 სიმბოლოს' })
     .optional()
     .default(''),
 
-  budget: z.coerce
-    .number()
-    .positive({ error: 'Budget must be greater than 0' }),
+  budget: z.preprocess(
+    toNumber,
+    numberField('ბიუჯეტი')
+      .min(0.01, { error: 'ბიუჯეტი უნდა იყოს 0-ზე მეტი' })
+      .refine(hasMaxTwoDecimals, {
+        error: 'ბიუჯეტი შეიძლება შეიცავდეს მაქსიმუმ 2 ათწილადს',
+      })
+  ),
 
   budget_hidden: z.boolean().default(false),
 
-  duration_days: z.coerce
-    .number()
-    .int({ error: 'Duration days must be an integer' })
-    .positive({ error: 'Duration days must be greater than 0' }),
+  duration_days: z.preprocess(
+    toNumber,
+    numberField('ხანგრძლივობა')
+      .int({ error: 'ხანგრძლივობა უნდა იყოს მთელი რიცხვი' })
+      .min(1, { error: 'ხანგრძლივობა უნდა იყოს მინიმუმ 1 დღე' })
+  ),
 
-  // ✅ შესწორება #3: default 'active' → 'draft'
-  status: campaignStatusEnum.default('draft'),
+  status: campaignStatusEnum.default('active'),
 
   chat_type: chatTypeEnum.default('public'),
 
   target_creator_types: z
-    .array(creatorTypeEnum)
-    .min(1, { error: 'At least one target creator type is required' }),
+    .array(creatorTypeEnum, { error: 'აირჩიეთ მინიმუმ ერთი შემქმნელის ტიპი' })
+    .min(1, { error: 'აირჩიეთ მინიმუმ ერთი შემქმნელის ტიპი' }),
 
   additional_requirements: z
     .string()
     .trim()
     .max(5000, {
-      error: 'Additional requirements must be less than 5000 characters',
+      error: 'დამატებითი მოთხოვნები არ უნდა აღემატებოდეს 5000 სიმბოლოს',
     })
     .nullable()
     .optional(),
 
   payment_type: paymentTypeEnum,
 
-  payment_amount: z.coerce
-    .number()
-    .positive({ error: 'Payment amount must be greater than 0' }),
+  payment_amount: z.preprocess(
+    toNumber,
+    numberField('ფასი')
+      .min(0.01, { error: 'ფასი უნდა იყოს 0-ზე მეტი' })
+      .refine(hasMaxTwoDecimals, {
+        error: 'ფასი შეიძლება შეიცავდეს მაქსიმუმ 2 ათწილადს',
+      })
+  ),
 
-  payment_per_quantity: z.coerce
-    .number()
-    .int({ error: 'Payment per quantity must be an integer' })
-    .positive({ error: 'Payment per quantity must be greater than 0' }),
+  payment_per_quantity: z.preprocess(
+    toNumber,
+    numberField('მოცულობა')
+      .int({ error: 'მოცულობა უნდა იყოს მთელი რიცხვი' })
+      .min(1, { error: 'მოცულობა უნდა იყოს 0-ზე მეტი' })
+  ),
 
   requirements: z
-    .string({
-      error: (issue) =>
-        issue.input === undefined
-          ? 'Requirements is required'
-          : 'Requirements must be a string',
-    })
+    .string({ error: 'კამპანიის მოთხოვნები სავალდებულოა' })
     .trim()
-    .min(10, { error: 'Requirements must be at least 10 characters' })
-    .max(5000, { error: 'Requirements must be less than 5000 characters' }),
+    .min(10, {
+      error: 'კამპანიის მოთხოვნები უნდა შეიცავდეს მინიმუმ 10 სიმბოლოს',
+    })
+    .max(5000, {
+      error: 'კამპანიის მოთხოვნები არ უნდა აღემატებოდეს 5000 სიმბოლოს',
+    }),
 
   target_audience: z
     .string()
     .trim()
-    .max(1000, { error: 'Target audience must be less than 1000 characters' })
+    .max(1000, {
+      error: 'სამიზნე აუდიტორია არ უნდა აღემატებოდეს 1000 სიმბოლოს',
+    })
     .nullable()
     .optional(),
 
-  // ✅ შესწორება #1: string().url() → z.instanceof(File) — Swagger: string($binary)
+  // Sent as a multipart file; the backend uploads it and stores the URL
   campaign_image_url: z.instanceof(File).nullable().optional(),
 
   platforms: z
-    .array(socialPlatformEnum)
-    .min(1, { error: 'At least one platform is required' }),
+    .array(socialPlatformEnum, { error: 'აირჩიეთ მინიმუმ ერთი პლატფორმა' })
+    .min(1, { error: 'აირჩიეთ მინიმუმ ერთი პლატფორმა' }),
 
   tags: z
     .array(
       z
         .string()
         .trim()
-        .min(1, { error: 'Tag is required' })
-        .max(100, { error: 'Tag must be less than 100 characters' })
+        .min(1, { error: 'თეგი არ შეიძლება იყოს ცარიელი' })
+        .max(100, { error: 'თეგი არ უნდა აღემატებოდეს 100 სიმბოლოს' })
     )
     .default([]),
 
   media: z
     .array(
       z.object({
-        name: trimmedString('Media name', 255),
+        name: trimmedString('მედიის სახელი', 255),
         url: z
           .string()
           .trim()
-          .url({ error: 'Media URL must be valid' })
-          .max(500, { error: 'Media URL must be less than 500 characters' }),
+          .url({ error: 'მედიის ბმული არასწორია' })
+          .max(500, { error: 'მედიის ბმული ძალიან გრძელია' }),
         type: campaignAssetTypeEnum,
       })
     )
     .default([]),
 
-  // ✅ შესწორება #2: array of objects → array of File — Swagger: array<string>($binary)
-  asset_files: z.array(z.instanceof(File)).default([]),
+  // Sent as multiple multipart file parts under `asset_files`
+  asset_files: z
+    .array(z.instanceof(File))
+    .max(10, { error: 'შეგიძლიათ მაქსიმუმ 10 ფაილის ატვირთვა' })
+    .default([]),
 });
 
 export type CreateCampaignSchemaType = z.infer<typeof createCampaignSchema>;

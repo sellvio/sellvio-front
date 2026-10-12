@@ -1,68 +1,19 @@
-export const analyticCards = [
-  { id: 1, title: "ჯამური კამპანიები", quantity: 8 },
-  { id: 2, title: "ჯამური ბიუჯეტი", quantity: "$10,000" },
-  { id: 3, title: "ჯამური ნახვა", quantity: "282,921" },
-  { id: 4, title: "ჯამური გასავალი", quantity: "$5,621" },
+import { PlatformName } from "@/lib/api/analytics";
+
+// Static card configuration; numbers come from the analytics API
+export const platformPerformance: {
+  id: number;
+  platform: PlatformName;
+  title: string;
+}[] = [
+  { id: 1, platform: "tiktok", title: "TikTok" },
+  { id: 2, platform: "instagram", title: "Instagram" },
+  { id: 3, platform: "facebook", title: "Facebook" },
 ];
-export const platformPerformance = [
-  {
-    id: 1,
-    title: "Tik Tok",
-    views: 45000,
-    earns: 4.5,
-    likes: 45000,
-    shares: 45000,
-    viewerIcon: "/images/performanceCardIcons/svg/performanceEye.svg",
-    likeIcon: "/images/performanceCardIcons/svg/likeIcon.svg",
-    shareIcon: "/images/performanceCardIcons/svg/share.svg",
-    percent: "/images/performanceCardIcons/svg/percent.svg",
-    quantity: "45,000",
-    view: "ნახვები",
-    like: "ლაიქები",
-    share: "გაზიარება",
-    earn: "გამომუშავება",
-    favoriteVideo: "საუკეთესო ვიდეო",
-    videoname: "ვიდეოს სახელწოდება",
-    videoView: "15,000 ნახვა",
-  },
-  {
-    id: 2,
-    title: "instagram",
-    views: 45000,
-    earns: 4.5,
-    likes: 45000,
-    shares: 45000,
-    viewerIcon: "/images/performanceCardIcons/svg/performanceEye.svg",
-    likeIcon: "/images/performanceCardIcons/svg/likeIcon.svg",
-    shareIcon: "/images/performanceCardIcons/svg/share.svg",
-    percent: "/images/performanceCardIcons/svg/percent.svg",
-    quantity: "45,000",
-    view: "ნახვები",
-    like: "ლაიქები",
-    share: "გაზიარება",
-    earn: "გამომუშავება",
-    favoriteVideo: "საუკეთესო ვიდეო",
-    videoname: "ვიდეოს სახელწოდება",
-    videoView: "15,000 ნახვა",
-  },
-  {
-    id: 3,
-    title: "facebook",
-    views: 45000,
-    earns: 4.5,
-    likes: 45000,
-    shares: 45000,
-    viewerIcon: "/images/performanceCardIcons/svg/performanceEye.svg",
-    likeIcon: "/images/performanceCardIcons/svg/likeIcon.svg",
-    shareIcon: "/images/performanceCardIcons/svg/share.svg",
-    percent: "/images/performanceCardIcons/svg/percent.svg",
-    quantity: "45,000",
-    view: "ნახვები",
-    like: "ლაიქები",
-    share: "გაზიარება",
-    earn: "გამომუშავება",
-    favoriteVideo: "საუკეთესო ვიდეო",
-    videoname: "ვიდეოს სახელწოდება",
-    videoView: "15,000 ნახვა",
-  },
-];
+
+export const performanceIcons = {
+  viewerIcon: "/images/performanceCardIcons/svg/performanceEye.svg",
+  likeIcon: "/images/performanceCardIcons/svg/likeIcon.svg",
+  shareIcon: "/images/performanceCardIcons/svg/share.svg",
+  percent: "/images/performanceCardIcons/svg/percent.svg",
+};

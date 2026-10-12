@@ -71,6 +71,10 @@ const CompanyDetails = ({
             </label>
             <div className="flex gap-3">
               <input
+                type="number"
+                min={1}
+                step={1}
+                placeholder="მაგ: 30"
                 {...register('duration_days')}
                 className="bg-[#eff4f9] px-5 py-4 border-none rounded-xl outline-none focus:ring-[#0040e0] focus:ring-2 w-full font-bold text-[#171c20] transition-all appearance-none"
               />

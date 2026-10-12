@@ -9,6 +9,19 @@ const getHeaders = () => {
   };
 };
 
+const parseResponse = async (res: Response) => {
+  const body = await res.json().catch(() => null);
+  if (!res.ok) {
+    const message = body?.message;
+    throw new Error(
+      Array.isArray(message)
+        ? message.join(', ')
+        : message || `HTTP error! status: ${res.status}`
+    );
+  }
+  return body;
+};
+
 const getAuthHeader = () => {
   const token =
     typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
@@ -36,6 +49,20 @@ export const ChatMember = async (serverId: number) => {
   return res.json();
 };
 
+export const ChatInvitableMembers = async (
+  serverId: number,
+  channelId: number
+) => {
+  const res = await fetch(
+    `${baseUrl}/chat-servers/${serverId}/channels/${channelId}/invitable-members`,
+    {
+      headers: getHeaders(),
+      cache: 'no-store',
+    }
+  );
+  return parseResponse(res);
+};
+
 export const UploadVideoApi = async ({
   file,
   serverId,
@@ -59,11 +86,7 @@ export const UploadVideoApi = async ({
     }
   );
 
-  if (!res.ok) {
-    throw new Error('Upload failed');
-  }
-
-  return res.json();
+  return parseResponse(res);
 };
 
 export async function addChanel(serverId: number, data: any) {
@@ -72,7 +95,7 @@ export async function addChanel(serverId: number, data: any) {
     headers: getHeaders(),
     body: JSON.stringify(data),
   });
-  return res.json();
+  return parseResponse(res);
 }
 
 export async function addMember(
@@ -88,7 +111,7 @@ export async function addMember(
       body: JSON.stringify(data),
     }
   );
-  return res.json();
+  return parseResponse(res);
 }
 
 export async function updateChannel(
@@ -104,7 +127,7 @@ export async function updateChannel(
       body: JSON.stringify(data),
     }
   );
-  return res.json();
+  return parseResponse(res);
 }
 
 export async function deleteChannel(serverId: number, channelId: number) {
@@ -115,5 +138,5 @@ export async function deleteChannel(serverId: number, channelId: number) {
       headers: getHeaders(),
     }
   );
-  return res.ok;
+  return parseResponse(res);
 }

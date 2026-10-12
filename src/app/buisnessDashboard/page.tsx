@@ -1,10 +1,13 @@
 import Landing from "../../../feature/buisnessDashboard/components/composite/Landing";
+import RequireUserType from "../../../feature/components/RequireUserType";
 
 const BuisnessDashboard = () => {
   return (
-    <div>
-      <Landing />
-    </div>
+    <RequireUserType userType="business">
+      <div>
+        <Landing />
+      </div>
+    </RequireUserType>
   );
 };
 

@@ -52,6 +52,17 @@ const EnumSelectInput: React.FC<EnumSelectInputPropsExtended> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Restore the form value from the persisted search term once options load
+  useEffect(() => {
+    if (!setValue || !searchTerm) return;
+    const match = enumOptions.find((opt) => opt.name_ka === searchTerm);
+    if (match) {
+      setSelectedValue(match.name_ka);
+      setValue(name, match.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enumOptions]);
+
   const handleOptionClick = (option: LegalStatusOption) => {
     setSelectedValue(option.name_ka);
     setSearchTerm(option.name_ka);
@@ -69,9 +80,13 @@ const EnumSelectInput: React.FC<EnumSelectInputPropsExtended> = ({
     setIsOpen(true);
 
     const exactMatch = enumOptions.find((opt) => opt.name_ka === value);
-    if (setValue && exactMatch) {
-      setValue(name, exactMatch.id, { shouldValidate: true });
+    if (setValue) {
+      // Typed text that doesn't match an option must not keep a stale id
+      setValue(name, exactMatch ? exactMatch.id : undefined, {
+        shouldValidate: true,
+      });
     }
+    setSelectedValue(exactMatch ? exactMatch.name_ka : '');
   };
 
   const handleInputFocus = () => {
@@ -91,8 +106,9 @@ const EnumSelectInput: React.FC<EnumSelectInputPropsExtended> = ({
 
       <div className="w-full">
         <div className="relative">
+          {/* The id is stored via setValue; the visible input only holds the search text */}
+          <input type="hidden" {...register(name)} />
           <input
-            {...register(name)}
             type="text"
             id={name}
             value={searchTerm}

@@ -5,7 +5,7 @@ const CreatorVideo = () => {
   return (
     <div>
       <CreatorAnalityc />
-      <VideoCards />
+      <VideoCards defaultTab="campaing" />
     </div>
   );
 };

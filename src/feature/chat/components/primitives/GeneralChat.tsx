@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, JSX, memo } from 'react';
-import { channelsData, newChannelsData } from '../../data/chatData';
+import { newChannelsData } from '../../data/chatData';
 import Member from './Member';
 import PinedMessage from './PinedMessage';
 import { GeneralChatProps, Message } from '@/feature/chat/types';
@@ -19,8 +19,8 @@ const TAB_CONTENT: Record<string, JSX.Element> = {
   profile: <Member />,
   'frame-128760': <PinedMessage />,
   notification: (
-    <div className="flex justify-center items-center h-full text-white">
-      <h2 className="mb-2 font-semibold text-xl">Notifications</h2>
+    <div className="flex justify-center items-center w-full max-w-[304px] h-full text-white/60 text-sm">
+      შეტყობინებები ჯერ არ არის
     </div>
   ),
 };
@@ -31,9 +31,9 @@ const GeneralChat = memo(({ chatFull }: GeneralChatProps) => {
   const [replyMessage, setReplyMessage] = useState<Message | null>(null);
 
   const isAdmin = useChatStore((s) => s.isAdmin);
-  const fetchMembers = useChatStore((s) => s.fetchMembers);
   const selectedChannelId = useChatStore((s) => s.selectedChannelId);
   const selectedChannelTypeId = useChatStore((s) => s.selectedChannelTypeId);
+  const selectedChannelName = useChatStore((s) => s.selectedChannelName);
   const isLoadingChannel = useChatStore((s) => s.isLoadingChannel);
   const setChannelLoaded = useChatStore((s) => s.setChannelLoaded);
 
@@ -57,9 +57,10 @@ const GeneralChat = memo(({ chatFull }: GeneralChatProps) => {
     messages,
   });
 
+  // არხის შეცვლისას reply-ს ვასუფთავებთ
   useEffect(() => {
-    fetchMembers();
-  }, [fetchMembers]);
+    setReplyMessage(null);
+  }, [selectedChannelId]);
 
   useEffect(() => {
     if (!isLoadingMessages && isLoadingChannel) setChannelLoaded();
@@ -89,9 +90,6 @@ const GeneralChat = memo(({ chatFull }: GeneralChatProps) => {
     scrollToBottom();
   };
 
-  const generalChannel = channelsData[0]?.channels.find(
-    (ch) => ch.id === 'general-chat'
-  );
   const visibleChannels = newChannelsData.filter(
     (item) => !item.isAdmin || isAdmin
   );
@@ -113,8 +111,8 @@ const GeneralChat = memo(({ chatFull }: GeneralChatProps) => {
       className={`flex flex-col bg-[#001541D6] w-full ${chatFull ? '' : 'max-w-[1440px]'} h-screen`}
     >
       <ChatHeader
-        channelTitle={generalChannel?.title || 'Chat'}
-        channelImage={generalChannel?.image || ''}
+        channelTitle={selectedChannelName || 'აირჩიეთ არხი'}
+        channelImage="/images/chatIcons/svg/hashtag.svg"
         visibleChannels={visibleChannels}
         activeTab={activeTab}
         onTabClick={(id) => setActiveTab(activeTab === id ? null : id)}
@@ -149,7 +147,7 @@ const GeneralChat = memo(({ chatFull }: GeneralChatProps) => {
                   `User ${replyMessage.senderId}`}
                 -ს
               </p> */}
-              <p className="text-[#FFFFFF80] text-[15px]">Replying to</p>
+              <p className="text-[#FFFFFF80] text-[15px]">პასუხი:</p>
               <p className="font-bold text-[#FFFFFF80] text-[15px]">
                 {replyMessage.content}
               </p>

@@ -1,10 +1,13 @@
 import CreatorVideo from "../../../feature/creatodVideos/components/composites/CreatorVideo";
+import RequireUserType from "../../../feature/components/RequireUserType";
 
 const CreatorVideoPage = () => {
   return (
-    <div>
-      <CreatorVideo />
-    </div>
+    <RequireUserType userType="creator">
+      <div>
+        <CreatorVideo />
+      </div>
+    </RequireUserType>
   );
 };
 

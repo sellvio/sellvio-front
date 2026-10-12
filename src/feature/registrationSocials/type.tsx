@@ -4,10 +4,12 @@ import {
   UseFormRegister,
   UseFormSetValue,
 } from 'react-hook-form';
-import { RegistrationValues } from '../schema/registrationSchema';
+import {
+  CreatorStepTwoValues,
+  RegistrationValues,
+} from '../schema/registrationSchema';
 import { CompanyValues } from '../schema/companySchema';
 import { RegistrationStepTwoValues } from '../schema/businessRegistrationSchemaStepTwo';
-import { FormValues } from '../schema/authorisationSchema';
 
 export type TagInputProps<T extends Record<string, unknown>> = {
   name: Path<T>;
@@ -22,8 +24,8 @@ export type RegistrationFormProps = {
 };
 
 export type RegistrationFormStepTwo = {
-  register: UseFormRegister<FormValues>;
-  errors: FieldErrors<FormValues>;
+  register: UseFormRegister<CreatorStepTwoValues>;
+  errors: FieldErrors<CreatorStepTwoValues>;
 };
 
 export type CompanyFormProps = {

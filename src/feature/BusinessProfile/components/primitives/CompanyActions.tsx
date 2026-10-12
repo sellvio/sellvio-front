@@ -2,7 +2,7 @@ import React from 'react';
 
 type Props = {
   isPending: boolean;
-  setChangeProfile: (v: boolean) => void;
+  setPopupVisible: (v: boolean) => void;
 };
 
 const CompanyActions: React.FC<Props> = ({ isPending, setPopupVisible }) => {

@@ -1,28 +1,92 @@
 'use client';
 import Image from 'next/image';
-import { useState, useRef } from 'react';
-import { BusinessProfilePictureProps } from '../../type';
-import { useQuery } from '@tanstack/react-query';
-import { businessProfileData } from '@/lib/api/businessProfileData';
+import { useEffect, useRef, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
+import { BusinessProfilePictureProps, BusinessProfileResponse } from '../../type';
+import {
+  businessProfileData,
+  uploadProfileImages,
+} from '@/lib/api/businessProfileData';
 import BusinessProfilePictureSkeleton from './BusinessProfilePictureSkeleton';
+
+const ALLOWED_IMAGE_TYPES = [
+  'image/png',
+  'image/jpeg',
+  'image/jpg',
+  'image/webp',
+  'image/gif',
+];
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // backend limit: 10MB
+
+const DEFAULT_COVER = 'linear-gradient(0deg, #3012B3 0%, #7B62E8 100%)';
+const DEFAULT_LOGO = '/images/businessIcons/png/defaultUserProfile.png';
+
+const validateImage = (file: File) => {
+  if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+    toast.error('დასაშვებია მხოლოდ PNG, JPG, WEBP ან GIF ფორმატის სურათი');
+    return false;
+  }
+  if (file.size > MAX_IMAGE_SIZE) {
+    toast.error('სურათის ზომა არ უნდა აღემატებოდეს 10MB-ს');
+    return false;
+  }
+  return true;
+};
 
 const BusinessProfilePicture = ({
   setChangeProfile,
   changeProfile,
-  onLogoChange,
-  onCoverChange,
-  isUploading,
 }: BusinessProfilePictureProps) => {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
   const logoInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError } = useQuery<BusinessProfileResponse>({
     queryKey: ['businessProfile'],
     queryFn: businessProfileData,
   });
   const profile = data?.data?.business_profiles;
+
+  // Release object URLs created for previews
+  useEffect(() => {
+    return () => {
+      if (logoPreview) URL.revokeObjectURL(logoPreview);
+    };
+  }, [logoPreview]);
+
+  useEffect(() => {
+    return () => {
+      if (coverPreview) URL.revokeObjectURL(coverPreview);
+    };
+  }, [coverPreview]);
+
+  const uploadMutation = useMutation({
+    mutationFn: uploadProfileImages,
+    onSuccess: async (_data, variables) => {
+      await queryClient.invalidateQueries({ queryKey: ['businessProfile'] });
+      if (variables.logo) setLogoPreview(null);
+      if (variables.coverImage) setCoverPreview(null);
+      toast.success('ფოტო წარმატებით განახლდა');
+    },
+    onError: (error: Error, variables) => {
+      if (variables.logo) setLogoPreview(null);
+      if (variables.coverImage) setCoverPreview(null);
+      toast.error(`ფოტოს ატვირთვა ვერ მოხერხდა: ${error.message}`);
+    },
+  });
+
+  const isUploading = uploadMutation.isPending;
+
+  const joinedDate = data?.data?.created_at
+    ? new Date(data.data.created_at).toLocaleDateString('ka-GE', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      })
+    : '';
 
   const tags = [
     {
@@ -34,82 +98,47 @@ const BusinessProfilePicture = ({
     {
       id: 2,
       tagsIcon: '/images/businessProfileIcon/svg/calendar.svg',
-      tags: data?.timestamp
-        ? new Date(data.timestamp).toLocaleDateString('en-GB', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-          })
-        : '',
+      tags: joinedDate,
       tagsName: 'შეუერთდა: ',
     },
     {
       id: 3,
       tagsIcon: '/images/businessProfileIcon/svg/users.svg',
-      tags: profile?.business_industry_name,
+      tags: profile?.business_employee_range,
       tagsName: 'დასაქმებულია ',
     },
-  ];
+  ].filter((tag) => Boolean(tag.tags));
 
-  const handleLogoClick = () => {
-    if (changeProfile && logoInputRef.current) {
-      logoInputRef.current.click();
+  const openFilePicker = (input: HTMLInputElement | null) => {
+    if (changeProfile && !isUploading && input) {
+      input.value = '';
+      input.click();
     }
   };
 
-  const handleCoverClick = () => {
-    if (changeProfile && coverInputRef.current) {
-      coverInputRef.current.click();
-    }
-  };
+  const handleFileChange =
+    (kind: 'logo' | 'cover') => (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file || !validateImage(file)) return;
 
-  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // შევამოწმოთ ფაილის ტიპი
-      if (!file.type.startsWith('image/')) {
-        alert('გთხოვთ აირჩიოთ სურათის ფაილი');
-        return;
+      const previewUrl = URL.createObjectURL(file);
+      if (kind === 'logo') {
+        setLogoPreview(previewUrl);
+        uploadMutation.mutate({ logo: file });
+      } else {
+        setCoverPreview(previewUrl);
+        uploadMutation.mutate({ coverImage: file });
       }
+    };
 
-      // Preview-ისთვის
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setLogoPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+  if (isError) {
+    return (
+      <p className="mt-[48px] text-center">პროფილის ჩატვირთვა ვერ მოხერხდა</p>
+    );
+  }
 
-      // გავაგზავნოთ ფაილი parent component-ში
-      if (onLogoChange) {
-        onLogoChange(file);
-      }
-    }
-  };
-
-  const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // შევამოწმოთ ფაილის ტიპი
-      if (!file.type.startsWith('image/')) {
-        alert('გთხოვთ აირჩიოთ სურათის ფაილი');
-        return;
-      }
-
-      // Preview-ისთვის
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setCoverPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-
-      // გავაგზავნოთ ფაილი parent component-ში
-      if (onCoverChange) {
-        onCoverChange(file);
-      }
-    }
-  };
-
-  if (isError) return <p>Failed to fetch profile</p>;
+  const coverUrl = coverPreview || profile?.business_cover_image_url;
+  const logoUrl = logoPreview || profile?.logo_url || DEFAULT_LOGO;
 
   return isLoading ? (
     <BusinessProfilePictureSkeleton />
@@ -117,26 +146,23 @@ const BusinessProfilePicture = ({
     <div className="flex flex-col items-end gap-[24px] m-auto w-full max-w-[1360px] min-h-[548px]">
       <div className="flex flex-col items-center gap-4 mt-[48px] w-full">
         <div
-          className="group relative flex justify-end items-start bg-black p-[20px] rounded-[12px] w-full max-w-[1360px] min-h-[397px] cursor-pointer"
+          className={`group relative flex justify-end items-start bg-black p-[20px] rounded-[12px] w-full max-w-[1360px] min-h-[397px] ${
+            changeProfile ? 'cursor-pointer' : ''
+          }`}
           style={{
-            backgroundImage: `url('${
-              coverPreview ||
-              profile?.business_cover_image_url ||
-              '/images/businessIcons/png/defaultBanner.png'
-            }')`,
+            backgroundImage: coverUrl ? `url('${coverUrl}')` : DEFAULT_COVER,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
-          onClick={handleCoverClick}
+          onClick={() => openFilePicker(coverInputRef.current)}
         >
-          {/* Hidden file input for cover */}
           <input
             ref={coverInputRef}
             type="file"
-            accept="image/*"
+            accept={ALLOWED_IMAGE_TYPES.join(',')}
             className="hidden"
-            onChange={handleCoverChange}
-            disabled={!changeProfile}
+            onChange={handleFileChange('cover')}
+            disabled={!changeProfile || isUploading}
           />
 
           {changeProfile && (
@@ -147,11 +173,23 @@ const BusinessProfilePicture = ({
             </div>
           )}
 
+          {isUploading && (
+            <div className="z-20 absolute inset-0 flex justify-center items-center bg-black/40 rounded-[12px]">
+              <p className="font-medium text-white">იტვირთება...</p>
+            </div>
+          )}
+
           <button
+            type="button"
             onClick={(e) => {
               e.stopPropagation();
-              setChangeProfile(true);
+              if (changeProfile) {
+                openFilePicker(coverInputRef.current);
+              } else {
+                setChangeProfile(true);
+              }
             }}
+            disabled={isUploading}
             className="z-10 flex items-center gap-[14px] bg-[#FFFFFF1F] shadow-[4px_5px_6px_0px_#FFFFFF33_inset] backdrop-blur-[7.5px] px-[15px] py-[12px] rounded-[12px] cursor-pointer"
           >
             <Image
@@ -165,31 +203,27 @@ const BusinessProfilePicture = ({
             </p>
           </button>
 
-          {/* Logo section */}
           <div
-            className="group/logo bottom-[-151px] left-[75px] absolute border-[#000000] border-[4px] rounded-full w-[226px] h-[226px] cursor-pointer"
+            className={`group/logo bottom-[-151px] left-[75px] absolute border-[#000000] border-[4px] rounded-full w-[226px] h-[226px] ${
+              changeProfile ? 'cursor-pointer' : ''
+            }`}
             style={{
-              backgroundImage: `url('${
-                logoPreview ||
-                profile?.logo_url ||
-                '/images/businessIcons/png/defaultUserProfile.png'
-              }')`,
+              backgroundImage: `url('${logoUrl}')`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}
             onClick={(e) => {
               e.stopPropagation();
-              handleLogoClick();
+              openFilePicker(logoInputRef.current);
             }}
           >
-            {/* Hidden file input for logo */}
             <input
               ref={logoInputRef}
               type="file"
-              accept="image/*"
+              accept={ALLOWED_IMAGE_TYPES.join(',')}
               className="hidden"
-              onChange={handleLogoChange}
-              disabled={!changeProfile}
+              onChange={handleFileChange('logo')}
+              disabled={!changeProfile || isUploading}
             />
 
             {changeProfile && (
@@ -210,7 +244,7 @@ const BusinessProfilePicture = ({
           {tags.map((tag) => (
             <div
               key={tag.id}
-              className="flex items-center gap-[6px] bg-[#0866FF26] shadow-[inset_4px_5px_6px_#FFFFFF66] backdrop-blur-[7.5px] px-[22px] py-[13px] border border-[#1118271F] rounded-[12px] cursor-pointer"
+              className="flex items-center gap-[6px] bg-[#0866FF26] shadow-[inset_4px_5px_6px_#FFFFFF66] backdrop-blur-[7.5px] px-[22px] py-[13px] border border-[#1118271F] rounded-[12px]"
             >
               <Image src={tag.tagsIcon} alt="tags" width={20} height={20} />
               <p className="font-medium text-[#111827] text-[20px]">

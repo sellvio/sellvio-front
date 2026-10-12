@@ -13,10 +13,12 @@ import {
 import { addChanel } from '../../api/chatApi';
 import { CreateChanelPopupProps } from '../../types';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
+import { CHAT_SERVER_QUERY_KEY } from '../../hooks/useChatServer';
 
 const CreateChanelPopup = ({ setIsOpen }: CreateChanelPopupProps) => {
   const queryClient = useQueryClient();
   const serverId = useChatStore((state) => state.serverId);
+  const serverName = useChatStore((state) => state.serverName);
 
   const {
     register,
@@ -34,18 +36,17 @@ const CreateChanelPopup = ({ setIsOpen }: CreateChanelPopupProps) => {
   const channelState = watch('channel_state');
 
   const { mutate, isPending } = useMutation({
-    // გადავცემთ serverId-ს და მონაცემებს
     mutationFn: (data: createChatValue) => {
       if (!serverId) throw new Error('Server ID is missing');
       return addChanel(serverId, data);
     },
     onSuccess: () => {
-      toast.success('Channel created successfully');
-      queryClient.invalidateQueries({ queryKey: ['channelName'] });
+      toast.success('არხი წარმატებით შეიქმნა');
+      queryClient.invalidateQueries({ queryKey: [CHAT_SERVER_QUERY_KEY] });
       setIsOpen(false);
     },
     onError: () => {
-      toast.error('Channel creation failed');
+      toast.error('არხის შექმნა ვერ მოხერხდა');
     },
   });
 
@@ -63,9 +64,11 @@ const CreateChanelPopup = ({ setIsOpen }: CreateChanelPopupProps) => {
           <p className="font-semibold text-[#ffffff] text-[20px] text-center">
             შექმენი ჩანელი
           </p>
-          <p className="font-medium text-[#cbd5e1] text-[13px] text-center">
-            კამპანია ”ტიკტოკის გაპიარება”
-          </p>
+          {serverName && (
+            <p className="font-medium text-[#cbd5e1] text-[13px] text-center">
+              {serverName}
+            </p>
+          )}
         </div>
 
         <div className="flex flex-col gap-[8px] mt-[24px] px-[24px] w-full">

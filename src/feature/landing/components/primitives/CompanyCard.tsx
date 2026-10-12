@@ -2,16 +2,13 @@ import Image from 'next/image';
 import { CompanyCardProps } from '../../type';
 import CardHeader from './CardHeader';
 import CardStats from './CardStats';
-import { useState } from 'react';
-import JoinCompanyPopup from './JoinCompanyPopup';
+import { creatorTypeLabels } from '../../data/campaignLabels';
 
-const CompanyCard = ({ task, setPopupOpen }: CompanyCardProps) => {
-  const [JoinCompany, setJoinCompany] = useState<boolean>(false);
-  const [visible, setVisible] = useState<boolean>(false);
+const CompanyCard = ({ task, onOpenDetails, onJoin }: CompanyCardProps) => {
   return (
     <div className="flex flex-col justify-between px-[25px] py-[23px] border-[2px] border-[var(--auth-border)] rounded-[8px] w-full max-w-[445px] min-h-[417px]">
       <div>
-        <CardHeader task={task} setPopupOpen={setPopupOpen} />
+        <CardHeader task={task} onOpenDetails={onOpenDetails} />
 
         <div className="mt-[19px]">
           <div className="flex flex-wrap gap-[9px] mt-[8px] mb-[6px]">
@@ -25,7 +22,9 @@ const CompanyCard = ({ task, setPopupOpen }: CompanyCardProps) => {
             ))}
           </div>
 
-          <p className="font-medium text-[14px]">{task.description}</p>
+          <p className="font-medium text-[14px] line-clamp-3">
+            {task.description}
+          </p>
         </div>
 
         <CardStats task={task} />
@@ -39,8 +38,10 @@ const CompanyCard = ({ task, setPopupOpen }: CompanyCardProps) => {
               height={18}
             />
             <p className="font-bold text-[12px]">
-              {task.target_creator_types.length
-                ? task.target_creator_types.join(', ')
+              {task.target_creator_types?.length
+                ? task.target_creator_types
+                    .map((type) => creatorTypeLabels[type] ?? type)
+                    .join(', ')
                 : 'სპეციალური მოთხოვნები არ არის'}
             </p>
           </div>
@@ -55,20 +56,16 @@ const CompanyCard = ({ task, setPopupOpen }: CompanyCardProps) => {
             <p className="font-bold text-[12px]">
               ბოლო ვადა:{' '}
               {task.finish_date
-                ? new Date(task.finish_date).toLocaleDateString()
+                ? new Date(task.finish_date).toLocaleDateString('ka-GE')
                 : 'არ არის მითითებული'}
             </p>
           </div>
         </div>
       </div>
-      <JoinCompanyPopup
-        popupVisible={visible}
-        setPopupVisible={setVisible}
-        setChangeProfile={setJoinCompany}
-      />
       <button
-        onClick={() => setVisible((prev) => !prev)}
-        className="bg-gradient-to-r from-[#3012B3] to-[#7B62E8] mt-[17px] rounded-[8px] w-full min-h-[39px] font-medium text-[12px] text-white"
+        type="button"
+        onClick={() => onJoin({ id: task.id, chat_type: task.chat_type })}
+        className="bg-gradient-to-r from-[#3012B3] to-[#7B62E8] mt-[17px] rounded-[8px] w-full min-h-[39px] font-medium text-[12px] text-white cursor-pointer"
       >
         გაწევრიანება
       </button>

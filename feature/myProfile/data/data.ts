@@ -1,63 +1,60 @@
-import { Creator, socmediaPlatform } from "../types";
+import { CreatorTypeValue, socmediaPlatform } from "../types";
 
+// Platforms supported by the backend `social_platform` enum
 export const socmediaPlatforms: socmediaPlatform[] = [
   {
-    id: "1",
+    id: "instagram",
     src: "/images/svg/instagram.svg",
     title: "Instagram",
-    placeholder: "სალომე შავიანიძე",
   },
   {
-    id: "2",
-    src: "/images/svg/youtube.svg",
-    title: "Youtube",
-    placeholder: "noza@example.com",
-  },
-  {
-    id: "3",
+    id: "tiktok",
     src: "/images/svg/tiktok.svg",
     title: "Tik Tok",
-    placeholder: "noza@example.com",
   },
   {
-    id: "4",
+    id: "facebook",
     src: "/images/svg/facebook.svg",
     title: "Facebook",
-    placeholder: "noza@example.com",
   },
 ];
-export const creators: Creator[] = [
+
+export const profileIcons = {
+  badge: "/images/svg/diamond.svg",
+  defaultAvatar: "/images/svg/creatorProfile.svg",
+  location: "/images/svg/mapPin.svg",
+  joined: "/images/svg/calendar.svg",
+  views: "/images/svg/eye.svg",
+};
+
+export const creatorTypeOptions: {
+  value: CreatorTypeValue;
+  img: string;
+  title: string;
+  descr: string;
+}[] = [
   {
-    id: 1,
-    name: "სალომე შავიანიძე",
-    badge: "ტოპ შემქმნელი",
-    badgeIcon: "/images/svg/diamond.svg",
-    profileImg: "/images/svg/creatorProfile.svg",
-    location: {
-      icon: "/images/svg/mapPin.svg",
-      text: "Georgia, Tbilisi",
-    },
-    joined: {
-      icon: "/images/svg/calendar.svg",
-      text: "შეურთდა მარტი 2025",
-    },
-    views: {
-      icon: "/images/svg/eye.svg",
-      text: "საშუალო 25,000 ნახვა",
-    },
-    bio: "კონტეტის შემქმნელი, სპეციალიზირებული ტექნოლოგიურ მიმოხილვებსა და ცხოვრების წესის კონტენტში. გატაცებული მიმზიდველი ვიდეოების შექმნით, რომლებიც ეხმარება ადამიანებს ინფორმირებული გადაწყვეტილებების მიღებაში",
+    value: "influencer",
+    img: "/images/svg/star.svg",
+    title: "ინფლუენსერი",
+    descr: "ცნობილი შემქმნელები დამკვიდრებული აუდიტორიით",
   },
-];
-export const initialTags = [
   {
-    tags: [
-      "Technology",
-      "Lifestyle",
-      "Fitness",
-      "Health",
-      "Gaming",
-      "Fashion",
-      "Cooking",
-    ],
+    value: "experienced",
+    img: "/images/svg/cup.svg",
+    title: "გამოცდილი შემქმნელი",
+    descr: "შემქმნელები დადასტურებული კონტენტის გამოცდილებით",
+  },
+  {
+    value: "beginner",
+    img: "/images/svg/profileGoal.svg",
+    title: "დამწყები შემქმნელი",
+    descr: "ახალი შემქმნელები რომლებიც ცდილობენ გამოცდილების დაგროვებას",
+  },
+  {
+    value: "clipper",
+    img: "/images/svg/scissors.svg",
+    title: "კლიპერი",
+    descr: "ვიდეო მონტაჟის სპეციალისტები",
   },
 ];

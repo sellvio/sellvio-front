@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { ChanelInfoProps } from '../../types';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -11,8 +11,10 @@ import { channelSchema, channelValue } from '../../schema/channelSchema';
 import { addChanel } from '../../api/chatApi';
 import { useChatLayout } from '@/feature/common/stores/useChatLayout';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
+import { CHAT_SERVER_QUERY_KEY } from '../../hooks/useChatServer';
 
 const ChanelInfo = ({ setChatInfoOpen }: ChanelInfoProps) => {
+  const queryClient = useQueryClient();
   const serverId = useChatStore((state) => state.serverId);
 
   const {
@@ -36,11 +38,12 @@ const ChanelInfo = ({ setChatInfoOpen }: ChanelInfoProps) => {
       return addChanel(serverId, data);
     },
     onSuccess: () => {
-      toast.success('Channel created successfully');
+      toast.success('არხი წარმატებით შეიქმნა');
+      queryClient.invalidateQueries({ queryKey: [CHAT_SERVER_QUERY_KEY] });
       setChatInfoOpen(false);
     },
     onError: () => {
-      toast.error('Channel creation failed');
+      toast.error('არხის შექმნა ვერ მოხერხდა');
     },
   });
 

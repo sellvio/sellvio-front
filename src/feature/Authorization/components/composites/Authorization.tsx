@@ -25,12 +25,16 @@ const Authorization = () => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: loginUser,
-    onSuccess: () => {
-      toast.success('Login successful');
-      router.push('/');
+    onSuccess: (data) => {
+      toast.success('ავტორიზაცია წარმატებით დასრულდა');
+      router.replace(
+        data.user.user_type === 'business'
+          ? '/buisnessDashboard'
+          : '/creatorDashboard'
+      );
     },
-    onError: () => {
-      toast.error('Login failed');
+    onError: (error: Error) => {
+      toast.error(error.message || 'ავტორიზაცია ვერ მოხერხდა');
     },
   });
 
@@ -90,7 +94,7 @@ const Authorization = () => {
               errors={errors}
             />
           </div>
-          <Button variant="auth" disabled={isPending}>
+          <Button variant="auth" type="submit" disabled={isPending}>
             {isPending ? 'იგზავნება...' : 'შესვლა'}
           </Button>
         </form>

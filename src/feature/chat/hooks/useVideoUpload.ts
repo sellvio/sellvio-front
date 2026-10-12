@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 import { UploadVideoApi } from '@/feature/chat/api/chatApi';
 
 interface UseVideoUploadParams {
@@ -29,6 +30,10 @@ export const useVideoUpload = ({
     onSuccess: (res) => {
       if (res?.data?.videoUrl) setUploadedVideoUrl(res.data.videoUrl);
     },
+    onError: () => {
+      toast.error('ვიდეოს ატვირთვა ვერ მოხერხდა');
+      handleReset();
+    },
   });
 
   const handleFile = (file: File | undefined) => {
@@ -37,12 +42,13 @@ export const useVideoUpload = ({
     mutate(file);
   };
 
-  const handleReset = () => {
+  function handleReset() {
+    if (preview) URL.revokeObjectURL(preview);
     setPreview(null);
     setTitle('');
     setUploadedVideoUrl(null);
     if (fileRef.current) fileRef.current.value = '';
-  };
+  }
 
   return {
     fileRef,

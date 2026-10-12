@@ -50,7 +50,7 @@ export const MessageItem = ({
 
             {message.pinned && (
               <span className="bg-[#0866FF26] px-2 py-[2px] rounded-full font-medium text-[#8BB8FF] text-[10px]">
-                Pinned
+                აპინული
               </span>
             )}
           </div>
@@ -100,20 +100,23 @@ export const MessageItem = ({
                 <MessageStatusIcon status={message.status} />
               </div>
 
-              <div
-                className={`top-[-38px] right-[46px] absolute transition-all duration-200 ${
-                  isPickerOpen
-                    ? 'opacity-100 visible pointer-events-auto'
-                    : 'opacity-0 invisible pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:pointer-events-auto'
-                }`}
-              >
-                <MessageReactionPicker
-                  message={message}
-                  isOpen={isPickerOpen}
-                  onToggleOpen={onTogglePicker}
-                  onClose={onClosePicker}
-                />
-              </div>
+              {/* დროებით (ჯერ არ შენახულ) შეტყობინებაზე მოქმედებები არ ჩანს */}
+              {!message.tempId && (
+                <div
+                  className={`top-[-38px] right-[46px] absolute transition-all duration-200 ${
+                    isPickerOpen
+                      ? 'opacity-100 visible pointer-events-auto'
+                      : 'opacity-0 invisible pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:pointer-events-auto'
+                  }`}
+                >
+                  <MessageReactionPicker
+                    message={message}
+                    isOpen={isPickerOpen}
+                    onToggleOpen={onTogglePicker}
+                    onClose={onClosePicker}
+                  />
+                </div>
+              )}
             </div>
 
             <MessageReactionPills message={message} />

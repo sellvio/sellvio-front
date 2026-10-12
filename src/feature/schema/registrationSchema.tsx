@@ -22,6 +22,28 @@ export const RegistrationSchema = z.object({
 
 export type RegistrationValues = z.infer<typeof RegistrationSchema>;
 
+// Backend RegisterDto: password must be 12-72 characters
+export const CreatorStepTwoSchema = z
+  .object({
+    email: z
+      .string()
+      .trim()
+      .toLowerCase()
+      .email({ message: 'შეიყვანე სწორი ემაილი' })
+      .max(254, { message: 'ემაილი ძალიან გრძელია' }),
+    password: z
+      .string()
+      .min(12, { message: 'პაროლი უნდა შეიცავდეს მინიმუმ 12 სიმბოლოს' })
+      .max(72, { message: 'პაროლი ძალიან გრძელია' }),
+    repeatPassword: z.string().min(1, { message: 'გაიმეორეთ პაროლი' }),
+  })
+  .refine((data) => data.password === data.repeatPassword, {
+    message: 'პაროლები არ ემთხვევა',
+    path: ['repeatPassword'],
+  });
+
+export type CreatorStepTwoValues = z.infer<typeof CreatorStepTwoSchema>;
+
 export const RegistrationStepBusinessSchema = z
   .object({
     contactNumber: z.string().min(9, { message: 'ნომერი ძალიან მოკლეა' }),
@@ -29,8 +51,8 @@ export const RegistrationStepBusinessSchema = z
     nickname: z
       .string()
       .min(2, { message: 'ზედმეტსახელი უნდა შეიცავდეს მინიმუმ 2 სიმბოლოს' }),
-    password: z.string().min(6, { message: 'პაროლი მინიმუმ 6 სიმბოლო' }),
-    repeatPassword: z.string().min(6, { message: 'გაიმეორეთ პაროლი' }),
+    password: z.string().min(12, { message: 'პაროლი მინიმუმ 12 სიმბოლო' }),
+    repeatPassword: z.string().min(1, { message: 'გაიმეორეთ პაროლი' }),
   })
   .refine((data) => data.password === data.repeatPassword, {
     message: 'პაროლები არ ემთხვევა',

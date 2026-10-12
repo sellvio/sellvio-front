@@ -33,10 +33,9 @@ export type InputFieldProps = {
   className?: string;
 };
 export type socmediaPlatform = {
-  id: string;
+  id: "instagram" | "tiktok" | "facebook";
   src: string;
   title: string;
-  placeholder: string;
 };
 export type Creator = {
   id: number;
@@ -57,4 +56,16 @@ export type Creator = {
     text: string;
   };
   bio: string;
+};
+export type CreatorTypeValue =
+  | "beginner"
+  | "experienced"
+  | "influencer"
+  | "clipper";
+export type ProfileFormState = {
+  fullName: string;
+  bio: string;
+  location: string;
+  creatorType: CreatorTypeValue | null;
+  tagIds: number[];
 };

@@ -24,9 +24,9 @@ export const footerData: FooterItem[] = [
     id: 3,
     title: 'ინფორმაციები',
     options: [
-      { id: 1, label: 'ბლოგები ჩვენი შესახებ', href: '/blogs' },
-      { id: 2, label: 'როგორ მუშაობს რეატორებისთვის', href: '/' },
-      { id: 3, label: 'როგორ მუშაობს ბიზნესებისთვის', href: '/' },
+      { id: 1, label: 'ბლოგები ჩვენი შესახებ', href: '/' },
+      { id: 2, label: 'როგორ მუშაობს კრეატორებისთვის', href: '/#howtowork' },
+      { id: 3, label: 'როგორ მუშაობს ბიზნესებისთვის', href: '/#howtowork' },
     ],
   },
   {

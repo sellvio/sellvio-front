@@ -1,8 +1,14 @@
+type CanseEditlPopupProps = {
+  popupVisible: boolean;
+  setPopupVisible: (v: boolean) => void;
+  setChangeProfile: (v: boolean) => void;
+};
+
 const CanseEditlPopup = ({
   popupVisible,
   setPopupVisible,
   setChangeProfile,
-}) => {
+}: CanseEditlPopupProps) => {
   if (!popupVisible) return null;
   return (
     <div className="z-50 fixed inset-0 flex justify-center items-center bg-black/50">
@@ -12,13 +18,18 @@ const CanseEditlPopup = ({
         </p>
         <div className="flex justify-center gap-[22px] w-full">
           <button
+            type="button"
             onClick={() => setPopupVisible(false)}
             className="bg-[#FFFFFF1A] hover:bg-[#16EB5440] shadow-[4px_5px_6px_0px_#FFFFFF66_inset,-1px_-3px_4px_0px_#FFFFFF66_inset,0px_8px_13px_0px_#0000000A] px-[102px] py-[16px] border border-[#E3E8EF] rounded-[8px] font-bold text-[#000000D4] text-[20px] cursor-pointer"
           >
             არა
           </button>
           <button
-            onClick={() => (setPopupVisible(false), setChangeProfile(false))}
+            type="button"
+            onClick={() => {
+              setPopupVisible(false);
+              setChangeProfile(false);
+            }}
             className="bg-[#FFFFFF1A] hover:bg-[#EB165440] shadow-[4px_5px_6px_0px_#FFFFFF66_inset,-1px_-3px_4px_0px_#FFFFFF66_inset,0px_8px_13px_0px_#0000000A] px-[102px] py-[16px] border border-[#E3E8EF] rounded-[8px] font-bold text-[#000000D4] text-[20px] cursor-pointer"
           >
             დიახ

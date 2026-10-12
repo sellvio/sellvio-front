@@ -20,7 +20,7 @@ type VerificationChatProps = {
   chatFull: boolean;
 };
 
-type ReviewStatus = 'verified' | 'rejected';
+type ReviewStatus = 'verified' | 'rejected' | 'pending';
 
 const icons = {
   instagram: Instagram,
@@ -58,11 +58,13 @@ const VerificationChat = ({ chatFull }: VerificationChatProps) => {
     (m) => m.messageType === 'verification_video'
   );
 
-  useEffect(() => {
-    if (socket && selectedChannelId) {
-      socket.emit('verification:videos', { channelId: selectedChannelId });
-    }
-  }, [socket, selectedChannelId]);
+  // verification:videos-ს joinChannel უკვე აგზავნის არხის არჩევისას.
+  // backend-ი ინახავს მხოლოდ is_verified-ს, ამიტომ "უარყოფილი" მხოლოდ ლოკალურია
+  const getReviewStatus = (postId: number, isVerified: boolean) => {
+    const localStatus = reviewedPosts[postId];
+    if (localStatus === 'pending') return undefined;
+    return localStatus ?? (isVerified ? 'verified' : undefined);
+  };
 
   useEffect(() => {
     setReviewedPosts({});
@@ -93,20 +95,22 @@ const VerificationChat = ({ chatFull }: VerificationChatProps) => {
     }, 800);
   };
 
-  const handleVerify = (socialPostId: number) => {
+  const handleVerify = (socialPostId: number, isVerified: boolean) => {
     if (!socket || !selectedChannelId) return;
 
-    const currentStatus = reviewedPosts[socialPostId];
+    const currentStatus = getReviewStatus(socialPostId, isVerified);
 
     setLoadingPostId(socialPostId);
     setLoadingAction('verified');
 
     if (currentStatus === 'verified') {
-      setReviewedPosts((prev) => {
-        const next = { ...prev };
-        delete next[socialPostId];
-        return next;
+      // ვერიფიკაციის გაუქმება სერვერზეც უნდა აისახოს
+      socket.emit('verification:review', {
+        channelId: selectedChannelId,
+        socialPostId,
+        verified: false,
       });
+      setReviewedPosts((prev) => ({ ...prev, [socialPostId]: 'pending' }));
       clearLoading();
       return;
     }
@@ -125,20 +129,16 @@ const VerificationChat = ({ chatFull }: VerificationChatProps) => {
     clearLoading();
   };
 
-  const handleReject = (socialPostId: number) => {
+  const handleReject = (socialPostId: number, isVerified: boolean) => {
     if (!socket || !selectedChannelId) return;
 
-    const currentStatus = reviewedPosts[socialPostId];
+    const currentStatus = getReviewStatus(socialPostId, isVerified);
 
     setLoadingPostId(socialPostId);
     setLoadingAction('rejected');
 
     if (currentStatus === 'rejected') {
-      setReviewedPosts((prev) => {
-        const next = { ...prev };
-        delete next[socialPostId];
-        return next;
-      });
+      setReviewedPosts((prev) => ({ ...prev, [socialPostId]: 'pending' }));
       clearLoading();
       return;
     }
@@ -211,8 +211,8 @@ const VerificationChat = ({ chatFull }: VerificationChatProps) => {
                         </div>
 
                         <video
-                          src={video.videoUrl ?? ''}
-                          poster={video.videoCoverUrl ?? ''}
+                          src={video.videoUrl ?? undefined}
+                          poster={video.videoCoverUrl ?? undefined}
                           controls={false}
                           className="bg-black rounded-[8px] w-[112px] h-[126px] object-cover cursor-pointer"
                         />
@@ -225,7 +225,10 @@ const VerificationChat = ({ chatFull }: VerificationChatProps) => {
                       <div className="flex flex-col gap-3">
                         {video.socialPosts.map((post) => {
                           const isCurrentLoading = loadingPostId === post.id;
-                          const reviewStatus = reviewedPosts[post.id];
+                          const reviewStatus = getReviewStatus(
+                            post.id,
+                            post.isVerified
+                          );
 
                           return (
                             <div key={post.id} className="flex flex-col gap-2">
@@ -260,7 +263,9 @@ const VerificationChat = ({ chatFull }: VerificationChatProps) => {
                                   <div className="flex items-center gap-3 mt-1">
                                     <button
                                       type="button"
-                                      onClick={() => handleVerify(post.id)}
+                                      onClick={() =>
+                                        handleVerify(post.id, post.isVerified)
+                                      }
                                       className="flex flex-1 justify-center items-center gap-2 bg-[#0866FF] hover:bg-[#0867ffc1] disabled:opacity-70 py-[10px] rounded-[6px] font-medium text-white text-xs transition-colors cursor-pointer disabled:cursor-not-allowed"
                                     >
                                       ვერიფიცირებული
@@ -270,7 +275,9 @@ const VerificationChat = ({ chatFull }: VerificationChatProps) => {
                                   <div className="flex items-center gap-3 mt-1">
                                     <button
                                       type="button"
-                                      onClick={() => handleReject(post.id)}
+                                      onClick={() =>
+                                        handleReject(post.id, post.isVerified)
+                                      }
                                       className="flex flex-1 justify-center items-center gap-2 hover:bg-[#ff00004a] disabled:opacity-70 py-[10px] border border-[#0866FF] rounded-[6px] font-medium text-white text-xs transition-colors cursor-pointer disabled:cursor-not-allowed"
                                     >
                                       უარყოფილია
@@ -281,8 +288,12 @@ const VerificationChat = ({ chatFull }: VerificationChatProps) => {
                                     <VerificationReviewActions
                                       isLoading={isCurrentLoading}
                                       loadingAction={loadingAction}
-                                      onVerify={() => handleVerify(post.id)}
-                                      onReject={() => handleReject(post.id)}
+                                      onVerify={() =>
+                                        handleVerify(post.id, post.isVerified)
+                                      }
+                                      onReject={() =>
+                                        handleReject(post.id, post.isVerified)
+                                      }
                                     />
                                   </div>
                                 )

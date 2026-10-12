@@ -4,6 +4,12 @@ import { ChatMember } from '../../api/chatApi';
 import MemberSkeleton from './MemberSkeleton';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
 
+const ROLE_LABELS: Record<string, string> = {
+  admin: 'ადმინი',
+  moderator: 'მოდერატორი',
+  user: 'წევრი',
+};
+
 const Member = () => {
   const serverId = useChatStore((state) => state.serverId);
 
@@ -18,7 +24,11 @@ const Member = () => {
   }
 
   if (isError) {
-    return <div className="p-4 text-red-500">Error loading members</div>;
+    return (
+      <div className="p-4 w-full max-w-[304px] text-red-400 text-sm">
+        წევრების ჩატვირთვა ვერ მოხერხდა
+      </div>
+    );
   }
 
   return (
@@ -34,7 +44,7 @@ const Member = () => {
                 {eachElement.user.email}
               </p>
               <p className="font-semibold text-[12px] text-gray-500">
-                {eachElement.role}
+                {ROLE_LABELS[eachElement.role] ?? eachElement.role}
               </p>
             </div>
           </div>

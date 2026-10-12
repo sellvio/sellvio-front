@@ -2,6 +2,7 @@
 
 import { create } from 'zustand';
 import { io } from 'socket.io-client';
+import { toast } from 'react-toastify';
 import {
   Message,
   MessageReaction,
@@ -292,22 +293,46 @@ export const useSocketStore = create<SocketState>((set, get) => ({
   pendingPinMessageIds: [],
 
   connect: (token: string) => {
-    if (typeof window === 'undefined' || get().socket?.connected) return;
+    if (typeof window === 'undefined') return;
 
     const existingSocket = get().socket;
+    // უკვე დაკავშირებულია ან კავშირის/ხელახალი კავშირის პროცესშია
+    if (existingSocket?.connected || existingSocket?.active) return;
+
     if (existingSocket) {
       existingSocket.removeAllListeners();
       existingSocket.disconnect();
     }
 
     const socket = io(`${baseUrl}/chat`, {
-      auth: { token },
+      // ყოველ (ხელახალ) დაკავშირებაზე ვიღებთ უახლეს ტოკენს
+      auth: (cb) => cb({ token: localStorage.getItem('access_token') ?? token }),
       transports: ['websocket', 'polling'],
       reconnection: true,
     });
 
-    socket.on('connect', () => set({ isConnected: true }));
-    socket.on('disconnect', () => set({ isConnected: false }));
+    let hasConnectedBefore = false;
+
+    socket.on('connect', () => {
+      set({ isConnected: true });
+
+      const isReconnect = hasConnectedBefore;
+      hasConnectedBefore = true;
+      if (!isReconnect) return;
+
+      // ხელახალი კავშირის შემდეგ ოთახები იკარგება — არჩეულ არხს თავიდან ვუერთდებით
+      // (server:open-ს Channels კომპონენტი თავად აგზავნის isConnected-ის ცვლილებაზე)
+      const { serverId, selectedChannelId, selectedChannelTypeId } =
+        useChatStore.getState();
+
+      if (serverId && selectedChannelId) {
+        get().joinChannel(
+          serverId,
+          selectedChannelId,
+          selectedChannelTypeId ?? undefined
+        );
+      }
+    });
 
     socket.on('message:history', (data) => {
       const chatState = useChatStore.getState();
@@ -408,13 +433,17 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       }
 
       set((state) => {
+        if (state.messages.some((item) => !item.tempId && item.id === message.id)) {
+          return state;
+        }
+
         const optimisticIndex = state.messages.findIndex(
           (item) =>
             item.channelId === message.channelId &&
             item.messageType !== 'feedback_video' &&
             item.messageType !== 'verification_video' &&
             item.tempId &&
-            item.senderId === -1 &&
+            (item.senderId === message.senderId || item.senderId === -1) &&
             item.content.trim() === message.content.trim() &&
             item.replyToId === (message.replyToId ?? null) &&
             (item.status === 'sending' || item.status === 'sent')
@@ -647,11 +676,19 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       }));
     });
 
-    socket.on('error', () => {
-      set({
+    socket.on('error', (data: { message?: string } | undefined) => {
+      set((state) => ({
         isLoadingMessages: false,
         pendingPinMessageIds: [],
-      });
+        pendingReactionOperations: [],
+        messages: state.messages.map((message) =>
+          message.tempId && message.status === 'sending'
+            ? { ...message, status: 'failed' as MessageStatus }
+            : message
+        ),
+      }));
+
+      toast.error(data?.message || 'ჩატში დაფიქსირდა შეცდომა');
     });
 
     set({ socket });
@@ -708,12 +745,14 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     const trimmedContent = content.trim();
     if (!trimmedContent) return;
 
+    const currentUser = useChatStore.getState().currentUser;
     const tempId = `temp_${Date.now()}_${Math.random()}`;
 
     const tempMessage: Message = {
       id: Date.now(),
       channelId,
-      senderId: -1,
+      senderId: currentUser?.id ?? -1,
+      senderFirstName: currentUser?.name ?? null,
       content: trimmedContent,
       createdAt: new Date().toISOString(),
       pinned: false,
@@ -953,7 +992,9 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     }),
 
   disconnect: () => {
-    get().socket?.disconnect();
+    const socket = get().socket;
+    socket?.removeAllListeners();
+    socket?.disconnect();
 
     set({
       socket: null,

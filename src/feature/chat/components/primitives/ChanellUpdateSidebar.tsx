@@ -9,6 +9,7 @@ import { useState } from 'react';
 import DeleteChatPopup from './DeleteChatPopup';
 import { ChanellUpdateSidebarProps } from '../../types';
 import { useChatStore } from '@/feature/common/stores/useChatStore';
+import { CHAT_SERVER_QUERY_KEY } from '../../hooks/useChatServer';
 
 const ChanellUpdateSidebar = ({
   chatChanel,
@@ -16,6 +17,7 @@ const ChanellUpdateSidebar = ({
   channelId,
   toggleChatFull,
   chatFull,
+  backHref,
 }: ChanellUpdateSidebarProps) => {
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -31,7 +33,7 @@ const ChanellUpdateSidebar = ({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['channelName'],
+        queryKey: [CHAT_SERVER_QUERY_KEY],
       });
     },
   });
@@ -50,8 +52,8 @@ const ChanellUpdateSidebar = ({
       });
 
       setIsOpen(false);
-      router.push('/chat');
-    } catch (error) {
+      router.push(backHref);
+    } catch {
       toast.update(toastId, {
         render: 'არხის წაშლა ვერ მოხერხდა',
         type: 'error',
@@ -112,9 +114,11 @@ const ChanellUpdateSidebar = ({
 
       <div className="bg-[#FFFFFF75] mx-[13px] h-[1px]"></div>
 
-      <div
+      <button
+        type="button"
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-[10px] hover:bg-red-500/20 mt-2 px-[21px] py-2 w-full transition-all cursor-pointer"
+        disabled={!serverId || isPending}
+        className="flex items-center gap-[10px] hover:bg-red-500/20 disabled:opacity-50 mt-2 px-[21px] py-2 w-full transition-all cursor-pointer disabled:cursor-not-allowed"
       >
         <Image
           src={'/images/chatIcons/svg/deleteSvg.svg'}
@@ -125,7 +129,7 @@ const ChanellUpdateSidebar = ({
         <p className="text-[#FF86AC] text-[15px]">
           {isPending ? 'იშლება...' : 'არხის წაშლა'}
         </p>
-      </div>
+      </button>
 
       {isOpen && (
         <DeleteChatPopup

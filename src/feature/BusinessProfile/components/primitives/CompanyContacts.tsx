@@ -1,15 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
+import { CompanyFieldsProps } from '../../type';
 
-type Props = {
-  profile: any;
-  changeProfile: boolean;
-  register: any;
-  errors: any;
-};
-
-const CompanyContacts: React.FC<Props> = ({
-  profile,
+const CompanyContacts: React.FC<CompanyFieldsProps> = ({
   changeProfile,
   register,
   errors,
@@ -32,7 +25,6 @@ const CompanyContacts: React.FC<Props> = ({
               type="email"
               id="email"
               readOnly={!changeProfile}
-              defaultValue={profile?.business_email || ''}
               {...register('business_email')}
               className="bg-[rgba(255,255,255,0.14)] shadow-[4px_5px_6px_0_rgba(255,255,255,0.4)_inset,-1px_-3px_4px_0_rgba(255,255,255,0.4)_inset,0_8px_13px_0_rgba(0,0,0,0.04)] backdrop-blur-[7.5px] px-[18px] border border-[#E3E8EF] rounded-[8px] w-full min-h-[56px] font-bold text-[#000000D4] text-[18px]"
             />
@@ -59,11 +51,13 @@ const CompanyContacts: React.FC<Props> = ({
               type="text"
               id="phone"
               readOnly={!changeProfile}
-              defaultValue={profile?.phone || ''}
               {...register('phone')}
               className="bg-[rgba(255,255,255,0.14)] shadow-[4px_5px_6px_0_rgba(255,255,255,0.4)_inset,-1px_-3px_4px_0_rgba(255,255,255,0.4)_inset,0_8px_13px_0_rgba(0,0,0,0.04)] backdrop-blur-[7.5px] px-[18px] border border-[#E3E8EF] rounded-[8px] w-full min-h-[56px] font-bold text-[#000000D4] text-[18px]"
             />
           </div>
+          {errors?.phone && (
+            <p className="text-red-500 text-sm">{errors.phone.message}</p>
+          )}
         </div>
       </div>
 
@@ -82,11 +76,13 @@ const CompanyContacts: React.FC<Props> = ({
             type="text"
             id="web"
             readOnly={!changeProfile}
-            defaultValue={profile?.website_url || ''}
             {...register('website_url')}
             className="bg-[rgba(255,255,255,0.14)] shadow-[4px_5px_6px_0_rgba(255,255,255,0.4)_inset,-1px_-3px_4px_0_rgba(255,255,255,0.4)_inset,0_8px_13px_0_rgba(0,0,0,0.04)] backdrop-blur-[7.5px] px-[18px] border border-[#E3E8EF] rounded-[8px] w-full min-h-[56px] font-bold text-[#000000D4] text-[18px]"
           />
         </div>
+        {errors?.website_url && (
+          <p className="text-red-500 text-sm">{errors.website_url.message}</p>
+        )}
       </div>
     </div>
   );

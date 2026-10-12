@@ -47,8 +47,8 @@ export const GoalCards = [
 ] as const;
 
 export const UploadFile = [
-  { id: 1, img: './images/svg/gallery.svg', title: 'ატვირთე ფაილი' },
-  { id: 2, img: './images/svg/upload.svg', title: 'ატვირთე ლინკი' },
+  { id: 1, img: '/images/svg/gallery.svg', title: 'ატვირთე ფაილი' },
+  { id: 2, img: '/images/svg/upload.svg', title: 'ატვირთე ლინკი' },
 ];
 
 export const costOptions = [

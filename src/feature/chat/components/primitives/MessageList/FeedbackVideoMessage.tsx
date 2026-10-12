@@ -177,7 +177,7 @@ export const FeedbackVideoMessage = ({ message }: Props) => {
             <X className="w-[35px] h-[35px]" />
           </button>
           <div
-            className="bg-[url('/images/png/iPhoneFrame.png')] bg-cover bg-center px-[15px] py-[16px] rounded-[12px] w-full max-w-[442px] h-[910px] overflow-hidden relativ"
+            className="bg-[url('/images/png/iPhoneFrame.png')] bg-cover bg-center px-[15px] py-[16px] rounded-[12px] w-full max-w-[442px] h-[910px] overflow-hidden relative"
             onClick={(e) => e.stopPropagation()}
           >
             <video
